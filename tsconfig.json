@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es5",                          
+        "module": "commonjs",                    
+        "lib": ["es5"],                     
+        "allowJs": true,
+        "outDir": "build",                          
+        "rootDir": "src",       
+        "esModuleInterop": true,
+        "resolveJsonModule": true
+    },
+    "exclude": [
+      "node_modules"
+    ],
+    "include":[
+      "routes"
+    ]
+}
