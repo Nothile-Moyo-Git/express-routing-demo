@@ -13,7 +13,7 @@ adminRoutes.get("/add-product", (request : Request, response : Response, next : 
 
     // Define an action and a method for the form
     response.send(`
-        <form action="/product" method="POST">
+        <form action="/admin/add-product" method="POST">
             <input type="text" name="title"/>
             <button type="submit">Add Product</button>
         </form>
@@ -21,7 +21,7 @@ adminRoutes.get("/add-product", (request : Request, response : Response, next : 
 });
 
 // Handle a response in the body of a request usng middleware
-adminRoutes.post("/product", (request : Request, response : Response, next : NextFunction) => {
+adminRoutes.post("/add-product", (request : Request, response : Response, next : NextFunction) => {
 
     console.log(request.body.title);
     response.redirect("/");

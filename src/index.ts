@@ -20,7 +20,7 @@ const port = process.env.DEV_PORT;
 app.use( bodyParser.urlencoded({ extended : true }) );
 
 // Use our admin router which handles the product form and page
-app.use( adminRoutes );
+app.use( '/admin', adminRoutes );
 
 // Use our shop router which handles the output for the home page
 app.use( shopRoutes );
