@@ -9,7 +9,9 @@ const shopRoutes = express.Router();
 
 // Base middleware response, 
 shopRoutes.get("/", (request : Request, response : Response, next : NextFunction) => {
-    response.send("<h1>Hello From Express</h1>");
+
+    // Read and send the file back to the user
+    response.sendFile("views/shop.html", { root : "src" });
 });
 
 export default shopRoutes;

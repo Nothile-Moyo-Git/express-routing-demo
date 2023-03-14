@@ -2,9 +2,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import adminRoutes from "../routes/admin";
-import shopRoutes from "../routes/shop";
-import errorRoutes from "../routes/error";
+import adminRoutes from "./routes/admin";
+import shopRoutes from "./routes/shop";
+import errorRoutes from "./routes/error";
 
 // Import the .env variables
 dotenv.config();
