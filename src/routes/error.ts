@@ -1,6 +1,8 @@
 // Import express router for the admin and shop pages
 // This file is for the output routes
 import express from "express";
+import path from "path";
+import rootDir from "../util/path";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
@@ -12,12 +14,7 @@ const errorRoutes = express.Router();
 errorRoutes.get("*", (request : Request, response : Response, next : NextFunction) => {
 
     // If the page has a 404 error, then output an error page instead of crashing the server
-    response.status(404).send(`
-        <html>
-            <title>404</title>
-            <h1>Error 404: Page Not Found</h1>
-        </html>
-    `);
+    response.status(404).sendFile(path.join(rootDir, "views/404.html"));
 
 });
 

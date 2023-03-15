@@ -2,6 +2,7 @@
 // This file is for the product routes
 import express from "express";
 import path from "path";
+import rootDir from "../util/path";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
@@ -13,7 +14,7 @@ const adminRoutes = express.Router();
 adminRoutes.get("/add-product", (request : Request, response : Response, next : NextFunction) => {
 
     // Send our HTML file to the browser
-    response.sendFile(path.join(__dirname, "../views/add-product.html"));
+    response.sendFile(path.join(rootDir, "views/add-product.html"));
 
 });
 
