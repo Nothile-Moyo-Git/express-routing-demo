@@ -1,14 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <main>
-        <h1>Error 404: Page Not Found</h1>
-    </main>
-</body>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+        @keyframes fade-in{ 
+            0%{ opacity: 0; } 
+            100%{ opacity: 1; } 
+        }
+
+        body{ 
+            margin: 0px;
+            margin-top: 60px; 
+            animation: fade-in 0.2s linear;
+            font-family: "Open Sans";
+        }
+
+        nav{ 
+            width: 100%; 
+        }
+
+        ul{ 
+            list-style-type: none; 
+        }  
+
+        a{ 
+            text-decoration: none;
+            color:rgba(0, 0, 0, 0.9); 
+            transition: all 0.3s linear;
+        }
+
+        a:hover{
+            color: #01BAEF;
+        }
+
+        .page-title{
+            margin: 0;
+        }
+
+        .header{
+            position: fixed;
+            top: 0;
+            height: 50px;
+            width: 100%;
+            box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+
+        .content{
+            padding: 0rem 1rem;
+        }
+        
+    </style>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+
+    <body>
+
+        <header class="header">
+            <nav>
+                <ul class="menu">
+                    <li>
+                        <a href="/">Shop</a>
+                    </li>
+                    <li>
+                        <a href="/admin/add-product">Add Product</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="content">
+            <h1 class="page-title">Page Not Found</h1>
+        </main>
+
+    </body>
+
 </html>
