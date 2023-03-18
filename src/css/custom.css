@@ -45,4 +45,25 @@ a:hover {
   width: 100%; }
 
 .content {
-  padding: 0rem 1rem; }
+  padding: 1rem; }
+
+.content__form {
+  display: flex;
+  flex-direction: row;
+  grid-gap: 1rem; }
+
+.content__input {
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 3px; }
+
+.content__button {
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s linear; }
+
+.content__button:hover {
+  background: #01BAEF; }

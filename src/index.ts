@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
+import path from "path";
 
 // Import the .env variables
 dotenv.config();
@@ -18,6 +19,9 @@ const port = process.env.DEV_PORT;
 // Run the urlEncoded bodyParser to get the body of our objects
 // This allows us to get request.body
 app.use( bodyParser.urlencoded({ extended : true }) );
+
+// Serve the css files statically
+app.use(express.static( path.join(__dirname, "/css") ));
 
 // Use our admin router which handles the product form and page
 app.use( '/admin', adminRoutes );
