@@ -7,8 +7,15 @@ import rootDir from "../util/path";
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 
+// Interface for our product types
+interface Product {
+    title : string
+}
+
 // Create our express router
 const adminRoutes = express.Router();
+
+const products : Product[] = [];
 
 // Initial middleware response
 adminRoutes.get("/add-product", (request : Request, response : Response, next : NextFunction) => {
@@ -21,9 +28,9 @@ adminRoutes.get("/add-product", (request : Request, response : Response, next : 
 // Handle a response in the body of a request usng middleware
 adminRoutes.post("/add-product", (request : Request, response : Response, next : NextFunction) => {
 
-    console.log(request.body.title);
+    products.push({title: request.body.title});
     response.redirect("/");
 });
 
-
+export { products };
 export default adminRoutes;

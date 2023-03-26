@@ -16,12 +16,17 @@ const app = express();
 // Get our port number from our environment file
 const port = process.env.DEV_PORT;
 
+// Set the type of view engine we want to use
+// We can use pug or EJS since it's supported out of the box
+app.set('view engine', 'pug');
+app.set('views', 'src/views');
+
 // Run the urlEncoded bodyParser to get the body of our objects
 // This allows us to get request.body
 app.use( bodyParser.urlencoded({ extended : true }) );
 
 // Serve the css files statically
-app.use(express.static( path.join(__dirname, "/css") ));
+app.use( express.static( path.join( __dirname, "/css" ) ));
 
 // Use our admin router which handles the product form and page
 app.use( '/admin', adminRoutes );
