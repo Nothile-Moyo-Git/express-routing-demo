@@ -4,7 +4,7 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title My Shop
+        title #{docTitle}
         link(rel="stylesheet", href="custom.css")
     body
         header.header
@@ -16,6 +16,10 @@ html(lang="en")
                         a(href="/admin/add-product") Add Product
         main.content
             h1 My Products #[br]
-            each product in prods 
-                br
-                p #{product.title}
+            each product in prods
+
+                article.card 
+                    h3.card__title #{product.title}
+                    img.card__img(src="https://picsum.photos/300/175", alt="Shop Item Logo Image")
+                    p.card__desc A very interesting book about so many even more interesting things!
+                    button.card__button Add To Cart

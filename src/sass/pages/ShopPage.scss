@@ -1,0 +1,28 @@
+.card{
+
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    box-shadow: $toggle_shadow;
+    border-radius: 4px;
+
+    &__title{
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    &__img{
+
+    }
+
+    &__desc{
+        padding: 0.5rem 1rem;
+    }
+
+    &__button{
+        width: max-content;
+        margin: 0rem auto 1rem auto;
+        cursor: pointer;
+        transition: $standard_transition;
+    }
+}

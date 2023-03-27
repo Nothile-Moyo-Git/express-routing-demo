@@ -1,4 +1,99 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+@keyframes fade-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 0%; }
+  50% {
+    background-position: 100% 100%; }
+  100% {
+    background-position: 0% 0%; } }
+
+@keyframes efficient-gradient {
+  0% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%); }
+  25% {
+    transform: translate(-37.5%);
+    -webkit-transform: translateX(-37.5%); }
+  50% {
+    transform: translateX(-75%);
+    -webkit-transform: translateX(-75%); }
+  75% {
+    transform: translateX(-37.5%);
+    -webkit-transform: translateX(-37.5%); }
+  100% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%); } }
+
+/*
+    Slide in animation for the burger menu on the right hand side
+*/
+@keyframes burger-menu-slide-in {
+  0% {
+    left: 100%; }
+  100% {
+    left: calc(100% - 300px); } }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1); }
+  50% {
+    transform: scale(1.2); }
+  100% {
+    transform: scale(1); } }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg); }
+  25% {
+    transform: rotate(4deg); }
+  50% {
+    transform: rotate(0deg); }
+  75% {
+    transform: rotate(-4deg); }
+  100% {
+    transform: rotate(0deg); } }
+
+/* 
+    Background gradient effect
+    This hover effect creates an efficient and smooth gradient animation
+    It is currently optimized for modern browsers by avoiding repainting
+    It also takes advantage of the GPU as much as possible
+    To use this, pass through your linear gradient and set the z-index of the parent to at least 1
+    If you want to delay this animation, pass it to the parent using an inline style
+    This can be great if you're rendering a list of cards and want to delay each animation
+*/
+/* Responsive */
+.card {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 4px; }
+  .card__title {
+    text-align: center;
+    font-size: 1.5rem; }
+  .card__desc {
+    padding: 0.5rem 1rem; }
+  .card__button {
+    width: max-content;
+    margin: 0rem auto 1rem auto;
+    cursor: pointer;
+    transition: all 0.15s linear; }
+
 @keyframes fade-in {
   0% {
     opacity: 0; }
@@ -20,13 +115,16 @@ ul {
 a {
   text-decoration: none;
   color: rgba(0, 0, 0, 0.9);
-  transition: all 0.3s linear; }
+  transition: all 0.3s linear;
+  font-size: 1.25rem; }
+  a:hover, a:focus {
+    color: #6200ff; }
 
-a:hover {
-  color: #6200ff; }
+p {
+  margin: 0; }
 
 h1 {
-  margin: 0; }
+  margin-bottom: 1rem; }
 
 .page-title {
   margin: 0; }
@@ -51,30 +149,122 @@ h1 {
   padding: 1rem;
   color: rgba(0, 0, 0, 0.7);
   display: flex;
-  justify-content: center; }
+  justify-content: center;
+  flex-direction: column;
+  align-items: center; }
+  .content__form {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 1rem; }
+  .content__input {
+    box-shadow: 0px 0px 5px 0px #dbc441;
+    border: 1px solid #dbc441;
+    border-radius: 3px;
+    padding: 0.25rem; }
+  .content__button {
+    box-shadow: 0px 0px 5px 0px #dbc441;
+    background: #dbc441;
+    border: 1px solid #dbc441;
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s linear; }
+    .content__button:hover, .content__button:focus {
+      background: #6200ff;
+      box-shadow: 0px 0px 5px 0px #6200ff;
+      border-color: #6200ff;
+      color: white; }
 
-.content__form {
+.card {
   display: flex;
-  flex-direction: row;
-  grid-gap: 1rem; }
+  flex-direction: column;
+  max-width: 300px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 4px; }
+  .card__title {
+    text-align: center;
+    font-size: 1.5rem; }
+  .card__desc {
+    padding: 0.5rem 1rem; }
+  .card__button {
+    width: max-content;
+    margin: 0rem auto 1rem auto;
+    cursor: pointer;
+    transition: all 0.15s linear; }
 
-.content__input {
-  box-shadow: 0px 0px 5px 0px #dbc441;
-  border: 1px solid #dbc441;
-  border-radius: 3px;
-  padding: 0.25rem; }
+@keyframes fade-in {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
 
-.content__button {
-  box-shadow: 0px 0px 5px 0px #dbc441;
-  background: #dbc441;
-  border: 1px solid #dbc441;
-  border-radius: 3px;
-  padding: 0.2rem 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s linear; }
+@keyframes gradient {
+  0% {
+    background-position: 0% 0%; }
+  50% {
+    background-position: 100% 100%; }
+  100% {
+    background-position: 0% 0%; } }
 
-.content__button:hover {
-  background: #6200ff;
-  box-shadow: 0px 0px 5px 0px #6200ff;
-  border-color: #6200ff;
-  color: white; }
+@keyframes efficient-gradient {
+  0% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%); }
+  25% {
+    transform: translate(-37.5%);
+    -webkit-transform: translateX(-37.5%); }
+  50% {
+    transform: translateX(-75%);
+    -webkit-transform: translateX(-75%); }
+  75% {
+    transform: translateX(-37.5%);
+    -webkit-transform: translateX(-37.5%); }
+  100% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%); } }
+
+/*
+    Slide in animation for the burger menu on the right hand side
+*/
+@keyframes burger-menu-slide-in {
+  0% {
+    left: 100%; }
+  100% {
+    left: calc(100% - 300px); } }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1); }
+  50% {
+    transform: scale(1.2); }
+  100% {
+    transform: scale(1); } }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg); }
+  25% {
+    transform: rotate(4deg); }
+  50% {
+    transform: rotate(0deg); }
+  75% {
+    transform: rotate(-4deg); }
+  100% {
+    transform: rotate(0deg); } }
+
+/* 
+    Background gradient effect
+    This hover effect creates an efficient and smooth gradient animation
+    It is currently optimized for modern browsers by avoiding repainting
+    It also takes advantage of the GPU as much as possible
+    To use this, pass through your linear gradient and set the z-index of the parent to at least 1
+    If you want to delay this animation, pass it to the parent using an inline style
+    This can be great if you're rendering a list of cards and want to delay each animation
+*/
+/* Responsive */

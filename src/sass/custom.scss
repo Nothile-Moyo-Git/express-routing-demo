@@ -1,7 +1,15 @@
+// Import the google font
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-$brand_color_one: #dbc441;
-$brand_color_two: #6200ff;
+// Import the scss files
+@import "../sass/partials/animations";
+@import "../sass/partials/branding";
+@import "../sass/partials/fonts";
+@import "../sass/partials/mixins";
+@import "../sass/partials/responsive";
+
+// Pages
+@import "../sass/pages/ShopPage.scss";
 
 @keyframes fade-in{ 
     0%{ opacity: 0; } 
@@ -27,14 +35,19 @@ a{
     text-decoration: none;
     color:rgba(0, 0, 0, 0.9); 
     transition: all 0.3s linear;
+    font-size: 1.25rem;
+
+    @include state(){
+        color: $brand_color_two;  
+    }
 }
 
-a:hover{ 
-    color: $brand_color_two; 
+p{
+    margin: 0;
 }
 
 h1{
-    margin: 0;
+    margin-bottom: 1rem;
 }
 
 .page-title{ 
@@ -64,34 +77,36 @@ h1{
     color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
-}
+    flex-direction: column;
+    align-items: center;
 
-.content__form{
-    display: flex;
-    flex-direction: row;
-    grid-gap: 1rem;
-}
+    &__form{
+        display: flex;
+        flex-direction: row;
+        grid-gap: 1rem;
+    }
 
-.content__input{
-    box-shadow: 0px 0px 5px 0px $brand_color_one;
-    border: 1px solid $brand_color_one;
-    border-radius: 3px;
-    padding: 0.25rem;
-}
+    &__input{
+        box-shadow: 0px 0px 5px 0px $brand_color_one;
+        border: 1px solid $brand_color_one;
+        border-radius: 3px;
+        padding: 0.25rem; 
+    }
 
-.content__button{
-    box-shadow: 0px 0px 5px 0px $brand_color_one;
-    background: $brand_color_one;
-    border: 1px solid $brand_color_one;
-    border-radius: 3px;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-}
+    &__button{
+        box-shadow: 0px 0px 5px 0px $brand_color_one;
+        background: $brand_color_one;
+        border: 1px solid $brand_color_one;
+        border-radius: 3px;
+        padding: 0.2rem 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s linear;
 
-.content__button:hover{
-    background: $brand_color_two;
-    box-shadow: 0px 0px 5px 0px $brand_color_two;
-    border-color: $brand_color_two;
-    color: white;
+        @include state(){
+            background: $brand_color_two;
+            box-shadow: 0px 0px 5px 0px $brand_color_two;
+            border-color: $brand_color_two;
+            color: white;
+        }
+    }
 }

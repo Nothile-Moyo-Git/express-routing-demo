@@ -1,8 +1,8 @@
 // Import express router for the admin and shop pages
 // This file is for the output routes
 import express from "express";
-import path from "path";
-import rootDir from "../util/path";
+// import path from "path";
+// import rootDir from "../util/path";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
@@ -21,7 +21,7 @@ shopRoutes.get("/", (request : Request, response : Response, next : NextFunction
     // response.sendFile(path.join(rootDir, "views/shop.html"));
 
     // Render the pug template file, we don't need a file extension to do this
-    response.render('shop', { prods : products });
+    response.render('shop', { prods : products, docTitle: 'Shop' });
 });
 
 export default shopRoutes;
