@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     max-width: 300px;
-    box-shadow: $toggle_shadow;
+    box-shadow: $box_shadow;
     border-radius: 4px;
 
     &__title{
@@ -21,8 +21,19 @@
 
     &__button{
         width: max-content;
-        margin: 0rem auto 1rem auto;
+        margin: 0.5rem auto 1.5rem auto;
         cursor: pointer;
         transition: $standard_transition;
+        background: $brand_color_one;
+        border: none;
+        border-radius: 4px;
+        padding: 0.4rem 1rem;
+        box-shadow: $yellow_box_shadow;
+        font-size: 1rem;
+        filter: contrast(95%);
+
+        @include state(){
+            filter: contrast(120%);
+        }
     }
 }

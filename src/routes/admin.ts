@@ -1,8 +1,8 @@
 // Import express router for the admin and shop pages
 // This file is for the product routes
 import express from "express";
-import path from "path";
-import rootDir from "../util/path";
+// import path from "path";
+// import rootDir from "../util/path";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
@@ -21,7 +21,8 @@ const products : Product[] = [];
 adminRoutes.get("/add-product", (request : Request, response : Response, next : NextFunction) => {
 
     // Send our HTML file to the browser
-    response.sendFile(path.join(rootDir, "views/add-product.html"));
+    // response.sendFile(path.join(rootDir, "views/add-product.html"));
+    response.render("add-product", {});
 
 });
 
