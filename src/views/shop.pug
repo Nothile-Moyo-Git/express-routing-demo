@@ -1,25 +1,10 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(http-equiv="X-UA-Compatible", content="IE=edge")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title #{docTitle}
-        link(rel="stylesheet", href="custom.css") 
-    body
-        header.header
-            nav 
-                ul.menu
-                    li 
-                        a(href="/") Shop
-                    li
-                        a(href="/admin/add-product") Add Product
-        main.content
-            h1 My Products
-            each product in prods
-
-                article.card 
-                    h3.card__title #{product.title}
-                    img.card__img(src="https://picsum.photos/300/175", alt="Shop Item Logo Image")
-                    p.card__desc A very interesting book about so many even more interesting things!
-                    button.card__button Add To Cart
+extends layouts/layout.pug
+block content
+    main.content
+        h1 My Products
+        each product in prods
+            article.card 
+                h3.card__title #{product.title}
+                img.card__img(src="https://picsum.photos/300/175", alt="Shop Item Logo Image")
+                p.card__desc A very interesting book about so many even more interesting things!
+                button.card__button Add To Cart

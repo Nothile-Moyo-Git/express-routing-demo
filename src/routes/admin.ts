@@ -22,7 +22,7 @@ adminRoutes.get("/add-product", (request : Request, response : Response, next : 
 
     // Send our HTML file to the browser
     // response.sendFile(path.join(rootDir, "views/add-product.html"));
-    response.render("add-product", {});
+    response.render("add-product", { pageTitle: "Add Product" });
 
 });
 
