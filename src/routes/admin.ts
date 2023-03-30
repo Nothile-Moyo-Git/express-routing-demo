@@ -22,14 +22,14 @@ adminRoutes.get("/add-product", (request : Request, response : Response, next : 
 
     // Send our HTML file to the browser
     // response.sendFile(path.join(rootDir, "views/add-product.html"));
-    response.render("add-product", { pageTitle: "Add Product" });
+    response.render("add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
 
 });
 
 // Handle a response in the body of a request usng middleware
 adminRoutes.post("/add-product", (request : Request, response : Response, next : NextFunction) => {
 
-    products.push({title: request.body.title});
+    products.push({ title: request.body.title });
     response.redirect("/");
 });
 
