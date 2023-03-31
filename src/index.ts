@@ -6,6 +6,7 @@ import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import path from "path";
+import cons from "consolidate";
 
 // Import the .env variables
 dotenv.config();
@@ -25,7 +26,9 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
-app.set('view engine', 'pug');
+// Register a templating engine even case it's not default, we do this with handlebars
+app.engine('hbs', cons.handlebars);
+app.set('view engine', 'hbs');
 app.set('views', 'src/views');
 
 // Use our admin router which handles the product form and page
