@@ -21,7 +21,7 @@ shopRoutes.get("/", (request : Request, response : Response, next : NextFunction
     // response.sendFile(path.join(rootDir, "views/shop.html"));
 
     // Render the pug template file, we don't need a file extension to do this
-    response.render('shop', { prods : products, pageTitle: "Shop", path: "/" });
+    response.render('shop', { prods : products, pageTitle: "Shop", path: "/", hasProducts : products.length > 0 });
 });
 
 export default shopRoutes;

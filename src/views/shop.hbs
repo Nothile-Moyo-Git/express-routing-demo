@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Shop</title>
+        <title>{{ pageTitle }}</title>
     </head>
 
     <body>
@@ -27,20 +27,26 @@
         </header>
 
         <main class="content">
+
             <h1>My Products</h1>
 
-                {{#with prods}}
-                    <article classname="card">
-                        <h3 classname="card__title">{{title}}</h3>
+            {{#if hasProducts }}
+                {{#each prods}}
+                    <article class="card">
+                        <h3 class="card__title">{{this.title}}</h3>
                         <img
                             src="https://picsum.photos/300/175"
                             alt="Shop Item Logo Image"
-                            classname="card__img"
+                            class="card__img"
                         />
-                        <p classname="card__desc">A very interesting book about so many even more interesting things!</p>
-                        <button classname="card__button">Add To Cart</button>
+                        <p class="card__desc">A very interesting book about so many even more interesting things!</p>
+                        <button class="card__button">Add To Cart</button>
                     </article>
-                {{/with}}
+                {{/each}}
+
+                {{else}}
+                    <h1>No Products Found!</h1>
+            {{/if}}
 
         </main>
 

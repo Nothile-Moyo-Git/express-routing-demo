@@ -189,33 +189,6 @@ h1 {
       border-color: #6200ff;
       color: white; }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  margin-bottom: 2rem; }
-  .card__title {
-    text-align: center;
-    font-size: 1.5rem; }
-  .card__desc {
-    padding: 0.5rem 1rem; }
-  .card__button {
-    width: max-content;
-    margin: 0.5rem auto 1.5rem auto;
-    cursor: pointer;
-    transition: all 0.15s linear;
-    background: #dbc441;
-    border: none;
-    border-radius: 4px;
-    padding: 0.4rem 1rem;
-    box-shadow: 0px 0px 10px 0px #dbc441;
-    font-size: 1rem;
-    filter: contrast(95%); }
-    .card__button:hover, .card__button:focus {
-      filter: contrast(120%); }
-
 @keyframes fade-in {
   0% {
     opacity: 0; }
@@ -292,3 +265,29 @@ h1 {
     This can be great if you're rendering a list of cards and want to delay each animation
 */
 /* Responsive */
+.card {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  margin-bottom: 2rem; }
+  .card__title {
+    text-align: center;
+    font-size: 1.5rem; }
+  .card__desc {
+    padding: 0.5rem 1rem; }
+  .card__button {
+    width: max-content;
+    margin: 0.5rem auto 1.5rem auto;
+    cursor: pointer;
+    transition: all 0.15s linear;
+    background: #dbc441;
+    border: none;
+    border-radius: 4px;
+    padding: 0.4rem 1rem;
+    box-shadow: 0px 0px 10px 0px #dbc441;
+    font-size: 1rem;
+    filter: contrast(95%); }
+    .card__button:hover, .card__button:focus {
+      filter: contrast(120%); }
