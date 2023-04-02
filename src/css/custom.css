@@ -81,9 +81,33 @@
   display: flex;
   flex-direction: column;
   max-width: 300px;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 10px 0px #dbc441;
   border-radius: 4px;
-  margin-bottom: 2rem; }
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden; }
+  .card:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 400%;
+    z-index: -1;
+    will-change: transform;
+    animation-name: efficient-gradient;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: inherit;
+    -webkit-animation-name: efficient-gradient;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-delay: inherit;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
   .card__title {
     text-align: center;
     font-size: 1.5rem; }
@@ -94,13 +118,37 @@
     margin: 0.5rem auto 1.5rem auto;
     cursor: pointer;
     transition: all 0.15s linear;
-    background: #dbc441;
     border: none;
     border-radius: 4px;
     padding: 0.4rem 1rem;
-    box-shadow: 0px 0px 10px 0px #dbc441;
+    box-shadow: 0px 0px 10px 0px #6200ff;
     font-size: 1rem;
-    filter: contrast(95%); }
+    filter: contrast(95%);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    color: white; }
+    .card__button:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 400%;
+      z-index: -1;
+      will-change: transform;
+      animation-name: efficient-gradient;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      animation-delay: inherit;
+      -webkit-animation-name: efficient-gradient;
+      -webkit-animation-duration: 5s;
+      -webkit-animation-delay: inherit;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      background: linear-gradient(60deg, #6200ff, #5800e6, #721aff, #4e00cc); }
     .card__button:hover, .card__button:focus {
       filter: contrast(120%); }
 
@@ -110,11 +158,16 @@
   100% {
     opacity: 1; } }
 
+html {
+  height: 100%;
+  background: rgba(30, 32, 42, 0.97); }
+
 body {
   margin: 0px;
   margin-top: 60px;
   animation: fade-in 0.2s linear;
-  font-family: "Open Sans"; }
+  font-family: "Open Sans";
+  height: 100%; }
 
 nav {
   width: 100%; }
@@ -134,7 +187,8 @@ p {
   margin: 0; }
 
 h1 {
-  margin-bottom: 1rem; }
+  margin-bottom: 1rem;
+  color: white; }
 
 .page-title {
   margin: 0; }
@@ -191,9 +245,33 @@ h1 {
   display: flex;
   flex-direction: column;
   max-width: 300px;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 10px 0px #dbc441;
   border-radius: 4px;
-  margin-bottom: 2rem; }
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden; }
+  .card:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 400%;
+    z-index: -1;
+    will-change: transform;
+    animation-name: efficient-gradient;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: inherit;
+    -webkit-animation-name: efficient-gradient;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-delay: inherit;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
   .card__title {
     text-align: center;
     font-size: 1.5rem; }
@@ -204,13 +282,37 @@ h1 {
     margin: 0.5rem auto 1.5rem auto;
     cursor: pointer;
     transition: all 0.15s linear;
-    background: #dbc441;
     border: none;
     border-radius: 4px;
     padding: 0.4rem 1rem;
-    box-shadow: 0px 0px 10px 0px #dbc441;
+    box-shadow: 0px 0px 10px 0px #6200ff;
     font-size: 1rem;
-    filter: contrast(95%); }
+    filter: contrast(95%);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    color: white; }
+    .card__button:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 400%;
+      z-index: -1;
+      will-change: transform;
+      animation-name: efficient-gradient;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      animation-delay: inherit;
+      -webkit-animation-name: efficient-gradient;
+      -webkit-animation-duration: 5s;
+      -webkit-animation-delay: inherit;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      background: linear-gradient(60deg, #6200ff, #5800e6, #721aff, #4e00cc); }
     .card__button:hover, .card__button:focus {
       filter: contrast(120%); }
 

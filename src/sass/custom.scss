@@ -16,11 +16,17 @@
     100%{ opacity: 1; } 
 }
 
+html{
+    height: 100%;
+    background: $backdrop_color_one;
+}
+
 body{ 
     margin: 0px;
     margin-top: 60px; 
     animation: fade-in 0.2s linear;
     font-family: "Open Sans";
+    height: 100%;
 }
 
 nav{    
@@ -48,6 +54,7 @@ p{
 
 h1{
     margin-bottom: 1rem;
+    color: white;
 }
 
 .page-title{ 

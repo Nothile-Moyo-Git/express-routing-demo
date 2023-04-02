@@ -1,11 +1,17 @@
 .card{
-
     display: flex;
     flex-direction: column;
     max-width: 300px;
-    box-shadow: $box_shadow;
+    box-shadow: $box_shadow_yellow;
     border-radius: 4px;
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+
+    @include backgroundGradientEffect(){
+        background: $gradient_color_one;
+    }
 
     &__title{
         text-align: center;
@@ -21,13 +27,20 @@
         margin: 0.5rem auto 1.5rem auto;
         cursor: pointer;
         transition: $standard_transition;
-        background: $brand_color_one;
         border: none;
         border-radius: 4px;
         padding: 0.4rem 1rem;
-        box-shadow: $yellow_box_shadow;
+        box-shadow: $box_shadow_purple;
         font-size: 1rem;
         filter: contrast(95%);
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        color: white;
+
+        @include backgroundGradientEffect(){
+            background: $gradient_color_two;
+        }
 
         @include state(){
             filter: contrast(120%);
