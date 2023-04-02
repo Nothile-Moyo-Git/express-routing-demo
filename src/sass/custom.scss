@@ -109,12 +109,10 @@ h1{
         padding: 0.3rem 0.5rem;
         cursor: pointer;
         transition: all 0.3s linear;
+        filter: contrast(95%);
 
         @include state(){
-            background: $brand_color_two;
-            box-shadow: 0px 0px 5px 0px $brand_color_two;
-            border-color: $brand_color_two;
-            color: white;
+            filter: contrast(120%);
         }
     }
 }
