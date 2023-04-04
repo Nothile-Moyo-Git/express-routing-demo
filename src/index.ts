@@ -28,8 +28,8 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 // We can use pug or EJS since it's supported out of the box
 // Register a templating engine even case it's not default, we do this with handlebars
 // By using engine here, it allows express-handlebars to use its default layout which must be named "main.handlebars"
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
+// app.engine('handlebars', engine());
+app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 
 // Use our admin router which handles the product form and page
