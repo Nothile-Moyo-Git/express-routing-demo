@@ -241,6 +241,24 @@ h1 {
     .content__button:hover, .content__button:focus {
       filter: contrast(120%); }
 
+/* Scroll bar */
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; }
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(30, 32, 42, 0.97); }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #6200ff; }
+
+/* Corner */
+::-webkit-scrollbar-corner {
+  background: rgba(30, 32, 42, 0.97); }
+
 .card {
   display: flex;
   flex-direction: column;

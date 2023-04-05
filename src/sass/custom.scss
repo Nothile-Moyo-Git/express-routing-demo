@@ -123,3 +123,24 @@ h1{
         }
     }
 }
+
+/* Scroll bar */
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: $backdrop_color_one;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: $brand_color_two;
+  }
+  /* Corner */
+  ::-webkit-scrollbar-corner{
+    background: $backdrop_color_one;
+  }
