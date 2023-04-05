@@ -166,8 +166,7 @@ body {
   margin: 0px;
   margin-top: 60px;
   animation: fade-in 0.2s linear;
-  font-family: "Open Sans";
-  height: 100%; }
+  font-family: "Open Sans"; }
 
 nav {
   width: 100%; }

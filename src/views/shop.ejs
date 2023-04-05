@@ -17,18 +17,20 @@
         <main class="content">
             <h1>My Products</h1>
 
-            <% prods.forEach((product) => { %>
-                <article class="card">
-                    <h3 class="card__title"><%= product.title %></h3>
-                    <img 
-                        src="https://picsum.photos/300/175"
-                        alt="Shop Item Logo Image"
-                        class="card__img"
-                    />
-                    <p class="card__desc">A very interesting book about so many even more interesting things!</p>
-                    <button class="card__button">Add To Cart</button>
-                </article>
-            <% }) %>
+            <% if (hasProducts) {%>
+                <% prods.forEach((product) => { %>
+                    <article class="card">
+                        <h3 class="card__title"><%= product.title %></h3>
+                        <img 
+                            src="https://picsum.photos/300/175"
+                            alt="Shop Item Logo Image"
+                            class="card__img"
+                        />
+                        <p class="card__desc">A very interesting book about so many even more interesting things!</p>
+                        <button class="card__button">Add To Cart</button>
+                    </article>
+                <% }) %>
+            <% } %>
         </main>
 
 
