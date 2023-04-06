@@ -1,18 +1,7 @@
 <%- include('layouts/header'); %>
     <body>
 
-        <header class="header">
-            <nav>
-                <ul class="menu">
-                    <li>
-                        <a href="/">Shop</a>
-                    </li>
-                    <li>
-                        <a href="/admin/add-product">Add Product</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+        <%- include('layouts/nav'); %>
 
         <main class="content">
             <form action="/admin/add-product" method="POST" class="content__form">
