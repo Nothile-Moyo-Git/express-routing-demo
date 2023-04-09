@@ -7,6 +7,8 @@ import express from "express";
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 
+import { getAddProduct, postAddProduct } from "../controllers/products";
+
 // Interface for our product types
 interface Product {
     title : string
@@ -18,20 +20,9 @@ const adminRoutes = express.Router();
 const products : Product[] = [];
 
 // Initial middleware response
-adminRoutes.get("/add-product", (request : Request, response : Response, next : NextFunction) => {
-
-    // Send our HTML file to the browser
-    // response.sendFile(path.join(rootDir, "views/add-product.html"));
-    response.render("add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
-
-});
+adminRoutes.get("/add-product", getAddProduct);
 
 // Handle a response in the body of a request usng middleware
-adminRoutes.post("/add-product", (request : Request, response : Response, next : NextFunction) => {
+adminRoutes.post("/add-product", postAddProduct);
 
-    products.push({ title: request.body.title });
-    response.redirect("/");
-});
-
-export { products };
 export default adminRoutes;

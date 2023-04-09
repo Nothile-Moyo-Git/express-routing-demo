@@ -8,7 +8,7 @@ import express from "express";
 import { Request, Response, NextFunction } from 'express';
 
 // Import the products array from the admin file
-import { products } from "./admin";
+import { products } from "../controllers/products";
 
 const shopRoutes = express.Router();
 

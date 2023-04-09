@@ -6,7 +6,7 @@ import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import path from "path";
-import { engine } from "express-handlebars";
+// import { engine } from "express-handlebars";
 
 // Import the .env variables
 dotenv.config();
