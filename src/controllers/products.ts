@@ -27,5 +27,11 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
     response.redirect("/");
 }
 
+const getProducts = (request : Request, response : Response, next : NextFunction) => {
 
-export { getAddProduct, products, postAddProduct };
+    // Render the pug template file, we don't need a file extension to do this
+    response.render('shop', { prods : products, pageTitle: "Shop", path: "/", hasProducts : products.length > 0 });
+};
+
+
+export { getAddProduct, products, postAddProduct, getProducts };
