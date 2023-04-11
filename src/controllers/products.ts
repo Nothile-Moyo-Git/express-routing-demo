@@ -1,14 +1,17 @@
 /**
  * Products controller
  * Handles requests and routing 
+ * This controller uses the products model on order to handle functionality
  */
+
+// import our express types for TypeScript use
+import { Request, Response, NextFunction } from 'express';
 
 interface Product {
     title : string
 }
 
-// import our express types for TypeScript use
-import { Request, Response, NextFunction } from 'express';
+import Products from "../models/products";
 
 // Add product controller
 const getAddProduct = (request : Request, response : Response, next : NextFunction) => {
@@ -23,7 +26,13 @@ const products : Product[] = [];
 
 const postAddProduct = (request : Request, response : Response, next : NextFunction) => {
 
-    products.push({ title: request.body.title });
+    const productInstance = new Products();
+    productInstance.addProduct({title : request.body.title});
+
+    console.log("Products");
+    console.log(productInstance.products);
+
+    products.push({ title : request.body.title });
     response.redirect("/");
 }
 
