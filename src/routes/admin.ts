@@ -1,13 +1,7 @@
 // Import express router for the admin and shop pages
 // This file is for the product routes
 import express from "express";
-
 import { getAddProduct, postAddProduct } from "../controllers/products";
-
-// Interface for our product types
-interface Product {
-    title : string
-}
 
 // Create our express router
 const adminRoutes = express.Router();

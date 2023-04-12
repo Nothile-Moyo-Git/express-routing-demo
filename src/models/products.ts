@@ -12,11 +12,10 @@ interface Product {
     title : string
 }
 
-// Our products class, functions as described above
 class Products {
 
     // Products variable
-    public products : Product[];
+    public products : Product[] = [];
 
     // Create an empty products array on class instantiation
     construtor(){
@@ -25,8 +24,9 @@ class Products {
 
     addProduct = (product : Product) => {
         
+        // Pushing to products
         // Add the new product to our array of products
-        this.products.push({title : product.title});
+        this.products.push(product);
     };
 
 }
