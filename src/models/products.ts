@@ -9,7 +9,9 @@
 
 import fs from "fs";
 import path from "path";
+import qs from "querystring";
 import rootDir from "../util/path";
+import os from "os";
 
 // Setting the interface for the Product objects
 interface Product {
@@ -43,21 +45,37 @@ class Products {
             "products.json" 
         );
 
-        // Save the file to the folder, and if it doesn't exist, create it!
-        fs.appendFileSync(p, `${product.title} \r\n`);
+        // Read our saved file, we read it first to find the previous JSON and append to it
+        fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
 
-        // Read our saved file
-        fs.readFile(p, (err: NodeJS.ErrnoException, data: Buffer) => {
+            // Array of products we get from the file
+            let products : Product[] = [];
 
-            let products : Product[];
-
+            // If we fail at reading our file, create a new one
             if (err) {
 
-                console.log(err);
+                console.log( err );
             }else{
 
-                console.log("Outputting data buffer");
-                products = JSON.parse(data);
+                // If our buffer isn't empty, add it to the products so we can amend our JSON
+                if (data.length !== 0) {
+
+                    products.push(JSON.parse( data ));
+                }
+
+                // Add the new product to the array
+                products.push(product);
+
+                // Stringify our JSON so we can save it to the appropriate file
+                const json = JSON.stringify(products);
+
+                // Save the file to the folder, and if it doesn't exist, create it!
+                fs.writeFile(p, json, "utf-8", (err: NodeJS.ErrnoException) => {
+
+                    if (err) {
+                        console.log("There was an issue appending to the file, please check your code");
+                    }
+                });
             }
 
         });
