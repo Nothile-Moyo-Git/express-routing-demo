@@ -9,9 +9,7 @@
 
 import fs from "fs";
 import path from "path";
-import qs from "querystring";
 import rootDir from "../util/path";
-import os from "os";
 
 // Setting the interface for the Product objects
 interface Product {
@@ -38,7 +36,7 @@ class Products {
     // Save to the products json file
     saveProduct = (product : Product) => {
 
-        // Create the path
+        // Create the path to our file
         const p = path.join(
             rootDir, 
             "data",
@@ -60,28 +58,68 @@ class Products {
                 // If our buffer isn't empty, add it to the products so we can amend our JSON
                 if (data.length !== 0) {
 
-                    products.push(JSON.parse( data ));
+                    // Parse the products into an array we can iterate
+                    const productsArray = JSON.parse( data );
+
+                    // Push each product into the products array so we can save that to the file
+                    productsArray.map(( product : Product ) => {
+
+                        products.push( product );
+                    });
+
                 }
+
+                // Outputting the products array
+                console.log( "JSON Products" );
+                console.log( products );
 
                 // Add the new product to the array
                 products.push(product);
 
                 // Stringify our JSON so we can save it to the appropriate file
-                const json = JSON.stringify(products);
+                const json = JSON.stringify(products, null, "\t");
 
                 // Save the file to the folder, and if it doesn't exist, create it!
-                fs.writeFile(p, json, "utf-8", (err: NodeJS.ErrnoException) => {
-
-                    if (err) {
-                        console.log("There was an issue appending to the file, please check your code");
-                    }
-                });
+                fs.writeFileSync(p, json, "utf-8");
             }
 
         });
 
     }
 
+    // Get products
+    getProducts = async () => {
+
+        // Create the path to our file
+        const p = path.join(
+            rootDir, 
+            "data",
+            "products.json" 
+        );
+
+        // Read our saved file, we read it first to find the previous JSON and append to it
+        await fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
+
+            // If we fail at reading our file, create a new one
+            if (err) {
+
+                console.log( err );
+            }else{
+
+                // If our buffer isn't empty, add it to the products so we can amend our JSON
+                if (data.length !== 0) {
+
+                    // Parse the products into an array we can iterate
+                    const productsArray = JSON.parse( data );
+
+                    // Push each product into the products array so we can save that to the file
+                    productsArray.map(( product : Product ) => {
+                        this.products.push( product );
+                    });
+                }
+            }
+        });
+    };
 }
 
 export default Products;

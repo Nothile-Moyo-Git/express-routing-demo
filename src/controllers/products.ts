@@ -36,7 +36,13 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
 }
 
 // Get products controller
-const getProducts = (request : Request, response : Response, next : NextFunction) => {
+const getProducts = async (request : Request, response : Response, next : NextFunction) => {
+
+    // Get the products from our JSON file
+    await productsInstance.getProducts();
+
+    console.log("Products");
+    console.log(productsInstance.products);
 
     // Render the pug template file, we don't need a file extension to do this
     response.render('shop', { prods : productsInstance.products, pageTitle: "Shop", path: "/", hasProducts : productsInstance.products.length > 0 });
