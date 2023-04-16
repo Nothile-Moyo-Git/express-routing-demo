@@ -88,7 +88,7 @@ class Products {
     }
 
     // Get products
-    getProducts = async () => {
+    getProducts = () => {
 
         // Create the path to our file
         const p = path.join(
@@ -97,28 +97,16 @@ class Products {
             "products.json" 
         );
 
-        // Read our saved file, we read it first to find the previous JSON and append to it
-        await fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
+        const products : Product[] = [];
 
-            // If we fail at reading our file, create a new one
-            if (err) {
+        // Get the result synchronously
+        const productsList : Product[] | any = JSON.parse(fs.readFileSync(p, "utf-8"));
 
-                console.log( err );
-            }else{
-
-                // If our buffer isn't empty, add it to the products so we can amend our JSON
-                if (data.length !== 0) {
-
-                    // Parse the products into an array we can iterate
-                    const productsArray = JSON.parse( data );
-
-                    // Push each product into the products array so we can save that to the file
-                    productsArray.map(( product : Product ) => {
-                        this.products.push( product );
-                    });
-                }
-            }
+        productsList.map((product : Product) => {
+            products.push(product);
         });
+
+        return products;
     };
 }
 
