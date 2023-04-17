@@ -74,7 +74,7 @@ class Products {
                 console.log( products );
 
                 // Add the new product to the array
-                products.push(product);
+                products.push( product );
 
                 // Stringify our JSON so we can save it to the appropriate file
                 const json = JSON.stringify(products, null, "\t");
@@ -100,7 +100,7 @@ class Products {
         const products : Product[] = [];
 
         // Get the result synchronously
-        const productsList : Product[] | any = JSON.parse(fs.readFileSync(p, "utf-8"));
+        const productsList : Product[] = JSON.parse(fs.readFileSync(p, "utf-8"));
 
         productsList.map((product : Product) => {
             products.push(product);
