@@ -1,0 +1,34 @@
+<%- include('../includes/head'); %>
+    <body>
+
+        <%- include('../includes/navigation'); %>
+
+        <main class="content">
+            <h1>My Products</h1>
+
+            <% if (hasProducts) {%>
+
+                <ul class="card-list">
+
+                    <% prods.forEach((product) => { %>
+                        <li class="card">
+                            <h3 class="card__title"><%= product.title %></h3>
+                            <img 
+                                src="https://picsum.photos/300/175"
+                                alt="Shop Item Logo Image"
+                                class="card__img"
+                            />
+                            <p class="card__desc">A very interesting book about so many even more interesting things!</p>
+                            <button class="card__button">Add To Cart</button>
+                        </li>
+                    <% }) %>
+
+                </ul>
+
+            <% } %>
+        </main>
+
+
+    </body>
+<%- include('../includes/end'); %>
+

@@ -19,7 +19,7 @@ const productsInstance = new Products();
 const getAddProduct = (request : Request, response : Response, next : NextFunction) => {
 
     // Send our HTML file to the browser
-    response.render("add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
+    response.render("admin/add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
 };
 
 // Post add product controller
@@ -45,7 +45,7 @@ const getProducts = (request : Request, response : Response, next : NextFunction
     console.log(result);
 
     // Render the pug template file, we don't need a file extension to do this
-    response.render('shop', { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
+    response.render('shop/product-list', { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
 };
 
 export { getAddProduct, postAddProduct, getProducts };

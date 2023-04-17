@@ -1,13 +1,29 @@
+.card-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: calc(920px + 2rem);
+    grid-gap: 1rem;
+    justify-content: center;
+    margin: auto;
+    padding: 1rem;
+}
+
 .card{
     display: flex;
     flex-direction: column;
     max-width: 300px;
+    width: 33%;
     box-shadow: $box_shadow_yellow;
     border-radius: 4px;
     margin-bottom: 2rem;
     position: relative;
     z-index: 1;
     overflow: hidden;
+
+    @include breakpoint(tablet){
+        width: 100%;
+    }
 
     @include backgroundGradientEffect(){
         background: $gradient_color_one;
