@@ -4,7 +4,9 @@
  * This can add products or show them
  * 
  * @property products : Product[]
- * @method addProduct : (product Product) => void
+ * @method addProduct : (product : Product) => void
+ * @method saveProduct : (product : Product) => void
+ * @method getProducts : () => void
  */
 
 import fs from "fs";

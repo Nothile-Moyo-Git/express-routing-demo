@@ -4,10 +4,12 @@ import express from "express";
 
 // Import the products array from the admin file
 import { getProducts } from "../controllers/products";
+import { getCart } from "../controllers/shop";
 
 const shopRoutes = express.Router();
 
 // Base middleware response, 
 shopRoutes.get("/", getProducts);
+shopRoutes.get("/cart", getCart);
 
 export default shopRoutes;

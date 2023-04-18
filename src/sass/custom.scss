@@ -10,6 +10,7 @@
 
 // Pages
 @import "../sass/pages/Shop.scss"; 
+@import "../sass/pages/Cart.scss";
 
 @keyframes fade-in{ 
     0%{ opacity: 0; } 
@@ -70,6 +71,10 @@ h1{
     align-items: center;
     background: $brand_color_one;
     z-index: 2;
+
+    @include breakpoint(tablet){
+        height: 136px;
+    }
 }
 
 .menu{
@@ -77,9 +82,21 @@ h1{
     flex-direction: row;
     justify-content: space-evenly;
     width: 100%;
+    margin: auto;
+    padding: 0;
 
-    li{
-        width: 125px;
+    @include breakpoint(tablet){
+        flex-direction: column;
+    }
+
+    &__item{
+        width: 20%;
+        text-align: center;
+
+        @include breakpoint(tablet){
+            width: 100%;
+            border-bottom: 1px solid black;
+        }
     }
 }
 
