@@ -9,10 +9,27 @@
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
+import Cart from "../models/cart";
 
-const getCart = ( request : Request, response : Response, next : NextFunction) => {
+// Instantiate the cart
+const cartInstance = new Cart();
+
+// Get the shop index page
+const getShop = ( request : Request, response : Response, next : NextFunction ) => {
+
+    response.render("/", {pageTitle : "Shop"});
+};
+
+// Get the cart
+const getCart = ( request : Request, response : Response, next : NextFunction ) => {
 
     response.render("shop/cart", {pageTitle : "Cart"});
 };
 
-export { getCart }
+// Get the checkout page from the cart
+const getCheckout = ( request : Request, response : Response, next : NextFunction ) => {
+
+    response.render("shop/checkout", {pageTitle : "Checkout"});
+};
+
+export { getCart, getCheckout, getShop };
