@@ -4,7 +4,9 @@
  * This controller handles the routing for the cart and shop functionality.
  * It also hooks up the "shop" model which can be used to manage our data
  * 
+ * @method getShop : (request : Request, response : Response, next : NextFunction) => void
  * @method getCart : (request : Request, response : Response, next : NextFunction) => void
+ * @method getCheckout : (request : Request, response : Response, next : NextFunction) => void
  */
 
 // import our express types for TypeScript use
@@ -17,7 +19,7 @@ const cartInstance = new Cart();
 // Get the shop index page
 const getShop = ( request : Request, response : Response, next : NextFunction ) => {
 
-    response.render("/", {pageTitle : "Shop"});
+    response.render("shop/index", {pageTitle : "Shop"});
 };
 
 // Get the cart

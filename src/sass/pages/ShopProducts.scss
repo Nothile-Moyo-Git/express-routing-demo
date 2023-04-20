@@ -1,0 +1,65 @@
+.card-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: calc(920px + 2rem);
+    grid-gap: 1rem;
+    justify-content: center;
+    margin: auto;
+    padding: 1rem;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    width: 33%;
+    box-shadow: $box_shadow_yellow;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+
+    @include breakpoint(tablet){
+        width: 100%;
+    }
+
+    @include backgroundGradientEffect(){
+        background: $gradient_color_one;
+    }
+
+    &__title{
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    &__desc{
+        padding: 0.5rem 1rem;
+    }
+
+    &__button{
+        width: max-content;
+        margin: 0.5rem auto 1.5rem auto;
+        cursor: pointer;
+        transition: $standard_transition;
+        border: none;
+        border-radius: 4px;
+        padding: 0.4rem 1rem;
+        box-shadow: $box_shadow_purple;
+        font-size: 1rem;
+        filter: contrast(95%);
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        color: white;
+
+        @include backgroundGradientEffect(){
+            background: $gradient_color_two;
+        }
+
+        @include state(){
+            filter: contrast(120%);
+        }
+    }
+}
