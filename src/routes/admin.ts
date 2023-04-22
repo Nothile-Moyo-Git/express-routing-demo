@@ -1,8 +1,8 @@
 // Import express router for the admin and shop pages
 // This file is for the product routes
 import express from "express";
-import { getAdminProducts, getAdminEditProduct } from "../controllers/products";
-import { getAddProduct, postAddProduct } from "../controllers/admin";
+import { getAdminEditProduct } from "../controllers/products";
+import { getAddProduct, postAddProduct, getProducts } from "../controllers/admin";
 
 // Create our express router
 const adminRoutes = express.Router();
@@ -14,7 +14,7 @@ adminRoutes.get("/add-product", getAddProduct);
 adminRoutes.post("/add-product", postAddProduct);
 
 // Handle and eventally render the admin/products page
-adminRoutes.get("/products", getAdminProducts);
+adminRoutes.get("/products", getProducts);
 
 // Handle the edit product dynamic route and render the admin/edit-products page
 adminRoutes.get("/edit-product/:id", getAdminEditProduct);

@@ -15,17 +15,6 @@ import Products from "../models/products";
 // Instantiate our products 
 const productsInstance = new Products();
 
-// Get admin products controller
-const getAdminProducts = (request : Request, response : Response, next : NextFunction) => {
-
-    // Get the products from our json file
-    const result = productsInstance.getProducts();
-
-    // Render the admin products ejs template
-    response.render("admin/products", { pageTitle : "Admin Products", hasProducts : result.length > 0 });
-};
-
-
 // Get admin edit product controller
 const getAdminEditProduct = (request : Request, response : Response, next : NextFunction) => {
 
@@ -37,4 +26,4 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
     response.render("admin/edit-product", { pageTitle : "Edit Products", id: request.params.id });
 };
 
-export { getAdminProducts, getAdminEditProduct };
+export { getAdminEditProduct };

@@ -23,6 +23,16 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
 
     // Redirect to the products page
     response.redirect("/");
-}
+};
 
-export { getAddProduct, postAddProduct }; 
+// Get admin products controller
+const getProducts = (request : Request, response : Response, next : NextFunction) => {
+
+    // Get the products from our json file
+    const result = productsInstance.getProducts();
+
+    // Render the admin products ejs template
+    response.render("admin/products", { pageTitle : "Admin Products", hasProducts : result.length > 0 });
+};
+
+export { getAddProduct, postAddProduct, getProducts }; 
