@@ -1,6 +1,8 @@
 /**
  * Error controller
  * Handles requests and routing 
+ * 
+ * @method getError : (request : Request, response : Response, next : NextFunction) => void
  */
 
 // import our express types for TypeScript use

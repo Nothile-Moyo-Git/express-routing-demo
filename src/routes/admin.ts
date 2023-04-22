@@ -1,7 +1,8 @@
 // Import express router for the admin and shop pages
 // This file is for the product routes
 import express from "express";
-import { getAddProduct, postAddProduct, getAdminProducts, getAdminEditProduct } from "../controllers/products";
+import { getAdminProducts, getAdminEditProduct } from "../controllers/products";
+import { getAddProduct, postAddProduct } from "../controllers/admin";
 
 // Create our express router
 const adminRoutes = express.Router();
