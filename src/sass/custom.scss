@@ -11,6 +11,7 @@
 // Pages
 @import "../sass/pages/Shop.scss"; 
 @import "../sass/pages/Cart.scss";
+@import "../sass/pages/AddProduct.scss";
 
 @keyframes fade-in{ 
     0%{ opacity: 0; } 
@@ -27,6 +28,7 @@ body{
     margin-top: 60px; 
     animation: fade-in 0.2s linear;
     font-family: "Open Sans";
+    height: calc(100% - 68px);
 }
 
 nav{    

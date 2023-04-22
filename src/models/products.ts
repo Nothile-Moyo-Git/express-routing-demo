@@ -31,7 +31,7 @@ class Products {
     // Add a product to the produts array
     addProduct = (product : Product) => {
         
-        // Add the new product to our array of products
+        // Add the new product to our array of products 
         this.products.push(product);
     };
 
