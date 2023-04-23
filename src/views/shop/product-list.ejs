@@ -14,11 +14,12 @@
                         <li class="card">
                             <h3 class="card__title"><%= product.title %></h3>
                             <img 
-                                src="https://picsum.photos/300/175"
+                                src=<%= product.image%>
                                 alt="Shop Item Logo Image"
                                 class="card__img"
                             />
-                            <p class="card__desc">A very interesting book about so many even more interesting things!</p>
+                            <p class="card__price">£<%= product.price %></p>
+                            <p class="card__desc"><%= product.description %></p>
                             <button class="card__button">Add To Cart</button>
                         </li>
                     <% }) %>

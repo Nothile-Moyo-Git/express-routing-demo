@@ -7,6 +7,7 @@
     justify-content: center;
     margin: auto;
     padding: 1rem;
+    width: 100%;
 }
 
 .card{
@@ -36,6 +37,13 @@
 
     &__desc{
         padding: 0.5rem 1rem;
+        text-align: center;
+    }
+
+    &__price{
+        text-align: center;
+        font-size: 1.5rem;
+        padding-top: 0.5rem;
     }
 
     &__button{

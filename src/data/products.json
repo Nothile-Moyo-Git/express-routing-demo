@@ -1,14 +1,9 @@
 [
 	{
-		"title": "Max Verstappen"
-	},
-	{
-		"title": "Lewis Hamilton"
-	},
-	{
-		"title": "Fenando Alonso"
-	},
-	{
-		"title": "Michael Schumacker"
+		"title": "Kengan Omega",
+		"image": "https://picsum.photos/300/175",
+		"description": "A cool fighting Manga!",
+		"price": "12",
+		"id": "488ccdde-aaf4-44d6-a5b8-239dcc95006e"
 	}
 ]

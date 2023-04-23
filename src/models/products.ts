@@ -15,7 +15,11 @@ import rootDir from "../util/path";
 
 // Setting the interface for the Product objects
 interface Product {
-    title : string
+    title : string,
+    image : string,
+    description : string,
+    price : number,
+    id : string
 }
 
 class Products {
