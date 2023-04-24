@@ -17,13 +17,17 @@
     width: 33%;
     box-shadow: $box_shadow_yellow;
     border-radius: 4px;
-    margin-bottom: 2rem;
     position: relative;
     z-index: 1;
     overflow: hidden;
 
     @include breakpoint(tablet){
         width: 100%;
+    }
+
+    &__img{
+        object-fit : cover;
+        height: 150px;
     }
 
     @include backgroundGradientEffect(){
@@ -37,6 +41,7 @@
 
     &__desc{
         padding: 0.5rem 1rem;
+        margin-bottom: 0.25rem;
         text-align: center;
     }
 
@@ -46,9 +51,31 @@
         padding-top: 0.5rem;
     }
 
+    &__forms{
+        display: flex;
+        flex-direction: row;
+        margin: auto auto 1rem auto;
+        justify-content: space-evenly;
+        width: 100%;
+    }
+
+    &__form{
+        width: max-content;
+        margin: 0;
+    }
+
+    &__buttons{
+        display: flex;
+        margin-top: auto;
+        margin-bottom: 1rem;
+        width: 100%;
+        margin-top: auto;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
     &__button{
         width: max-content;
-        margin: 0.5rem auto 1.5rem auto;
         cursor: pointer;
         transition: $standard_transition;
         border: none;

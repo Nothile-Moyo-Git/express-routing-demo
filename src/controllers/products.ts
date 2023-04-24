@@ -21,7 +21,6 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
     console.log("Outputting the params");
     console.log(request.params);
 
-
     // Render the edit products template
     response.render("admin/edit-product", { pageTitle : "Edit Products", id: request.params.id });
 };

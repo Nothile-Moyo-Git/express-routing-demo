@@ -20,7 +20,14 @@
                             />
                             <p class="card__price">£<%= product.price %></p>
                             <p class="card__desc"><%= product.description %></p>
-                            <button class="card__button">Add To Cart</button>
+                            <div class="card__forms">
+                                <form class="card__form" action=<%= `/admin/edit-product/${product.id}` %>>
+                                    <button class="card__button">Edit</button>
+                                </form>
+                                <form action="card__form">
+                                    <button class="card__button">Delete</button>
+                                </form>
+                            </div>
                         </li>
                     <% }) %>
 
