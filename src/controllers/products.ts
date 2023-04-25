@@ -12,17 +12,42 @@
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
 
+// Product interface
+interface Product {
+    title : string,
+    image : string,
+    description : string,
+    price : number,
+    id : string
+}
+
 // Instantiate our products 
 const productsInstance = new Products();
 
 // Get admin edit product controller
 const getAdminEditProduct = (request : Request, response : Response, next : NextFunction) => {
 
-    console.log("Outputting the params");
-    console.log(request.params);
+    // Get all our products in an array
+    const products = productsInstance.getProducts();
+
+    // Filter the appropriate product based on the ID
+    const editProduct = products.filter((product : Product) => {
+        return product.id === request.params.id;
+    });
+
+    console.clear();
+    console.log("Edit Product");
+    console.log(editProduct);
 
     // Render the edit products template
-    response.render("admin/edit-product", { pageTitle : "Edit Products", id: request.params.id });
+    response.render(
+        "admin/edit-product", 
+        { 
+            pageTitle : "Edit Products", 
+            id : request.params.id, 
+            productInformation : editProduct,
+            hasProducts : editProduct.length !== 0
+        });
 };
 
 export { getAdminEditProduct };

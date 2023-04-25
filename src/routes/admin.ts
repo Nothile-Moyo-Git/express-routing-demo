@@ -2,7 +2,7 @@
 // This file is for the product routes
 import express from "express";
 import { getAdminEditProduct } from "../controllers/products";
-import { getAddProduct, postAddProduct, getProducts } from "../controllers/admin";
+import { getAddProduct, postAddProduct, getProducts, updateProduct } from "../controllers/admin";
 
 // Create our express router
 const adminRoutes = express.Router();
@@ -18,5 +18,8 @@ adminRoutes.get("/products", getProducts);
 
 // Handle the edit product dynamic route and render the admin/edit-products page
 adminRoutes.get("/edit-product/:id", getAdminEditProduct);
+
+// Handle the update product dynamic route which updates the product in the JSON
+adminRoutes.put("/update-product:id", updateProduct);
 
 export default adminRoutes;

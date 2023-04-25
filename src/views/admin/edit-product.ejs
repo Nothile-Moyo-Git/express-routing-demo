@@ -3,8 +3,61 @@
 
         <%- include('../includes/navigation'); %>
 
-        <main class="cart">
-            <h1>Index is currently <%= id %></h1>
+        <main class="edit-product">
+
+            <% if (hasProducts) { %>
+
+                <form 
+                    method="PUT" 
+                    class="edit-product__form" 
+                    action=<% `/admin/update-product${id}` %>
+                >
+
+                    <div class="edit-product__title">
+                        <h1>Edit Product</h1>
+                    </div>
+
+                    <div class="edit-product__field">
+                        <label for="title" id="title-label" class="edit-product__label">Title</label>
+                        <input
+                            required
+                            type="text"
+                            name="title"
+                            class="edit-product__input"
+                            aria-labelledby="title-label"
+                            value=<%= productInformation[0].title %>
+                        />
+                    </div>
+
+                    <div>
+                        <label>Image</label>
+                        <input
+                        
+                        />
+                    </div>
+
+                    <div>
+                        <label>Description</label>
+                        <input
+                        
+                        />
+                    </div>
+
+                    <div>
+                        <label>Price</label>
+                        <input
+                        
+                        />
+                    </div>
+
+                </form>
+
+            <% }else{ %>
+
+                <h1>Error: Product doesn't exist in the JSON file</h1>
+
+            <% } %>
+
         </main>
 
     </body>

@@ -16,10 +16,6 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 // Post add product controller
 const postAddProduct = (request : Request, response : Response, next : NextFunction) => {
 
-    console.log("Request body");
-    console.log( request.body );
-    console.log( uuidv4() );
-
     // Add a new product to the array
     productsInstance.addProduct({ 
         title : request.body.title,
@@ -52,4 +48,11 @@ const getProducts = (request : Request, response : Response, next : NextFunction
     response.render("admin/products", { pageTitle : "Admin Products", hasProducts : result.length > 0 });
 };
 
-export { getAddProduct, postAddProduct, getProducts }; 
+// Update product controller
+const updateProduct = (request : Request, response : Response, next : NextFunction) => {
+
+    console.log("Update product was called");
+    
+};
+
+export { getAddProduct, postAddProduct, getProducts, updateProduct }; 

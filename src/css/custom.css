@@ -90,7 +90,7 @@
   padding-top: 1rem;
   display: flex;
   justify-content: center;
-  height: 100%; }
+  height: calc(100% - 1rem); }
 
 .add-product {
   display: flex;
@@ -499,13 +499,21 @@ div .dot {
   padding-top: 1rem;
   display: flex;
   justify-content: center;
-  height: 100%; }
+  height: calc(100% - 1rem); }
 
 .checkout {
   width: 100%;
   padding-top: 1rem;
   display: flex;
   justify-content: center;
+  height: 100%; }
+
+.edit-product {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
   height: 100%; }
 
 .product-detail {
