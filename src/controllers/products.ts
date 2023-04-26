@@ -37,7 +37,7 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
 
     console.clear();
     console.log("Edit Product");
-    console.log(editProduct);
+    console.log(editProduct[0].description);
 
     // Render the edit products template
     response.render(
@@ -45,7 +45,7 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
         { 
             pageTitle : "Edit Products", 
             id : request.params.id, 
-            productInformation : editProduct,
+            productInformation : editProduct[0],
             hasProducts : editProduct.length !== 0
         });
 };

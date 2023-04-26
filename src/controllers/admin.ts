@@ -51,8 +51,8 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 // Update product controller
 const updateProduct = (request : Request, response : Response, next : NextFunction) => {
 
+    console.clear();
     console.log("Update product was called");
-    
 };
 
 export { getAddProduct, postAddProduct, getProducts, updateProduct }; 

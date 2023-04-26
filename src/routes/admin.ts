@@ -20,6 +20,6 @@ adminRoutes.get("/products", getProducts);
 adminRoutes.get("/edit-product/:id", getAdminEditProduct);
 
 // Handle the update product dynamic route which updates the product in the JSON
-adminRoutes.put("/update-product:id", updateProduct);
+adminRoutes.post("/update-product/:id", updateProduct);
 
 export default adminRoutes;
