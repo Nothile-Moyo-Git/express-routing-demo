@@ -32,7 +32,7 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
         description : request.body.description,
         price : request.body.price,
         id: uuidv4() 
-    });
+    }); 
 
     // Redirect to the products page
     response.redirect("/");
@@ -51,8 +51,13 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 // Update product controller
 const updateProduct = (request : Request, response : Response, next : NextFunction) => {
 
-    console.clear();
-    console.log("Update product was called");
+    productsInstance.updateProduct(
+        request.body.title,
+        request.body.image,
+        request.body.description,
+        request.body.price,
+        request.params.id
+    );
 };
 
 export { getAddProduct, postAddProduct, getProducts, updateProduct }; 

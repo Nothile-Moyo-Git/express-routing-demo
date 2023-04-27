@@ -35,10 +35,6 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
         return product.id === request.params.id;
     });
 
-    console.clear();
-    console.log("Edit Product");
-    console.log(editProduct[0].description);
-
     // Render the edit products template
     response.render(
         "admin/edit-product", 

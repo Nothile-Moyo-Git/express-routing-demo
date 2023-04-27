@@ -8,7 +8,7 @@
             <% if (hasProducts) { %>
 
                 <form 
-                    method="PUT" 
+                    method="POST" 
                     class="edit-product__form" 
                     action="<%= `/admin/update-product/${id}` %>"
                 >
@@ -57,8 +57,8 @@
                         <label for="price" id="price-label" class="edit-product__label">Price</label>
                         <input
                             required
-                            type="text"
-                            name="edit-product__input"
+                            type="number"
+                            name="price"
                             class="edit-product__input"
                             aria-labelledby="price-label"
                             value="<%= productInformation.price %>"

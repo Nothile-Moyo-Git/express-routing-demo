@@ -114,6 +114,38 @@ class Products {
 
         return products;
     };
+
+    updateProduct = (title : string, image : string, description : string, price : number, id : string) => {
+
+        // Get the current products
+        const result = this.getProducts();
+
+        console.clear();
+
+        // Create our new array of products will replace the old one with and eventually save it
+        const newProducts : Product[] = result.map((product : Product, index : number) => {
+
+            console.log(`Index at position ${index}`);
+            console.log("Product is currently");
+            console.log(product);
+
+            if (product.id === id) {
+                return {
+                    title : title,
+                    image : image,
+                    description : description,
+                    price : price, 
+                    id : id
+                };
+            }
+
+            return product;
+        });
+
+        console.log("New Products");
+        console.log(newProducts);
+
+    };
 }
 
 export default Products;
