@@ -125,10 +125,7 @@ class Products {
         // Create our new array of products will replace the old one with and eventually save it
         const newProducts : Product[] = result.map((product : Product, index : number) => {
 
-            console.log(`Index at position ${index}`);
-            console.log("Product is currently");
-            console.log(product);
-
+            // If the ID's the same, create our new array of
             if (product.id === id) {
                 return {
                     title : title,
@@ -145,7 +142,31 @@ class Products {
         console.log("New Products");
         console.log(newProducts);
 
-    };
+        // Create the path to our file
+        const p = path.join(
+            rootDir, 
+            "data",
+            "products.json" 
+        );
+
+        // Read our saved file, we read it first to find the previous JSON and append to it
+        fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
+
+            // If we fail at reading our file, create a new one
+            if (err) {
+
+                console.log( err );
+            }else{
+
+                // Stringify our JSON so we can save it to the appropriate file
+                const json = JSON.stringify(newProducts, null, "\t");
+
+                // Save the file to the folder, and if it doesn't exist, create it!
+                fs.writeFileSync(p, json, "utf-8");
+            }
+        });
+
+    }
 }
 
 export default Products;

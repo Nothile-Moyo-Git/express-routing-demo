@@ -3,8 +3,37 @@
 
         <%- include('../includes/navigation'); %>
 
-        <main class="cart">
-            <h1>Products</h1>
+        <main class="content">
+            <h1>My Products</h1>
+
+            <% if (hasProducts) {%>
+
+                <ul class="card-list">
+
+                    <% prods.forEach((product) => { %>
+                        <li class="card">
+                            <h3 class="card__title"><%= product.title %></h3>
+                            <img 
+                                src=<%= product.image%>
+                                alt="Shop Item Logo Image"
+                                class="card__img"
+                            />
+                            <p class="card__price">£<%= product.price %></p>
+                            <p class="card__desc"><%= product.description %></p>
+                            <div class="card__forms">
+                                <form class="card__form" action=<%= `/admin/edit-product/${product.id}` %>>
+                                    <button class="card__button">Edit</button>
+                                </form>
+                                <form action="card__form">
+                                    <button class="card__button">Delete</button>
+                                </form>
+                            </div>
+                        </li>
+                    <% }) %>
+
+                </ul>
+
+            <% } %>
         </main>
 
     </body>

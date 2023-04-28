@@ -45,7 +45,7 @@ const getProducts = (request : Request, response : Response, next : NextFunction
     const result = productsInstance.getProducts();
 
     // Render the admin products ejs template
-    response.render("admin/products", { pageTitle : "Admin Products", hasProducts : result.length > 0 });
+    response.render("admin/products", { prods : result, pageTitle : "Admin Products", hasProducts : result.length > 0 });
 };
 
 // Update product controller
@@ -58,6 +58,8 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
         request.body.price,
         request.params.id
     );
+
+    response.redirect("/admin/products");
 };
 
 export { getAddProduct, postAddProduct, getProducts, updateProduct }; 
