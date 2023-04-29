@@ -115,6 +115,7 @@ class Products {
         return products;
     };
 
+    // Update a single product in the JSON
     updateProduct = (title : string, image : string, description : string, price : number, id : string) => {
 
         // Get the current products
@@ -138,9 +139,6 @@ class Products {
 
             return product;
         });
-
-        console.log("New Products");
-        console.log(newProducts);
 
         // Create the path to our file
         const p = path.join(
@@ -167,6 +165,16 @@ class Products {
         });
 
     }
+
+    deleteProduct = (id : string) => {
+
+        // Outputting the id
+        console.clear();
+        console.log("id");
+        console.log(id);
+
+        
+    };
 }
 
 export default Products;
