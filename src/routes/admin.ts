@@ -2,7 +2,7 @@
 // This file is for the product routes
 import express from "express";
 import { getAdminEditProduct } from "../controllers/products";
-import { getAddProduct, postAddProduct, getProducts, updateProduct } from "../controllers/admin";
+import { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct } from "../controllers/admin";
 
 // Create our express router
 const adminRoutes = express.Router();
@@ -21,5 +21,8 @@ adminRoutes.get("/edit-product/:id", getAdminEditProduct);
 
 // Handle the update product dynamic route which updates the product in the JSON
 adminRoutes.post("/update-product/:id", updateProduct);
+
+// Delete the item from the products json array based on the id
+adminRoutes.post("/delete-product/:id", deleteProduct);
 
 export default adminRoutes;

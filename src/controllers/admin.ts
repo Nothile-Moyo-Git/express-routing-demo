@@ -62,4 +62,13 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
     response.redirect("/admin/products");
 };
 
-export { getAddProduct, postAddProduct, getProducts, updateProduct }; 
+// Delete product controller
+const deleteProduct = (request : Request, response : Response, next : NextFunction) => {
+
+    productsInstance.deleteProduct(request.params.id);
+
+
+    
+};
+
+export { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct }; 
