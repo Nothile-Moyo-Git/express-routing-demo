@@ -35,7 +35,7 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
     }); 
 
     // Redirect to the products page
-    response.redirect("/");
+    response.redirect("/products");
 };
 
 // Get admin products controller
@@ -65,10 +65,11 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
 // Delete product controller
 const deleteProduct = (request : Request, response : Response, next : NextFunction) => {
 
+    // Delete the product based on the ID in the JSON array
     productsInstance.deleteProduct(request.params.id);
 
-
-    
+    // Redirect to the admin products page since we executed admin functionality
+    response.redirect("/admin/products");
 };
 
 export { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct }; 

@@ -42,6 +42,12 @@ const getCart = ( request : Request, response : Response, next : NextFunction ) 
     response.render("shop/cart", { pageTitle : "Your Cart" });
 };
 
+// Get the orders
+const getOrders = ( request : Request, response : Response, next : NextFunction ) => {
+
+    response.render("shop/orders", { pageTitle : "Orders" });
+};
+
 // Get the checkout page from the cart
 const getCheckout = ( request : Request, response : Response, next : NextFunction ) => {
 
@@ -56,4 +62,4 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 };
 
 
-export { getCart, getProducts, getCheckout, getIndex, getProductDetails };
+export { getCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
