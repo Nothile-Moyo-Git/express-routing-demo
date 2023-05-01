@@ -149,7 +149,7 @@ html {
 
 body {
   margin: 0px;
-  margin-top: 60px;
+  margin-top: 169px;
   animation: fade-in 0.2s linear;
   font-family: "Open Sans";
   height: calc(100% - 68px); }
@@ -190,7 +190,7 @@ h1 {
   z-index: 2; }
   @media (max-width: 768px) {
     .header {
-      height: 136px; } }
+      height: 169px; } }
 
 .menu {
   display: flex;

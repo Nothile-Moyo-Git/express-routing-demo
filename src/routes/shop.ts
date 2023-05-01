@@ -13,6 +13,6 @@ shopRoutes.get("/products", getProducts);
 shopRoutes.get("/cart", getCart);
 shopRoutes.get("/orders", getOrders);
 shopRoutes.get("/checkout", getCheckout);
-shopRoutes.get("/product-details/:id", getProductDetails)
+shopRoutes.get("/product-detail/:id", getProductDetails)
 
 export default shopRoutes;
