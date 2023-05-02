@@ -4,9 +4,12 @@
  * This controller handles the routing for the cart and shop functionality.
  * It also hooks up the "shop" model which can be used to manage our data
  * 
- * @method getShop : (request : Request, response : Response, next : NextFunction) => void
- * @method getCart : (request : Request, response : Response, next : NextFunction) => void
- * @method getCheckout : (request : Request, response : Response, next : NextFunction) => void
+ * @method getIndex : ( request : Request, response : Response, next : NextFunction ) => void
+ * @method getShop : ( request : Request, response : Response, next : NextFunction ) => void
+ * @method getCart : ( request : Request, response : Response, next : NextFunction ) => void
+ * @method getCheckout : ( request : Request, response : Response, next : NextFunction ) => void
+ * @method getOrders : ( request : Request, response : Response, next : NextFunction ) => void
+ * @method getProductDetails : ( request : Request, response : Response, next : NextFunction ) => void
  */
 
 // import our express types for TypeScript use
@@ -57,8 +60,14 @@ const getCheckout = ( request : Request, response : Response, next : NextFunctio
 // Get product detail controller
 const getProductDetails = ( request : Request, response : Response, next : NextFunction ) => {
 
+    // Get the single product
+    const result = productsInstance.getProductById( request.params.id );
+
+    let hasValue : boolean;
+    result ? hasValue = true : hasValue = false;
+
     // Render the admin products ejs template
-    response.render("shop/product-detail", { pageTitle : "Product Details" });
+    response.render("shop/product-detail", { hasProduct : hasValue, productDetails : result, pageTitle : "Product Details" });
 };
 
 

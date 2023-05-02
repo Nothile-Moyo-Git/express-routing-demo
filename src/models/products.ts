@@ -8,7 +8,7 @@
  * @method saveProduct : (product : Product) => void
  * @method getProducts : () => void
  * @method updateProduct : (title : string, image : string, description : string, price : number, id : string) => void
- * 
+ * @method getProductById : (id : string) => void
  */
 
 import fs from "fs";
@@ -206,6 +206,24 @@ class Products {
             }
         }); 
     };
+
+    // Get the individual product for product details without the ability to edit it
+    getProductById = (id : string) => {
+
+        // Outputting the id
+        console.clear();
+
+        // Get the current products
+        const result = this.getProducts();
+
+        // Find the product information 
+        const productDetail = result.find((product : Product) => {
+            return product.id === id;
+        });
+
+        // Output the product detail
+        return productDetail;
+    }
 }
 
 export default Products;
