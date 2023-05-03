@@ -95,6 +95,7 @@
 
         @include state(){
             filter: contrast(120%);
+            color: white;
         }
     }
 }

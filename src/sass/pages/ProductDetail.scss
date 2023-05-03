@@ -1,0 +1,43 @@
+.product-detail{
+
+    max-width: 350px;
+    color: white;
+    display : flex;
+    margin : auto;
+    height : 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction : column;
+
+    @include breakpoint(tablet){
+        max-width: 100%;
+        width: calc(100% - 2rem);
+        padding: 0 1rem;
+    }
+
+    &__back-wrapper{
+        margin-right: auto;
+        color: white;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        grid-gap: 0.5rem;
+
+        img{
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    }
+
+    &__back-text{
+        color: white;
+    }
+
+    &__image{
+        width: 100%;
+    }
+
+    &__article{
+        width: 100%;
+    }
+}

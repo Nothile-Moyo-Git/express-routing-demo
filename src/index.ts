@@ -24,6 +24,9 @@ app.use( bodyParser.urlencoded({ extended : true }) );
 // Serve the css files statically
 app.use( express.static( path.join( __dirname, "/css" ) ));
 
+// Serve our image files statically
+app.use( express.static( path.join( __dirname, "/images") ));
+
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
 // Register a templating engine even case it's not default, we do this with handlebars

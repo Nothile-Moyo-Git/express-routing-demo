@@ -4,6 +4,16 @@
         <%- include('../includes/navigation'); %>
 
         <main class="product-detail">
+
+            <a href="/products" class="product-detail__back-wrapper">
+                <img
+                    src="../left-arrow.svg"
+                    alt="Go back arrow"
+                    class="product-detail__back-arrow"
+                />
+                <p class="product-detail__back-text">Go back</p>
+            </a>
+
             <% if (hasProduct === true) { %>
 
                 <article class="product-detail__article">

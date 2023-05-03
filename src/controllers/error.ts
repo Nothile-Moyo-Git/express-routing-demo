@@ -13,7 +13,6 @@ const getError = (request : Request, response : Response, next : NextFunction) =
 
     // If the page has a 404 error, then output an error page instead of crashing the server
     response.render('404', { pageTitle: "Error" });
-
 }
 
 export { getError };
