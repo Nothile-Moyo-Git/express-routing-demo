@@ -45,6 +45,22 @@ const getCart = ( request : Request, response : Response, next : NextFunction ) 
     response.render("shop/cart", { pageTitle : "Your Cart" });
 };
 
+// Handle the post request for the cart
+const postCart = ( request : Request, response : Response, next : NextFunction ) => {
+
+    const result = productsInstance.getProductById( request.body.productId );
+
+    // Get the params ID 
+    console.clear();
+    console.log("Params");
+    console.log(request.body);
+    console.log("\n\n");
+    console.log("result");
+    console.log(result);
+
+    response.redirect("/cart");
+}
+
 // Get the orders
 const getOrders = ( request : Request, response : Response, next : NextFunction ) => {
 
@@ -71,4 +87,4 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 };
 
 
-export { getCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
