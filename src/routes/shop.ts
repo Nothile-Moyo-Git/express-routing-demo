@@ -3,7 +3,7 @@
 import express from "express";
 
 // Import our router renderers
-import { getProducts, getCart, getCheckout, getIndex, getOrders, getProductDetails } from "../controllers/shop";
+import { getProducts, getCart, postCart, getCheckout, getIndex, getOrders, getProductDetails } from "../controllers/shop";
 
 const shopRoutes = express.Router();
 
@@ -11,6 +11,7 @@ const shopRoutes = express.Router();
 shopRoutes.get("/", getIndex),
 shopRoutes.get("/products", getProducts);
 shopRoutes.get("/cart", getCart);
+shopRoutes.post("/cart", postCart);
 shopRoutes.get("/orders", getOrders);
 shopRoutes.get("/checkout", getCheckout);
 shopRoutes.get("/product-detail/:id", getProductDetails)
