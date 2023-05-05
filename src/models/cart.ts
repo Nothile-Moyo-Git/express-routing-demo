@@ -8,31 +8,82 @@
  * @method removeCartItem : (product : Product) => {}
  */
 
-interface Product {
-    title : string,
-    id : string
-}
+import fs from "fs";
+import path from "path";
+import rootDir from "../util/path";
 
-interface CartItem{
+// Create the path to our file
+const p = path.join(
+    rootDir, 
+    "data",
+    "products.json" 
+);
+
+type Product = {
+    title : string,
+    id : string,
+    image : string,
+    price : string,
+    description : string
+};
+
+type CartItem = {
     product : Product,
     quantity : number,
-    productId : string
-}
+    productId : string,
+};
+
+type UpdatedProduct = {
+    quantity ?: number,
+    title ?: string,
+    id ?: string,
+    image ?: string,
+    price ?: string,
+    description ?: string
+};
 
 class Cart {
 
     // Our variables that we will be updating
     public cartItems : CartItem[];
+    public totalPrice : number;
     public totalNumberOfCartItems : number;
 
     // Create an empty array of cartItems when we instantiate our class
     constructor(){
         this.cartItems = [];
+        this.totalPrice = 0;
         this.totalNumberOfCartItems = 0;
     };
 
+    // Static add product
+    static addProduct = (id : string) => {
+
+        // Get the result synchronously
+        const productsList : Product[] = JSON.parse(fs.readFileSync(p, "utf-8"));
+
+        // Check for an existing product
+        const existingProduct = productsList.find((product : Product) => {
+            return product.id === id;
+        });
+
+        // Updated product
+        let updatedProduct : UpdatedProduct;
+
+        if (existingProduct) {
+
+            // 
+            updatedProduct = { ...existingProduct };
+            updatedProduct.quantity = updatedProduct.quantity++;
+        } else{
+            updatedProduct = { id : id, quantity : 1 };
+        }
+
+        return existingProduct;
+    };
+
     // Add a cart item to the cart array
-    addCartItem = (product : Product) => {
+    public addCartItem = (product : Product) => {
 
         // Get the index of the array of cart items
         let itemExists : boolean = false;
@@ -56,14 +107,7 @@ class Cart {
                 productId : product.id
             });
         }
-
     };
-
-    // Remove an item from the cart
-    removeCartItem = () => {
-
-    };
-
 };
 
 export default Cart;

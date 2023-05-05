@@ -52,13 +52,13 @@ const postCart = ( request : Request, response : Response, next : NextFunction )
 
     // Get the params ID 
     console.clear();
-    console.log("Params");
-    console.log(request.body);
-    console.log("\n\n");
-    console.log("result");
-    console.log(result);
+    console.log( "Params" );
+    console.log( request.body );
+    console.log( "\n\n" );
+    console.log( Cart.addProduct( request.body.productId ));
 
-    response.redirect("/cart");
+    // response.redirect("/cart");
+    response.end();
 }
 
 // Get the orders
