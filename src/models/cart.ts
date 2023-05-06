@@ -59,6 +59,8 @@ class Cart {
     // Static add product
     static addProduct = (id : string) => {
 
+        let cart = { products : [], totalPrice : 0 };
+
         // Get the result synchronously
         const productsList : Product[] = JSON.parse(fs.readFileSync(p, "utf-8"));
 
@@ -67,19 +69,41 @@ class Cart {
             return product.id === id;
         });
 
+        // Find the index of the existing product
+        const existingProductIndex = productsList.findIndex((product : Product) => {
+            return product.id === id;
+        });
+
+        console.log("Existing product index");
+        console.log(existingProductIndex);
+
         // Updated product
-        let updatedProduct : UpdatedProduct;
+        let updatedProduct : UpdatedProduct = { quantity : 0 };
 
         if (existingProduct) {
 
-            // 
-            updatedProduct = { ...existingProduct };
+            // Create a new updated product with a quantity
+            updatedProduct = { ...existingProduct, quantity: updatedProduct.quantity };
             updatedProduct.quantity = updatedProduct.quantity++;
+            cart.products[existingProductIndex] = updatedProduct;
+            
+            // Keep the cart the same
+            cart.products = [...cart.products];
         } else{
+
             updatedProduct = { id : id, quantity : 1 };
+            cart.products = [...cart.products, updatedProduct];
+            // Add the updated product to the cart
         }
 
-        return existingProduct;
+        // Add to the total price
+        cart.totalPrice = cart.totalPrice + Number(updatedProduct.price);
+
+        console.log("\n\n");
+        console.log("What's in my cart");
+        console.log(cart);
+
+        return updatedProduct;
     };
 
     // Add a cart item to the cart array
