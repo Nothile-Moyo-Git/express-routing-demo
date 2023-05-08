@@ -13,10 +13,16 @@ import path from "path";
 import rootDir from "../util/path";
 
 // Create the path to our file
-const p = path.join(
+const productsPath = path.join(
     rootDir, 
     "data",
     "products.json" 
+);
+
+const cartPath = path.join(
+    rootDir,
+    "data",
+    "cart.json"
 );
 
 type Product = {
@@ -59,23 +65,53 @@ class Cart {
     // Static add product
     static addProduct = (id : string) => {
 
+        // Initialise an empty cart JSON
         let cart = { products : [], totalPrice : 0 };
+        let cartData, cartProducts;
 
-        // Get the result synchronously
-        const productsList : Product[] = JSON.parse(fs.readFileSync(p, "utf-8"));
+        // Get the result synchronously from the file
+        cart.products = JSON.parse(fs.readFileSync(productsPath, "utf-8"));
+
+        // Get the products from the cart in order to see if they exist
+        cartData = JSON.parse(fs.readFileSync(cartPath, "utf-8"));
+        console.log("Cart items");
+        console.log(cartData);
+        console.log("\n\n");
+
+        // Loop through the products and check if the id's are the same as the cart.json
+        // If they are, then take the quantity from that
+        // If not, then create an empty quantity
+        // This will be the new list of products we'll store to the cart.json file
+        cartProducts = cart.products.map((product : UpdatedProduct, index : number) => {
+
+            // Don't use this index as it's unreliable Nothile
+            // You'll need to find the individual value like the find below, then use that quantity or initialise it to 0
+            const quantity = cartData.products[index].quantity;
+            console.log("Outputting the quantity");
+            console.log(quantity);
+            console.log("\n\n");
+
+            return{
+               title : product.title,
+               image : product.image,
+               description : product.description,
+               price : product.price,
+               id : product.id,
+               quantity : 0 
+            };
+        });
+
+
 
         // Check for an existing product
-        const existingProduct = productsList.find((product : Product) => {
+        const existingProduct = cart.products.find((product : UpdatedProduct) => {
             return product.id === id;
         });
 
         // Find the index of the existing product
-        const existingProductIndex = productsList.findIndex((product : Product) => {
+        const existingProductIndex = cart.products.findIndex((product : UpdatedProduct) => {
             return product.id === id;
         });
-
-        console.log("Existing product index");
-        console.log(existingProductIndex);
 
         // Updated product
         let updatedProduct : UpdatedProduct = { quantity : 0 };
@@ -84,11 +120,13 @@ class Cart {
 
             // Create a new updated product with a quantity
             updatedProduct = { ...existingProduct, quantity: updatedProduct.quantity };
-            updatedProduct.quantity = updatedProduct.quantity++;
+            updatedProduct.quantity = updatedProduct.quantity + 1;
+
             cart.products[existingProductIndex] = updatedProduct;
             
             // Keep the cart the same
             cart.products = [...cart.products];
+
         } else{
 
             updatedProduct = { id : id, quantity : 1 };
@@ -98,40 +136,16 @@ class Cart {
 
         // Add to the total price
         cart.totalPrice = cart.totalPrice + Number(updatedProduct.price);
+        
+        // Stringify our JSON so we can save it to the appropriate file
+        const json = JSON.stringify(cart, null, "\t");
 
-        console.log("\n\n");
-        console.log("What's in my cart");
-        console.log(cart);
+        // Save the file to the folder, and if it doesn't exist, create it!
+        fs.writeFileSync(cartPath, json, "utf-8");
 
         return updatedProduct;
     };
 
-    // Add a cart item to the cart array
-    public addCartItem = (product : Product) => {
-
-        // Get the index of the array of cart items
-        let itemExists : boolean = false;
-    
-        // Find the item in our cart if it already exists
-        this.cartItems.forEach((cartItem : CartItem) => {
-
-            // If the cart item exists
-            if (cartItem.productId === product.id) {
-                cartItem.quantity++;
-                itemExists === true;
-            }
-        });
-
-        // If the item doesn't exist in the cart, then create a new one
-        if (itemExists === false) {
-            
-            this.cartItems.push({
-                product : product,
-                quantity : 0,
-                productId : product.id
-            });
-        }
-    };
 };
 
 export default Cart;

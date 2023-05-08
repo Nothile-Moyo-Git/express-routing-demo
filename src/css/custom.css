@@ -499,6 +499,7 @@ h1 {
     padding-top: 0.5rem; }
   .card__forms {
     display: flex;
+    align-items: center;
     flex-direction: row;
     margin: auto auto 1rem auto;
     justify-content: space-evenly;

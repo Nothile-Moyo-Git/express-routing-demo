@@ -52,11 +52,9 @@ const postCart = ( request : Request, response : Response, next : NextFunction )
 
     // Get the params ID 
     console.clear();
-    console.log( "Params" );
-    console.log( request.body );
     console.log( "\n\n" );
     console.log( "Add product result" );
-    console.log( Cart.addProduct( request.body.productId ));
+    Cart.addProduct( request.body.productId );
 
     // response.redirect("/cart");
     response.end();
