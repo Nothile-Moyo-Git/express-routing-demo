@@ -25,6 +25,7 @@ const cartPath = path.join(
     "cart.json"
 );
 
+
 type Product = {
     title : string,
     id : string,
@@ -46,6 +47,11 @@ type UpdatedProduct = {
     image ?: string,
     price ?: string,
     description ?: string
+};
+
+type CartJSON = {
+    products : UpdatedProduct[],
+    totalPrice : number
 };
 
 class Cart {
@@ -70,13 +76,10 @@ class Cart {
         let cartData, cartProducts;
 
         // Get the result synchronously from the file
-        cart.products = JSON.parse(fs.readFileSync(productsPath, "utf-8"));
+        cart.products = JSON.parse( fs.readFileSync(productsPath, "utf-8") );
 
         // Get the products from the cart in order to see if they exist
-        cartData = JSON.parse(fs.readFileSync(cartPath, "utf-8"));
-        console.log("Cart items");
-        console.log(cartData);
-        console.log("\n\n");
+        cartData = JSON.parse( fs.readFileSync(cartPath, "utf-8") );
 
         // Loop through the products and check if the id's are the same as the cart.json
         // If they are, then take the quantity from that
@@ -87,9 +90,6 @@ class Cart {
             // Don't use this index as it's unreliable Nothile
             // You'll need to find the individual value like the find below, then use that quantity or initialise it to 0
             const quantity = cartData.products[index].quantity;
-            console.log("Outputting the quantity");
-            console.log(quantity);
-            console.log("\n\n");
 
             return{
                title : product.title,
@@ -97,24 +97,25 @@ class Cart {
                description : product.description,
                price : product.price,
                id : product.id,
-               quantity : 0 
+               quantity : quantity !== undefined ? quantity : 0
             };
         });
 
-
+        // Override the cart with the new one
+        cart.products = cartProducts;
 
         // Check for an existing product
-        const existingProduct = cart.products.find((product : UpdatedProduct) => {
+        const existingProduct = cartProducts.find((product : UpdatedProduct) => {
             return product.id === id;
         });
 
         // Find the index of the existing product
-        const existingProductIndex = cart.products.findIndex((product : UpdatedProduct) => {
+        const existingProductIndex = cartProducts.findIndex((product : UpdatedProduct) => {
             return product.id === id;
         });
 
         // Updated product
-        let updatedProduct : UpdatedProduct = { quantity : 0 };
+        let updatedProduct : UpdatedProduct;
 
         if (existingProduct) {
 

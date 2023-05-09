@@ -13,22 +13,25 @@
 			"image": "https://picsum.photos/300/175",
 			"description": "A manga about fighting aliens!",
 			"price": "18",
-			"id": "44f6b3a3-9fdf-4ff2-bc9c-9cf2cfaf7b1a"
+			"id": "44f6b3a3-9fdf-4ff2-bc9c-9cf2cfaf7b1a",
+			"quantity": 0
 		},
 		{
 			"title": "Berzerk",
 			"image": "https://picsum.photos/300/175",
 			"description": "A fantasy story about cheating death",
 			"price": "15",
-			"id": "9af91eca-2ab2-4dd2-8add-cd6a3be5f48e"
+			"id": "9af91eca-2ab2-4dd2-8add-cd6a3be5f48e",
+			"quantity": 0
 		},
 		{
 			"title": "The Last Of Us",
 			"image": "https://upload.wikimedia.org/wikipedia/en/4/46/Video_Game_Cover_-_The_Last_of_Us.jpg",
 			"description": "A game about surviving fungus",
 			"price": "50",
-			"id": "83e47571-c9b2-4e40-a7f6-d26cbcd681a7"
+			"id": "83e47571-c9b2-4e40-a7f6-d26cbcd681a7",
+			"quantity": 0
 		}
 	],
-	"totalPrice": 12
+	"totalPrice": 15
 }
