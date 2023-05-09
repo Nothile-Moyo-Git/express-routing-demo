@@ -6,7 +6,7 @@
 			"description": "A cool fighting Manga!",
 			"price": "12",
 			"id": "488ccdde-aaf4-44d6-a5b8-239dcc95006e",
-			"quantity": 1
+			"quantity": 2
 		},
 		{
 			"title": "Gantz",
@@ -14,7 +14,7 @@
 			"description": "A manga about fighting aliens!",
 			"price": "18",
 			"id": "44f6b3a3-9fdf-4ff2-bc9c-9cf2cfaf7b1a",
-			"quantity": 0
+			"quantity": 3
 		},
 		{
 			"title": "Berzerk",
@@ -33,5 +33,5 @@
 			"quantity": 0
 		}
 	],
-	"totalPrice": 15
+	"totalPrice": 18
 }

@@ -120,7 +120,7 @@ class Cart {
         if (existingProduct) {
 
             // Create a new updated product with a quantity
-            updatedProduct = { ...existingProduct, quantity: updatedProduct.quantity };
+            updatedProduct = { ...existingProduct };
             updatedProduct.quantity = updatedProduct.quantity + 1;
 
             cart.products[existingProductIndex] = updatedProduct;
