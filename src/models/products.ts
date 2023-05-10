@@ -77,12 +77,19 @@ class Products {
 
                 }
 
-                // Outputting the products array
-                console.log( "JSON Products" );
-                console.log( products );
+                // Data
+                console.log("Current product info");
+                console.log(product);
+                console.log("\n\n");
 
                 // Add the new product to the array
-                products.push( product );
+                products.push({
+                    title : product.title,
+                    image : product.image,
+                    description : product.description,
+                    price : Number(product.price),
+                    id : product.id
+                });
 
                 // Stringify our JSON so we can save it to the appropriate file
                 const json = JSON.stringify(products, null, "\t");

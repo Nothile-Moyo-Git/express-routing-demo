@@ -25,12 +25,11 @@ const cartPath = path.join(
     "cart.json"
 );
 
-
 type Product = {
     title : string,
     id : string,
     image : string,
-    price : string,
+    price : number,
     description : string
 };
 
@@ -45,7 +44,7 @@ type UpdatedProduct = {
     title ?: string,
     id ?: string,
     image ?: string,
-    price ?: string,
+    price ?: number,
     description ?: string
 };
 
@@ -90,6 +89,10 @@ class Cart {
             // Don't use this index as it's unreliable Nothile
             // You'll need to find the individual value like the find below, then use that quantity or initialise it to 0
             const quantity = cartData.products[index].quantity;
+
+            console.log("Quantity");
+            console.log(quantity);
+
 
             return{
                title : product.title,
@@ -136,7 +139,7 @@ class Cart {
         }
 
         // Add to the total price
-        cart.totalPrice = cart.totalPrice + Number(updatedProduct.price);
+        cart.totalPrice = cartData.totalPrice + Number(updatedProduct.price);
         
         // Stringify our JSON so we can save it to the appropriate file
         const json = JSON.stringify(cart, null, "\t");
