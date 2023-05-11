@@ -88,11 +88,7 @@ class Cart {
 
             // Don't use this index as it's unreliable Nothile
             // You'll need to find the individual value like the find below, then use that quantity or initialise it to 0
-            const quantity = cartData.products[index].quantity;
-
-            console.log("Quantity");
-            console.log(quantity);
-
+            const quantity = cartData.products[index] ? cartData.products[index].quantity : 0;  
 
             return{
                title : product.title,
@@ -100,7 +96,7 @@ class Cart {
                description : product.description,
                price : product.price,
                id : product.id,
-               quantity : quantity !== undefined ? quantity : 0
+               quantity : quantity
             };
         });
 

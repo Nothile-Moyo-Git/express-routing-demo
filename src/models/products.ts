@@ -77,11 +77,6 @@ class Products {
 
                 }
 
-                // Data
-                console.log("Current product info");
-                console.log(product);
-                console.log("\n\n");
-
                 // Add the new product to the array
                 products.push({
                     title : product.title,
