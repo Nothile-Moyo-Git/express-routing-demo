@@ -146,6 +146,39 @@ class Cart {
         return updatedProduct;
     };
 
+    // Delete a product and remove it from the total price
+    static deleteProduct = (id : string) => {
+
+        // Get the products from the cart in order to see if they exist
+        const cartData : CartJSON = JSON.parse( fs.readFileSync(cartPath, "utf-8") );
+
+        let price;
+        let totalPrice = cartData.totalPrice;
+
+        // Cart products
+        const newCartProducts = cartData.products.filter((product : UpdatedProduct) => {
+
+            // If the id of the product is the same as the one we're deleting
+            // Get the quantity and price, and remove it from the totalPrice
+            if (product.id === id) {
+
+                totalPrice = totalPrice - (product.quantity * product.price);
+            }
+
+            return product.id !== id;
+        });
+
+        console.clear();
+        console.log("Total Price");
+        console.log(totalPrice);
+        console.log("\n\n");
+
+        console.log("Cart");
+        console.log(newCartProducts);
+
+        return newCartProducts;
+    };
+
 };
 
 export default Cart;

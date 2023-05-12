@@ -1,10 +1,14 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
+import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
 
 // Instantiate our products 
 const productsInstance = new Products();
+
+// Instantiate our cart
+const cartInstance = new Cart();
 
 // Add product controller
 const getAddProduct = (request : Request, response : Response, next : NextFunction) => {
@@ -66,7 +70,9 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
 const deleteProduct = (request : Request, response : Response, next : NextFunction) => {
 
     // Delete the product based on the ID in the JSON array
-    productsInstance.deleteProduct(request.params.id);
+    // productsInstance.deleteProduct(request.params.id);
+
+    Cart.deleteProduct(request.params.id);
 
     // Redirect to the admin products page since we executed admin functionality
     response.redirect("/admin/products");

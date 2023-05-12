@@ -176,6 +176,11 @@ class Products {
         // Get the current products
         const result = this.getProducts();
 
+        // Filter the product based on the id
+        const filteredProducts = result.filter((product : Product) => {
+            return id !== product.id;
+        });
+
         // Create the path to our file
         const p = path.join(
             rootDir, 
@@ -183,30 +188,22 @@ class Products {
             "products.json" 
         );
 
-        // Remove the product we don't need based on the ID
-        const newProducts : Product[] = result.filter((product : Product) => {
-            return product.id !== id;
-        });
-
-        console.log("New Products without the deleted item \n\n");
-        console.log(newProducts);
-
         // Read our saved file, we read it first to find the previous JSON and append to it
-        fs.readFile(p, (err: NodeJS.ErrnoException) => {
+        fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
 
             // If we fail at reading our file, create a new one
             if (err) {
-
                 console.log( err );
             }else{
 
                 // Stringify our JSON so we can save it to the appropriate file
-                const json = JSON.stringify(newProducts, null, "\t");
+                const json = JSON.stringify(filteredProducts, null, "\t");
 
                 // Save the file to the folder, and if it doesn't exist, create it!
                 fs.writeFileSync(p, json, "utf-8");
             }
-        }); 
+        });
+
     };
 
     // Get the individual product for product details without the ability to edit it
