@@ -149,10 +149,16 @@ class Cart {
     // Delete a product and remove it from the total price
     static deleteProduct = (id : string) => {
 
+        // Create the path to our file
+        const p = path.join(
+            rootDir, 
+            "data",
+            "products.json" 
+        );
+
         // Get the products from the cart in order to see if they exist
         const cartData : CartJSON = JSON.parse( fs.readFileSync(cartPath, "utf-8") );
 
-        let price;
         let totalPrice = cartData.totalPrice;
 
         // Cart products
@@ -162,23 +168,33 @@ class Cart {
             // Get the quantity and price, and remove it from the totalPrice
             if (product.id === id) {
 
+                // Updated total price
                 totalPrice = totalPrice - (product.quantity * product.price);
             }
 
             return product.id !== id;
         });
 
-        console.clear();
-        console.log("Total Price");
-        console.log(totalPrice);
-        console.log("\n\n");
+        // Create a new cart with the updated totalPrice and the item removed
+        // This is executed alongside deleting the product in the JSON file
+        const newCart : CartJSON = { products : newCartProducts, totalPrice : totalPrice };
 
-        console.log("Cart");
-        console.log(newCartProducts);
+        // Read our saved file, we read it first to find the previous JSON and append to it
+        fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
 
-        return newCartProducts;
+            // If we fail at reading our file, create a new one
+            if (err) {
+                console.log( err );
+            }else{
+
+                // Stringify a JSON
+                const json = JSON.stringify(newCart, null, "\t");
+
+                // Save the file to the folder, and if it doesn't exist, create it!
+                fs.writeFileSync(cartPath, json, "utf-8");
+            }
+        });
     };
-
 };
 
 export default Cart;

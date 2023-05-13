@@ -48,16 +48,11 @@ const getCart = ( request : Request, response : Response, next : NextFunction ) 
 // Handle the post request for the cart
 const postCart = ( request : Request, response : Response, next : NextFunction ) => {
 
-    const result = productsInstance.getProductById( request.body.productId );
-
     // Get the params ID 
-    console.clear();
-    console.log( "\n\n" );
-    console.log( "Add product result" );
     Cart.addProduct( request.body.productId );
 
-    // response.redirect("/cart");
-    response.end();
+    // Redirect to the cart page
+    response.redirect("/cart");
 }
 
 // Get the orders
