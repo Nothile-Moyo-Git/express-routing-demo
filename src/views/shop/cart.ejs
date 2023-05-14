@@ -4,7 +4,29 @@
         <%- include('../includes/navigation'); %>
 
         <main class="cart">
-            <h1>Cart</h1>
+            <h1><%= pageTitle %></h1> 
+
+            <% if (hasProducts) { %>
+                <div>
+                    <ul class="cartModal">
+                        <li>
+                            <p>Name</p>
+                            <p>Quantity</p>
+                            <p>Cost</p>
+                        </li>
+                        <%  products.forEach((product) => {    %>
+                            <li>
+                                <p><%= product.title %></p>
+                                <p><%= product.quantity %></p>
+                                <p><%= product.price %></p>
+                            </li>
+                        <%  }); %>
+                    </ul>
+                    <p>Total Price : £<%= totalPrice %></p>
+                </div>
+            <% }else{ %>
+                <h2>Your cart is empty</h2>
+            <% } %>
         </main>
 
     </body>

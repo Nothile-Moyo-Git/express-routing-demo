@@ -42,7 +42,18 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 // Get the cart
 const getCart = ( request : Request, response : Response, next : NextFunction ) => {
 
-    response.render("shop/cart", { pageTitle : "Your Cart" });
+    // Output the cart instance
+    console.clear();
+    console.log("Output the cart instance");
+    console.log(cartInstance);
+
+    // Render the cart page
+    response.render("shop/cart", { 
+        pageTitle : "Your Cart", 
+        hasProducts : cartInstance.cartItems.length > 0, 
+        products : cartInstance.cartItems,
+        totalPrice : cartInstance.totalPrice
+    });
 };
 
 // Handle the post request for the cart

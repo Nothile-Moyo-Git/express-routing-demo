@@ -33,12 +33,6 @@ type Product = {
     description : string
 };
 
-type CartItem = {
-    product : Product,
-    quantity : number,
-    productId : string,
-};
-
 type UpdatedProduct = {
     quantity ?: number,
     title ?: string,
@@ -46,6 +40,12 @@ type UpdatedProduct = {
     image ?: string,
     price ?: number,
     description ?: string
+};
+
+type CartItem = {
+    product : Product,
+    quantity : number,
+    productId : string,
 };
 
 type CartJSON = {
@@ -56,15 +56,23 @@ type CartJSON = {
 class Cart {
 
     // Our variables that we will be updating
-    public cartItems : CartItem[];
+    public cartItems : UpdatedProduct[];
     public totalPrice : number;
-    public totalNumberOfCartItems : number;
+
 
     // Create an empty array of cartItems when we instantiate our class
     constructor(){
-        this.cartItems = [];
-        this.totalPrice = 0;
-        this.totalNumberOfCartItems = 0;
+
+        // Get the cart
+        const cartData : CartJSON = JSON.parse( fs.readFileSync(cartPath, "utf-8") );
+
+        // Set the cart variables
+        this.cartItems = cartData.products.filter((product : UpdatedProduct) => {
+            return product.quantity !== 0;
+        });
+
+        // Set the total price
+        this.totalPrice = cartData.totalPrice;
     };
 
     // Static add product
