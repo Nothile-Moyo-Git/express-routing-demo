@@ -4,28 +4,36 @@
         <%- include('../includes/navigation'); %>
 
         <main class="cart">
-            <h1><%= pageTitle %></h1> 
+            <h1 class="cart__header"><%= pageTitle %></h1> 
 
             <% if (hasProducts) { %>
-                <div>
-                    <ul class="cartModal">
-                        <li>
+                <div class="cart__modal-wrapper">
+
+                    <ul class="cart__modal-rows">
+                        <li class="cart__modal-header">
                             <p>Name</p>
                             <p>Quantity</p>
                             <p>Cost</p>
                         </li>
                         <%  products.forEach((product) => {    %>
-                            <li>
+                            <li class="cart__modal-row">
                                 <p><%= product.title %></p>
                                 <p><%= product.quantity %></p>
-                                <p><%= product.price %></p>
+                                <p>£<%= product.price * product.quantity %></p>
                             </li>
                         <%  }); %>
                     </ul>
-                    <p>Total Price : £<%= totalPrice %></p>
+
+                    <div class="cart__checkout">
+                        <p class="cart__checkout-text">Total Price : £<%= totalPrice %></p>
+                        <button class="cart__checkout-button">Checkout</button>
+                    </div>
+
                 </div>
-            <% }else{ %>
+            <% } else { %>
+
                 <h2>Your cart is empty</h2>
+
             <% } %>
         </main>
 

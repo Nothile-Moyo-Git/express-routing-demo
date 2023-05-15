@@ -29,11 +29,9 @@ body{
     margin-top: 50px; 
     animation: fade-in 0.2s linear;
     font-family: "Open Sans";
-    height: calc(100% - 50px);
 
     @include breakpoint(tablet){
         margin-top: 169px;
-        height: calc(100% - 169px);
     }
 }
 
@@ -63,6 +61,14 @@ p{
 h1{
     margin-bottom: 1rem;
     color: white;
+}
+
+main{
+    margin-top: 82px;
+
+    @include breakpoint(tablet){
+        margin-top: 201px;
+    }
 }
 
 .page-title{ 
