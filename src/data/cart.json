@@ -6,7 +6,7 @@
 			"description": "A cool fighting Manga!!",
 			"price": 12,
 			"id": "488ccdde-aaf4-44d6-a5b8-239dcc95006e",
-			"quantity": 1
+			"quantity": 2
 		},
 		{
 			"title": "Gantz",
@@ -38,8 +38,8 @@
 			"description": "A cool fighting Manga!!!",
 			"price": 15,
 			"id": "a024a862-ef88-4fb4-89a5-3fd44141abc5",
-			"quantity": 3
+			"quantity": 4
 		}
 	],
-	"totalPrice": 57
+	"totalPrice": 84
 }

@@ -1,15 +1,14 @@
 .cart{
-    width: 100%;
+    width: calc(100% - 4rem);
     display: flex;
     color: white;
     max-width: 40rem;
-    padding-top: 1rem;
+    padding: 1rem;
     position: relative;
     border: 1px solid white;
     flex-direction: column;
     justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 1rem auto;
 
     &__header{
         text-align: center;
@@ -43,9 +42,15 @@
     &__checkout{
         margin: auto;
         display: flex;
-        padding: 1rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
         flex-direction: row;
         justify-content: space-between;
+
+        @include breakpoint(tablet){
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     } 
 
     &__checkout-button{

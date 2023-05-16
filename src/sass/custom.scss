@@ -26,12 +26,12 @@ html{
 
 body{ 
     margin: 0px;
-    margin-top: 50px; 
+    margin-top: 82px;
     animation: fade-in 0.2s linear;
     font-family: "Open Sans";
 
     @include breakpoint(tablet){
-        margin-top: 169px;
+        margin-top: 201px;
     }
 }
 
@@ -61,14 +61,6 @@ p{
 h1{
     margin-bottom: 1rem;
     color: white;
-}
-
-main{
-    margin-top: 82px;
-
-    @include breakpoint(tablet){
-        margin-top: 201px;
-    }
 }
 
 .page-title{ 

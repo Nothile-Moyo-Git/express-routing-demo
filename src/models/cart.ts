@@ -59,9 +59,22 @@ class Cart {
     public cartItems : UpdatedProduct[];
     public totalPrice : number;
 
-
-    // Create an empty array of cartItems when we instantiate our class
     constructor(){
+        
+        // Get the cart
+        const cartData : CartJSON = JSON.parse( fs.readFileSync(cartPath, "utf-8") );
+
+        // Set the cart variables
+        this.cartItems = cartData.products.filter((product : UpdatedProduct) => {
+            return product.quantity !== 0;
+        });
+
+        // Set the total price
+        this.totalPrice = cartData.totalPrice;   
+    }
+
+    // Update our cart from the constructor
+    public getProducts = () => {
 
         // Get the cart
         const cartData : CartJSON = JSON.parse( fs.readFileSync(cartPath, "utf-8") );

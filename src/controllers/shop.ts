@@ -43,9 +43,7 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 const getCart = ( request : Request, response : Response, next : NextFunction ) => {
 
     // Output the cart instance
-    console.clear();
-    console.log("Output the cart instance");
-    console.log(cartInstance);
+    cartInstance.getProducts();
 
     // Render the cart page
     response.render("shop/cart", { 
