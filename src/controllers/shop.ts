@@ -57,8 +57,11 @@ const getCart = ( request : Request, response : Response, next : NextFunction ) 
 
 const postCartDelete = ( request : Request, response : Response, next : NextFunction ) => {
 
+    console.clear();
     cartInstance.removeCartItem();
-    
+    console.log("Post delete");
+    console.log(cartInstance);
+
     // Redirect to the cart page
     response.redirect("/cart");
 };
