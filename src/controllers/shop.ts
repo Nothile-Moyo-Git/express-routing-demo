@@ -50,8 +50,17 @@ const getCart = ( request : Request, response : Response, next : NextFunction ) 
         pageTitle : "Your Cart", 
         hasProducts : cartInstance.cartItems.length > 0, 
         products : cartInstance.cartItems,
-        totalPrice : cartInstance.totalPrice
+        totalPrice : cartInstance.totalPrice,
+        deleteItem : cartInstance.removeCartItem()
     });
+};
+
+const postCartDelete = ( request : Request, response : Response, next : NextFunction ) => {
+
+    cartInstance.removeCartItem();
+    
+    // Redirect to the cart page
+    response.redirect("/cart");
 };
 
 // Handle the post request for the cart
@@ -90,4 +99,4 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 };
 
 
-export { getCart, postCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };

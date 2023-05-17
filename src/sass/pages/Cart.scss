@@ -1,5 +1,5 @@
 .cart{
-    width: calc(100% - 4rem);
+    width: calc(100% - 3rem);
     display: flex;
     color: white;
     max-width: 40rem;
@@ -11,6 +11,10 @@
     box-shadow: $box_shadow;
     justify-content: center;
     margin: 1rem auto;
+
+    @include breakpoint(tablet){
+        padding: 2rem 0.5rem;
+    }
 
     &__header{
         text-align: center;

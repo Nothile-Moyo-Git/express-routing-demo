@@ -20,6 +20,9 @@
                                 <p><%= product.title %></p>
                                 <p><%= product.quantity %></p>
                                 <p>£<%= product.price * product.quantity %></p>
+                                <form action="/cart-delete-item" method="POST">
+                                    <button>X</button>
+                                </form>
                             </li>
                         <%  }); %>
                     </ul>

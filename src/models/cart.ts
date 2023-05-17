@@ -73,6 +73,12 @@ class Cart {
         this.totalPrice = cartData.totalPrice;   
     }
 
+    // Remove an item from the cart
+    public removeCartItem = () => {
+        
+        console.log("Remove a cart item");
+    };
+
     // Update our cart from the constructor
     public getProducts = () => {
 
