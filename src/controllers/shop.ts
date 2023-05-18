@@ -20,9 +20,6 @@ import Products from "../models/products";
 // Instantiate our products 
 const productsInstance = new Products();
 
-// Instantiate the cart
-const cartInstance = new Cart();
-
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
 
@@ -42,6 +39,9 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 // Get the cart
 const getCart = ( request : Request, response : Response, next : NextFunction ) => {
 
+    // Instantiate the cart
+    const cartInstance = new Cart();
+
     // Output the cart instance
     cartInstance.getProducts();
 
@@ -50,19 +50,24 @@ const getCart = ( request : Request, response : Response, next : NextFunction ) 
         pageTitle : "Your Cart", 
         hasProducts : cartInstance.cartItems.length > 0, 
         products : cartInstance.cartItems,
-        totalPrice : cartInstance.totalPrice,
-        deleteItem : cartInstance.removeCartItem()
+        totalPrice : cartInstance.totalPrice
     });
 };
 
 const postCartDelete = ( request : Request, response : Response, next : NextFunction ) => {
 
-    console.clear();
-    cartInstance.removeCartItem();
-    console.log("Post delete");
-    console.log(cartInstance);
+    // Instantiate the cart
+    const cartInstance = new Cart();
 
-    // Redirect to the cart page
+    // Get the product id in order to delete it from the Cart
+    const productId = request.body.productId;
+
+    console.clear();
+
+    // Execute remove item from cart method
+    cartInstance.removeCartItem(productId);
+
+    // Reload the page
     response.redirect("/cart");
 };
 

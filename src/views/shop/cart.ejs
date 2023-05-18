@@ -11,17 +11,18 @@
 
                     <ul class="cart__modal-rows">
                         <li class="cart__modal-header">
-                            <p>Name</p>
-                            <p>Quantity</p>
-                            <p>Cost</p>
+                            <p class="cart__modal-column">Name</p>
+                            <p class="cart__modal-column">Quantity</p>
+                            <p class="cart__modal-column">Cost</p>
                         </li>
                         <%  products.forEach((product) => {    %>
                             <li class="cart__modal-row">
-                                <p><%= product.title %></p>
-                                <p><%= product.quantity %></p>
-                                <p>£<%= product.price * product.quantity %></p>
-                                <form action="/cart-delete-item" method="POST">
-                                    <button type="submit">X</button>
+                                <p class="cart__modal-column"><%= product.title %></p>
+                                <p class="cart__modal-column"><%= product.quantity %></p>
+                                <p class="cart__modal-column">£<%= product.price * product.quantity %></p>
+                                <form class="cart__modal-column" action="/cart-delete-item" method="POST">
+                                    <button class="cart__modal-button" type="submit">X</button>
+                                    <input type="hidden" name="productId" value=<%= `${product.id}` %>/>
                                 </form>
                             </li>
                         <%  }); %>

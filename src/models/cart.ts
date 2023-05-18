@@ -74,9 +74,52 @@ class Cart {
     }
 
     // Remove an item from the cart
-    public removeCartItem = () => {
+    public removeCartItem = (productId : string) => {
+
+        // Create an instance of the cart object to store in the database
+        const cartFile : CartJSON = JSON.parse( fs.readFileSync(cartPath, "utf-8") );
+
+        // Format the product id to remove the dash at the end
+        const formattedProductId = productId.substring(0, productId.length -1);
         
-        this.totalPrice = 10;
+        // Filter out the new cart items without the original cart item
+        const currentProduct = this.cartItems.find(( product : UpdatedProduct ) => {
+            return product.id === formattedProductId;
+        });
+
+        console.log("current product");
+        console.log(currentProduct);
+
+        // Get the products from the cart in order to see if they exist
+        const updatedProducts = cartFile.products.map((product : UpdatedProduct) => {
+
+            if (formattedProductId === product.id) {
+
+                // Take away from the total price
+                cartFile.totalPrice = cartFile.totalPrice - (product.quantity * product.price);
+
+                return{
+                    quantity : 0,
+                    price : product.price,
+                    title : product.title,
+                    description : product.description,
+                    id : product.id,
+                    image : product.image
+                }
+            }else{
+                return product;
+            }
+        });
+
+        // Change the total price to reflect this
+        cartFile.products = updatedProducts;
+
+        // Save the new cart to file
+        console.log("\n\n");
+        console.log("Cart file");
+        console.log(cartFile);
+
+
     };
 
     // Update our cart from the constructor
