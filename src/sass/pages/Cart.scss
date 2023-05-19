@@ -59,6 +59,10 @@
         flex-direction: row;
     }
 
+    &__empty-items{
+        text-align: center;
+    }
+
     &__checkout{
         margin: auto;
         display: flex;

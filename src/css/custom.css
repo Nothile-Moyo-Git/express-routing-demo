@@ -130,6 +130,8 @@
   .cart__modal-header {
     display: flex;
     flex-direction: row; }
+  .cart__empty-items {
+    text-align: center; }
   .cart__checkout {
     margin: auto;
     display: flex;
@@ -444,6 +446,8 @@ h1 {
   .cart__modal-header {
     display: flex;
     flex-direction: row; }
+  .cart__empty-items {
+    text-align: center; }
   .cart__checkout {
     margin: auto;
     display: flex;

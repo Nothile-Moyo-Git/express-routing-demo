@@ -81,14 +81,6 @@ class Cart {
 
         // Format the product id to remove the dash at the end
         const formattedProductId = productId.substring(0, productId.length -1);
-        
-        // Filter out the new cart items without the original cart item
-        const currentProduct = this.cartItems.find(( product : UpdatedProduct ) => {
-            return product.id === formattedProductId;
-        });
-
-        console.log("current product");
-        console.log(currentProduct);
 
         // Get the products from the cart in order to see if they exist
         const updatedProducts = cartFile.products.map((product : UpdatedProduct) => {
@@ -111,15 +103,16 @@ class Cart {
             }
         });
 
-        // Change the total price to reflect this
+        // Update the products
         cartFile.products = updatedProducts;
+        this.getProducts();
 
-        // Save the new cart to file
-        console.log("\n\n");
-        console.log("Cart file");
-        console.log(cartFile);
+        // Stringify our JSON so we can save it to the appropriate file
+        const json = JSON.stringify(cartFile, null, "\t");
 
-
+        // Save the file to the folder, and if it doesn't exist, create it!
+        fs.writeFileSync(cartPath, json, "utf-8");
+        
     };
 
     // Update our cart from the constructor
