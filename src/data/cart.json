@@ -9,12 +9,12 @@
 			"quantity": 2
 		},
 		{
-			"title": "Gantz",
-			"image": "https://picsum.photos/300/175",
-			"description": "A manga about fighting aliens!",
+			"quantity": 0,
 			"price": 18,
+			"title": "Gantz",
+			"description": "A manga about fighting aliens!",
 			"id": "44f6b3a3-9fdf-4ff2-bc9c-9cf2cfaf7b1a",
-			"quantity": 0
+			"image": "https://picsum.photos/300/175"
 		},
 		{
 			"title": "Berzerk",
