@@ -6,8 +6,6 @@ import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import path from "path";
-import db from "./util/database";
-import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Import the .env variables
 dotenv.config();
@@ -47,14 +45,6 @@ app.use( errorRoutes );
 
 // Execute a command by writing SQL as a string
 
-console.clear();
-console.log("Testing SQL query");
-db.execute("SELECT * FROM products")
-    .then((result :  [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]]) => {
-        console.log(result);
-    }).catch((error) => {
-        console.log(error);
-});
 
 // Listen to the port
 app.listen(port, () => {

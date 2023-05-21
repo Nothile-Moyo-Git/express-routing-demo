@@ -14,6 +14,8 @@
 import fs from "fs";
 import path from "path";
 import rootDir from "../util/path";
+import db from "../util/database";
+import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Setting the interface for the Product objects
 interface Product {
@@ -113,6 +115,16 @@ class Products {
 
         productsList.map((product : Product) => {
             products.push(product);
+        });
+
+        // Get the products from the sql database
+        console.clear();
+        console.log("Testing SQL query");
+        db.execute("SELECT * FROM products")
+        .then((result :  [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]]) => {
+            console.log(result[0]);
+        }).catch((error) => {
+            console.log(error);
         });
 
         return products;
