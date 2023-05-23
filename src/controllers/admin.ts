@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
 import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
+import { test } from 'node:test';
 
 // Instantiate our products 
 const productsInstance = new Products();
@@ -44,9 +45,27 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 
     // Get the products from our json file
     const result = productsInstance.getProducts();
+    console.clear();
+
+    // Get the static response from the cart
+    // Execute our promise here in our sync code so we don't need to make eveyrhting else async
+    productsInstance.fetchAll().then(([rows, fieldData] : any) => {
+
+        console.log("check our rows");
+        console.log(rows);
+        console.log("Check out fieldata");
+        console.log(fieldData);
+
+
+        response.render("admin/products", { prods : rows, pageTitle : "Admin Products", hasProducts : rows.length > 0 });
+
+    }).catch((error) => {
+
+        console.log(error);
+    });
+
 
     // Render the admin products ejs template
-    response.render("admin/products", { prods : result, pageTitle : "Admin Products", hasProducts : result.length > 0 });
 };
 
 // Update product controller

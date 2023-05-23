@@ -117,17 +117,14 @@ class Products {
             products.push(product);
         });
 
-        // Get the products from the sql database
-        console.clear();
-        console.log("Testing SQL query");
-        db.execute("SELECT * FROM products")
-        .then((result :  [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]]) => {
-            console.log(result[0]);
-        }).catch((error) => {
-            console.log(error);
-        });
-
         return products;
+    };
+
+    // Fetch all products from the database
+    fetchAll = () => {
+
+        console.log("Fetch all");
+        return db.execute("SELECT * FROM products");
     };
 
     // Update a single product in the JSON
