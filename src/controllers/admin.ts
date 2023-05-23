@@ -49,6 +49,7 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 
     // Get the static response from the cart
     // Execute our promise here in our sync code so we don't need to make eveyrhting else async
+    // This will move over to be async later
     productsInstance.fetchAll().then(([rows, fieldData] : any) => {
 
         console.log("check our rows");
