@@ -15,7 +15,6 @@ import fs from "fs";
 import path from "path";
 import rootDir from "../util/path";
 import db from "../util/database";
-import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Setting the interface for the Product objects
 interface Product {
@@ -123,7 +122,6 @@ class Products {
     // Fetch all products from the database
     fetchAll = () => {
 
-        console.log("Fetch all");
         return db.execute("SELECT * FROM products");
     };
 
@@ -140,6 +138,7 @@ class Products {
 
             // If the ID's the same, create our new array of
             if (product.id === id) {
+
                 return {
                     title : title,
                     image : image,
@@ -172,9 +171,33 @@ class Products {
                 const json = JSON.stringify(newProducts, null, "\t");
 
                 // Save the file to the folder, and if it doesn't exist, create it!
-                fs.writeFileSync(p, json, "utf-8");
+                // fs.writeFileSync(p, json, "utf-8");
             }
         });
+
+        // Update product async
+        const updateSQLDatabase = async () => {
+
+            // Query our database
+            const result = await this.fetchAll();
+
+            // Get our products from the result
+            const resultsArray = JSON.parse( JSON.stringify(result[0]) );
+
+            console.clear();
+
+            console.log("Edit product query");
+            console.log("Results array");
+            console.log(resultsArray);
+            console.log("Id will be below");
+            console.log(id);
+
+            console.log("\n\n");
+
+        };
+
+        // Run the update SQL database method, this updates our table in WorkBench
+        updateSQLDatabase();
     }
 
     deleteProduct = (id : string) => {

@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
 import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
-import { test } from 'node:test';
+import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Instantiate our products 
 const productsInstance = new Products();
@@ -43,30 +43,37 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
 // Get admin products controller
 const getProducts = (request : Request, response : Response, next : NextFunction) => {
 
-    // Get the products from our json file
-    const result = productsInstance.getProducts();
-    console.clear();
-
     // Get the static response from the cart
     // Execute our promise here in our sync code so we don't need to make eveyrhting else async
     // This will move over to be async later
-    productsInstance.fetchAll().then(([rows, fieldData] : any) => {
 
-        console.log("check our rows");
-        console.log(rows);
-        console.log("Check out fieldata");
-        console.log(fieldData);
+    /*
+        productsInstance.fetchAll().then(([rows] : any) => {
 
+            // Render the view of the page
+            response.render("admin/products", { prods : rows , pageTitle : "Admin Products" , hasProducts : rows.length > 0 } );
 
-        response.render("admin/products", { prods : rows, pageTitle : "Admin Products", hasProducts : rows.length > 0 });
+        }).catch((error) => {
 
-    }).catch((error) => {
+            console.log(error);
 
-        console.log(error);
-    });
-
+        }); 
+    */
 
     // Render the admin products ejs template
+    const renderAdminProducts = async () => {
+
+        // Get the result of the SQL query
+        const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
+        
+        // Convert our result from a RowDataPacket to an array
+        const resultsArray = JSON.parse( JSON.stringify(result[0] ));
+
+        // Render the view of the page
+        response.render("admin/products", { prods : resultsArray , pageTitle : "Admin Products" , hasProducts : resultsArray.length > 0 } );
+    };
+
+    renderAdminProducts();
 };
 
 // Update product controller
@@ -88,7 +95,9 @@ const deleteProduct = (request : Request, response : Response, next : NextFuncti
 
     // Delete the product based on the ID in the JSON array
     productsInstance.deleteProduct(request.params.id);
-    Cart.deleteProduct(request.params.id);
+
+    // 
+    Cart.deleteProduct( request.params.id );
 
     // Redirect to the admin products page since we executed admin functionality
     response.redirect("/admin/products");
