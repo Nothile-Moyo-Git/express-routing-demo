@@ -16,6 +16,8 @@ import path from "path";
 import rootDir from "../util/path";
 import db from "../util/database";
 
+const tableName = "products";
+
 // Setting the interface for the Product objects
 interface Product {
     title : string,
@@ -23,7 +25,16 @@ interface Product {
     description : string,
     price : number,
     id : string
-}
+};
+
+interface SQLProduct {
+    title : string,
+    image : string,
+    description : string,
+    price : number,
+    id : string,
+    productid : string
+};
 
 class Products {
 
@@ -180,24 +191,42 @@ class Products {
 
             // Query our database
             const result = await this.fetchAll();
+            console.log("What's in our results?");
+            console.log(result);
 
             // Get our products from the result
-            const resultsArray = JSON.parse( JSON.stringify(result[0]) );
+            const resultsArray : SQLProduct[] = JSON.parse( JSON.stringify(result[0]) );
 
-            console.clear();
+            // Create our new array of products will replace the old one with and eventually save it
+            const newProducts = resultsArray.map((product : SQLProduct) => {
 
-            console.log("Edit product query");
-            console.log("Results array");
-            console.log(resultsArray);
-            console.log("Id will be below");
-            console.log(id);
+                // If the ID's the same, create our new array of
+                if (product.productid === id) {
 
-            console.log("\n\n");
+                    return {
+                        title : title,
+                        image : image,
+                        description : description,
+                        price : price, 
+                        id : product.id,
+                        productid : id
+                    };
+                }
 
+                // Return the original product if it's not the one we're updating
+                return product;
+            });
+            
+            // Update the product in the database where the productId matches the id of the product to update
+            const sqlQuery = (`UPDATE ${tableName} SET title = '${title}', image = '${image}', description = '${description}', price = ${price} WHERE productid = '${id}'`);
+
+            await db.execute(sqlQuery);
+
+            return newProducts;
         };
 
         // Run the update SQL database method, this updates our table in WorkBench
-        updateSQLDatabase();
+        return updateSQLDatabase();
     }
 
     deleteProduct = (id : string) => {

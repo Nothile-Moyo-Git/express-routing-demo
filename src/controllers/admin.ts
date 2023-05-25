@@ -43,22 +43,6 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
 // Get admin products controller
 const getProducts = (request : Request, response : Response, next : NextFunction) => {
 
-    // Get the static response from the cart
-    // Execute our promise here in our sync code so we don't need to make eveyrhting else async
-    // This will move over to be async later
-
-    /*
-        productsInstance.fetchAll().then(([rows] : any) => {
-
-            // Render the view of the page
-            response.render("admin/products", { prods : rows , pageTitle : "Admin Products" , hasProducts : rows.length > 0 } );
-
-        }).catch((error) => {
-
-            console.log(error);
-
-        }); 
-    */
 
     // Render the admin products ejs template
     const renderAdminProducts = async () => {
@@ -73,21 +57,37 @@ const getProducts = (request : Request, response : Response, next : NextFunction
         response.render("admin/products", { prods : resultsArray , pageTitle : "Admin Products" , hasProducts : resultsArray.length > 0 } );
     };
 
+    // Execute the async function in order to render our view after finishing our sql query
     renderAdminProducts();
 };
 
 // Update product controller
 const updateProduct = (request : Request, response : Response, next : NextFunction) => {
 
-    productsInstance.updateProduct(
-        request.body.title,
-        request.body.image,
-        request.body.description,
-        request.body.price,
-        request.params.id
-    );
+    // Execute update functionality asyncronously
+    const updateProductsAsync = async () => {
 
-    response.redirect("/admin/products");
+        const results = await productsInstance.updateProduct(
+            request.body.title,
+            request.body.image,
+            request.body.description,
+            request.body.price,
+            request.params.id
+        );
+
+        console.clear();
+        console.log("Results array");
+        console.log(results);
+        
+        // Render the view of the page
+        response.render("admin/products", { prods : results , pageTitle : "Admin Products" , hasProducts : results.length > 0 } );
+    
+    };
+
+    updateProductsAsync();
+
+    // Render the page with the new products
+
 };
 
 // Delete product controller
