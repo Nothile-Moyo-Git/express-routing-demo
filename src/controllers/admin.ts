@@ -67,6 +67,7 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
     // Execute update functionality asyncronously
     const updateProductsAsync = async () => {
 
+        // Get the results of the update product query
         const results = await productsInstance.updateProduct(
             request.body.title,
             request.body.image,
@@ -74,20 +75,14 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
             request.body.price,
             request.params.id
         );
-
-        console.clear();
-        console.log("Results array");
-        console.log(results);
         
         // Render the view of the page
         response.render("admin/products", { prods : results , pageTitle : "Admin Products" , hasProducts : results.length > 0 } );
     
     };
 
-    updateProductsAsync();
-
     // Render the page with the new products
-
+    updateProductsAsync();
 };
 
 // Delete product controller

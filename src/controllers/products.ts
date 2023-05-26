@@ -10,40 +10,53 @@
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
+import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import Products from "../models/products";
 
-// Product interface
-interface Product {
+// Sql product interface
+interface SQLProduct {
     title : string,
     image : string,
     description : string,
     price : number,
-    id : string
-}
+    id : string,
+    productid : string
+};
 
 // Instantiate our products 
 const productsInstance = new Products();
 
 // Get admin edit product controller
 const getAdminEditProduct = (request : Request, response : Response, next : NextFunction) => {
+    
+    // Get async admin edit product
+    const getAdminEditProductAsync = async () => {
 
-    // Get all our products in an array
-    const products = productsInstance.getProducts();
+        // Products
+        const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
 
-    // Filter the appropriate product based on the ID
-    const editProduct = products.filter((product : Product) => {
-        return product.id === request.params.id;
-    });
+        // Convert our result from a RowDataPacket to an array
+        const resultsArray = JSON.parse( JSON.stringify(result[0] ));
 
-    // Render the edit products template
-    response.render(
-        "admin/edit-product", 
-        { 
-            pageTitle : "Edit Products", 
-            id : request.params.id, 
-            productInformation : editProduct[0],
-            hasProducts : editProduct.length !== 0
+        // Filter the appropriate product based on the ID
+        const editProductItem = resultsArray.filter((product : SQLProduct) => {
+            return product.productid === request.params.id;
         });
+
+        // Render the edit products template
+        response.render(      
+            "admin/edit-product", 
+            { 
+                pageTitle : "Edit Products", 
+                id : request.params.id, 
+                productInformation : editProductItem[0],
+                hasProducts : editProductItem.length !== 0
+            }
+        );
+    };
+
+    getAdminEditProductAsync();
+
 };
 
 export { getAdminEditProduct };

@@ -98,6 +98,8 @@ h1{
     &__item{
         width: 20%;
         text-align: center;
+        display: flex;
+        align-items: center;
 
         @include breakpoint(tablet){
             width: 100%;

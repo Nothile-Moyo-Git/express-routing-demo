@@ -50,7 +50,7 @@ class Products {
     addProduct = (product : Product) => {
         
         // Add the new product to our array of products 
-        this.products.push(product);
+        // this.products.push(product);
     };
 
     // Save to the products json file
@@ -102,10 +102,21 @@ class Products {
                 const json = JSON.stringify(products, null, "\t");
 
                 // Save the file to the folder, and if it doesn't exist, create it!
-                fs.writeFileSync(p, json, "utf-8");
+                // fs.writeFileSync(p, json, "utf-8");
             }
-
         });
+
+        // Save the product to the SQL database
+        const saveProductAsync = async() => {
+
+            // Create insert query
+            const sqlQuery = `INSERT into products (title, image, description, price, productid) VALUES ('${product.title}', '${product.image}', '${product.description}', ${Number(product.price)}, '${product.id}')`;
+
+            // Insert the new item into our database and hopefully pull it back out
+            await db.execute(sqlQuery);
+        };
+
+        saveProductAsync();
     }
 
     // Get products
@@ -191,8 +202,6 @@ class Products {
 
             // Query our database
             const result = await this.fetchAll();
-            console.log("What's in our results?");
-            console.log(result);
 
             // Get our products from the result
             const resultsArray : SQLProduct[] = JSON.parse( JSON.stringify(result[0]) );

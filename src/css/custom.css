@@ -301,7 +301,9 @@ h1 {
       flex-direction: column; } }
   .menu__item {
     width: 20%;
-    text-align: center; }
+    text-align: center;
+    display: flex;
+    align-items: center; }
     @media (max-width: 768px) {
       .menu__item {
         width: 100%;
