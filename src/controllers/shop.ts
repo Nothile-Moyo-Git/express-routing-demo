@@ -96,14 +96,20 @@ const getCheckout = ( request : Request, response : Response, next : NextFunctio
 // Get product detail controller
 const getProductDetails = ( request : Request, response : Response, next : NextFunction ) => {
 
-    // Get the single product
-    const result = productsInstance.getProductById( request.params.id );
+    // Get product details async
+    const getProductDetailsAsync = async() => {
 
-    let hasValue : boolean;
-    result ? hasValue = true : hasValue = false;
+        const result = await productsInstance.getProductById( request.params.id );
 
-    // Render the admin products ejs template
-    response.render("shop/product-detail", { hasProduct : hasValue, productDetails : result, pageTitle : "Product Details" });
+        let hasValue : boolean;
+        result ? hasValue = true : hasValue = false;
+    
+        // Render the admin products ejs template
+        response.render("shop/product-detail", { hasProduct : hasValue, productDetails : result, pageTitle : "Product Details" });
+    };
+
+    getProductDetailsAsync();
+
 };
 
 

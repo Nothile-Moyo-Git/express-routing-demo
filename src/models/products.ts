@@ -39,7 +39,7 @@ interface SQLProduct {
 class Products {
 
     // Products variable
-    public products : Product[] = [];
+    public products : SQLProduct[] = [];
 
     // Create an empty products array on class instantiation
     construtor(){
@@ -150,53 +150,6 @@ class Products {
     // Update a single product in the JSON
     updateProduct = (title : string, image : string, description : string, price : number, id : string) => {
 
-        // Get the current products
-        const result = this.getProducts();
-
-        console.clear();
-
-        // Create our new array of products will replace the old one with and eventually save it
-        const newProducts : Product[] = result.map((product : Product) => {
-
-            // If the ID's the same, create our new array of
-            if (product.id === id) {
-
-                return {
-                    title : title,
-                    image : image,
-                    description : description,
-                    price : price, 
-                    id : id
-                };
-            }
-
-            return product;
-        });
-
-        // Create the path to our file
-        const p = path.join(
-            rootDir, 
-            "data",
-            "products.json" 
-        );
-
-        // Read our saved file, we read it first to find the previous JSON and append to it
-        fs.readFile(p, (err: NodeJS.ErrnoException) => {
-
-            // If we fail at reading our file, create a new one
-            if (err) {
-
-                console.log( err );
-            }else{
-
-                // Stringify our JSON so we can save it to the appropriate file
-                const json = JSON.stringify(newProducts, null, "\t");
-
-                // Save the file to the folder, and if it doesn't exist, create it!
-                // fs.writeFileSync(p, json, "utf-8");
-            }
-        });
-
         // Update product async
         const updateSQLDatabase = async () => {
 
@@ -270,28 +223,45 @@ class Products {
                 const json = JSON.stringify(filteredProducts, null, "\t");
 
                 // Save the file to the folder, and if it doesn't exist, create it!
-                fs.writeFileSync(p, json, "utf-8");
+                // fs.writeFileSync(p, json, "utf-8");
             }
         });
+
+        // Delete the product from the SQL database
+        const deleteProductAsync = async() => {
+
+            // Sql query to delete the product from the database
+            const sqlQuery = `DELETE FROM products WHERE productid = '${id}'`;
+
+            // Execute the query
+            await db.execute(sqlQuery);
+        };
+
+        // Execute the delete async code
+        deleteProductAsync();
 
     };
 
     // Get the individual product for product details without the ability to edit it
     getProductById = (id : string) => {
 
-        // Outputting the id
-        console.clear();
 
-        // Get the current products
-        const result = this.getProducts();
+        // Get a single product from the database by its id
+        const getProductByIdAsync = async () => {
 
-        // Find the product information 
-        const productDetail = result.find((product : Product) => {
-            return product.id === id;
-        });
+            // Sql query to get product by id
+            const sqlQuery = `SELECT * FROM products WHERE productid = '${id}'`;
 
-        // Output the product detail
-        return productDetail;
+            // Execute our sql query
+            const result = await db.execute(sqlQuery);
+
+            // Get our products from the result
+            const resultsArray : SQLProduct[] = JSON.parse( JSON.stringify(result[0]) );
+
+            return resultsArray[0];
+        };
+
+        return getProductByIdAsync();
     }
 }
 

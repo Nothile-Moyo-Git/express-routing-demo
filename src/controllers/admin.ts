@@ -17,16 +17,7 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 
 // Post add product controller
 const postAddProduct = (request : Request, response : Response, next : NextFunction) => {
-
-    // Add a new product to the array
-    productsInstance.addProduct({ 
-        title : request.body.title,
-        image : request.body.image,
-        description : request.body.description,
-        price : request.body.price,
-        id: uuidv4() 
-    }); 
-
+ 
     // Once we've added the product, save it to the messages.json file found in the data folder
     productsInstance.saveProduct({ 
         title : request.body.title,
