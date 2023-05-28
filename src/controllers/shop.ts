@@ -16,6 +16,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Cart from "../models/cart";
 import Products from "../models/products";
+import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Instantiate our products 
 const productsInstance = new Products();
@@ -29,11 +30,20 @@ const getIndex = ( request : Request, response : Response, next : NextFunction )
 // Get products controller
 const getProducts = (request : Request, response : Response, next : NextFunction) => {
 
-    // Get the products from our JSON file
-    const result = productsInstance.getProducts();
+    // Render the products page async
+    const getProductsAsync = async() => {
 
-    // Render the ejs template file, we don't need a file extension to do this
-    response.render("shop/product-list", { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
+        // Get the result of the SQL query
+        const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
+
+        // Convert our result from a RowDataPacket to an array
+        const resultsArray = JSON.parse( JSON.stringify(result[0] ));
+
+        // Render the ejs template file, we don't need a file extension to do this
+        response.render("shop/product-list", { prods : resultsArray, pageTitle: "Shop", path: "/", hasProducts : resultsArray.length > 0 });
+    };
+
+    getProductsAsync();
 };
 
 // Get the cart
