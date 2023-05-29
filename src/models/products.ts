@@ -15,6 +15,8 @@ import fs from "fs";
 import path from "path";
 import rootDir from "../util/path";
 import db from "../util/database";
+import { sequelize } from "../util/database";
+import { Sequelize, DataTypes } from "sequelize";
 
 const tableName = "products";
 
@@ -35,6 +37,33 @@ interface SQLProduct {
     id : string,
     productid : string
 };
+
+// Sequelize object
+const SequelizeProducts = sequelize.define("sequelizeProducts",{
+    id : {
+        type : DataTypes.INTEGER,
+        autoIncrement : true,
+        allowNull : false,
+        primaryKey : true
+    },
+    title : DataTypes.STRING,
+    image : {
+        type : DataTypes.STRING,
+        allowNull : false
+    },
+    description: {
+        type : DataTypes.STRING,
+        allowNull : false
+    },
+    price : {
+        type : DataTypes.DOUBLE,
+        allowNull : false
+    },
+    productid : {
+        type : DataTypes.STRING,
+        allowNull : false
+    }
+});
 
 class Products {
 
@@ -265,4 +294,5 @@ class Products {
     }
 }
 
+export { SequelizeProducts };
 export default Products;
