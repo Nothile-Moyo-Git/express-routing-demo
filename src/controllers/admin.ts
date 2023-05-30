@@ -1,6 +1,7 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
+import { SequelizeProducts } from '../models/products';
 import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
 import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
