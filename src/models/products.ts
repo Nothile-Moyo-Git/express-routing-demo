@@ -38,8 +38,8 @@ interface SQLProduct {
     productid : string
 };
 
-// Sequelize object
-const SequelizeProducts = sequelize.define("sequelizeProducts",{
+// Sequelize object, creates our table if it doesn't exist
+const SequelizeProducts = sequelize.define("sequelizeProducts", {
     id : {
         type : DataTypes.INTEGER,
         autoIncrement : true,
@@ -138,11 +138,25 @@ class Products {
         // Save the product to the SQL database
         const saveProductAsync = async() => {
 
+            // Create insert query with sequelize
+            const result = await SequelizeProducts.create({
+                title : product.title,
+                image : product.image,
+                price : Number(product.price),
+                description : product.description,
+                productid : product.id
+            });
+
+            // Output the result
+            console.clear();
+            console.log("Result");
+            console.log(result);
+
             // Create insert query
-            const sqlQuery = `INSERT into products (title, image, description, price, productid) VALUES ('${product.title}', '${product.image}', '${product.description}', ${Number(product.price)}, '${product.id}')`;
+            // const sqlQuery = `INSERT into products (title, image, description, price, productid) VALUES ('${product.title}', '${product.image}', '${product.description}', ${Number(product.price)}, '${product.id}')`;
 
             // Insert the new item into our database and hopefully pull it back out
-            await db.execute(sqlQuery);
+            // await db.execute(sqlQuery);
         };
 
         saveProductAsync();

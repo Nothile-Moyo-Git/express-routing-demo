@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
+import { sequelize } from "./util/database";
 import path from "path";
 
 // Import the .env variables
@@ -24,7 +25,7 @@ app.use( bodyParser.urlencoded({ extended : true }) );
 app.use( express.static( path.join( __dirname, "/css" ) ));
 
 // Serve our image files statically
-app.use( express.static( path.join( __dirname, "/images") ));
+app.use( express.static( path.join( __dirname, "/images" ) ));
 
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
@@ -43,11 +44,19 @@ app.use( shopRoutes );
 // Use the error page router
 app.use( errorRoutes );
 
-// Execute a command by writing SQL as a string
 
+// Start our server async
+const startServer = async () => {
 
-// Listen to the port
-app.listen(port, () => {
+    await sequelize.sync();
 
-    console.log(`[server]: Server is running on http://localhost:${port}`);
-});
+    // Listen to the port
+    app.listen(port, () => {
+
+        console.log(`[server]: Server is running on http://localhost:${port}`);
+    })
+};
+
+// Execute server start
+startServer();
+;
