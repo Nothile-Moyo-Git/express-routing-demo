@@ -43,6 +43,8 @@ const getProducts = (request : Request, response : Response, next : NextFunction
         console.log("Sequelize Products");
         console.log(sequelizeProducts);
 
+        // const productsArray = JSON.parse(JSON.stringify(sequelizeProducts));
+
         // Get the result of the SQL query
         const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
         

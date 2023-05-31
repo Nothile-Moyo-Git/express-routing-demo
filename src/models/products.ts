@@ -124,7 +124,7 @@ class Products {
         const getProductsAsync = async() => {
 
             // Create insert query with sequelize
-            return await SequelizeProducts.findAll();
+            return await SequelizeProducts.findAll({ raw : true });
         };
 
         return getProductsAsync();
