@@ -1,7 +1,6 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
-import { SequelizeProducts } from '../models/products';
 import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
 import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
@@ -38,6 +37,11 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 
     // Render the admin products ejs template
     const renderAdminProducts = async () => {
+
+        const sequelizeProducts = await productsInstance.fetchAllSequelize();
+        console.clear();
+        console.log("Sequelize Products");
+        console.log(sequelizeProducts);
 
         // Get the result of the SQL query
         const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();

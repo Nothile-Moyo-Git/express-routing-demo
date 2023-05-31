@@ -16,7 +16,7 @@ import path from "path";
 import rootDir from "../util/path";
 import db from "../util/database";
 import { sequelize } from "../util/database";
-import { Sequelize, DataTypes } from "sequelize";
+import { DataTypes } from "sequelize";
 
 const tableName = "products";
 
@@ -75,71 +75,14 @@ class Products {
         this.products = [];
     };
 
-    // Add a product to the produts array
-    addProduct = (product : Product) => {
-        
-        // Add the new product to our array of products 
-        // this.products.push(product);
-    };
-
     // Save to the products json file
     saveProduct = (product : Product) => {
-
-        // Create the path to our file
-        const p = path.join(
-            rootDir, 
-            "data",
-            "products.json" 
-        );
-
-        // Read our saved file, we read it first to find the previous JSON and append to it
-        fs.readFile(p, (err: NodeJS.ErrnoException, data: any) => {
-
-            // Array of products we get from the file
-            let products : Product[] = [];
-
-            // If we fail at reading our file, create a new one
-            if (err) {
-
-                console.log( err );
-            }else{
-
-                // If our buffer isn't empty, add it to the products so we can amend our JSON
-                if (data.length !== 0) {
-
-                    // Parse the products into an array we can iterate
-                    const productsArray = JSON.parse( data );
-
-                    // Push each product into the products array so we can save that to the file
-                    productsArray.map(( product : Product ) => {
-
-                        products.push( product );
-                    });
-
-                }
-
-                // Add the new product to the array
-                products.push({
-                    title : product.title,
-                    image : product.image,
-                    description : product.description,
-                    price : Number(product.price),
-                    id : product.id
-                });
-
-                // Stringify our JSON so we can save it to the appropriate file
-                const json = JSON.stringify(products, null, "\t");
-
-                // Save the file to the folder, and if it doesn't exist, create it!
-                // fs.writeFileSync(p, json, "utf-8");
-            }
-        });
 
         // Save the product to the SQL database
         const saveProductAsync = async() => {
 
             // Create insert query with sequelize
-            const result = await SequelizeProducts.create({
+            await SequelizeProducts.create({
                 title : product.title,
                 image : product.image,
                 price : Number(product.price),
@@ -147,16 +90,6 @@ class Products {
                 productid : product.id
             });
 
-            // Output the result
-            console.clear();
-            console.log("Result");
-            console.log(result);
-
-            // Create insert query
-            // const sqlQuery = `INSERT into products (title, image, description, price, productid) VALUES ('${product.title}', '${product.image}', '${product.description}', ${Number(product.price)}, '${product.id}')`;
-
-            // Insert the new item into our database and hopefully pull it back out
-            // await db.execute(sqlQuery);
         };
 
         saveProductAsync();
@@ -182,6 +115,19 @@ class Products {
         });
 
         return products;
+    };
+
+    // Fetch all sequelize style
+    fetchAllSequelize = () => {
+
+        // Save the product to the SQL database
+        const getProductsAsync = async() => {
+
+            // Create insert query with sequelize
+            return await SequelizeProducts.findAll();
+        };
+
+        return getProductsAsync();
     };
 
     // Fetch all products from the database
