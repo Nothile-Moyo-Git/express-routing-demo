@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
 import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
-import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Instantiate our products 
 const productsInstance = new Products();
@@ -34,25 +33,14 @@ const postAddProduct = (request : Request, response : Response, next : NextFunct
 // Get admin products controller
 const getProducts = (request : Request, response : Response, next : NextFunction) => {
 
-
     // Render the admin products ejs template
     const renderAdminProducts = async () => {
 
-        const sequelizeProducts = await productsInstance.fetchAllSequelize();
-        console.clear();
-        console.log("Sequelize Products");
-        console.log(sequelizeProducts);
-
-        // const productsArray = JSON.parse(JSON.stringify(sequelizeProducts));
-
-        // Get the result of the SQL query
-        const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
-        
-        // Convert our result from a RowDataPacket to an array
-        const resultsArray = JSON.parse( JSON.stringify(result[0] ));
+        // Find all sequelize results
+        const sequelizeProducts = await productsInstance.fetchAll();
 
         // Render the view of the page
-        response.render("admin/products", { prods : resultsArray , pageTitle : "Admin Products" , hasProducts : resultsArray.length > 0 } );
+        response.render("admin/products", { prods : sequelizeProducts , pageTitle : "Admin Products" , hasProducts : sequelizeProducts.length > 0 } );
     };
 
     // Execute the async function in order to render our view after finishing our sql query

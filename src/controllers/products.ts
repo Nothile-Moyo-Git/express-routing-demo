@@ -10,7 +10,6 @@
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
-import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import Products from "../models/products";
 
 // Sql product interface
@@ -33,7 +32,7 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
     const getAdminEditProductAsync = async () => {
 
         // Products
-        const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
+        const result = await productsInstance.fetchAll();
 
         // Convert our result from a RowDataPacket to an array
         const resultsArray = JSON.parse( JSON.stringify(result[0] ));

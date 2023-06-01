@@ -16,7 +16,6 @@
 import { Request, Response, NextFunction } from 'express';
 import Cart from "../models/cart";
 import Products from "../models/products";
-import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 // Instantiate our products 
 const productsInstance = new Products();
@@ -34,13 +33,10 @@ const getProducts = (request : Request, response : Response, next : NextFunction
     const getProductsAsync = async() => {
 
         // Get the result of the SQL query
-        const result : [RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader, FieldPacket[]] = await productsInstance.fetchAll();
-
-        // Convert our result from a RowDataPacket to an array
-        const resultsArray = JSON.parse( JSON.stringify(result[0] ));
+        const result = await productsInstance.fetchAll();
 
         // Render the ejs template file, we don't need a file extension to do this
-        response.render("shop/product-list", { prods : resultsArray, pageTitle: "Shop", path: "/", hasProducts : resultsArray.length > 0 });
+        response.render("shop/product-list", { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
     };
 
     getProductsAsync();
@@ -111,11 +107,15 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 
         const result = await productsInstance.getProductById( request.params.id );
 
+        console.clear();
+        console.log("Sequelize result");
+        console.log(result);
+
         let hasValue : boolean;
-        result ? hasValue = true : hasValue = false;
+        result.length > 0 ? hasValue = true : hasValue = false;
     
         // Render the admin products ejs template
-        response.render("shop/product-detail", { hasProduct : hasValue, productDetails : result, pageTitle : "Product Details" });
+        response.render("shop/product-detail", { hasProduct : hasValue, productDetails : result[0], pageTitle : "Product Details" });
     };
 
     getProductDetailsAsync();
