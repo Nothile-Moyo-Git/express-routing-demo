@@ -107,10 +107,6 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 
         const result = await productsInstance.getProductById( request.params.id );
 
-        console.clear();
-        console.log("Sequelize result");
-        console.log(result);
-
         let hasValue : boolean;
         result.length > 0 ? hasValue = true : hasValue = false;
     

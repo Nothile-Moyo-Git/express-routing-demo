@@ -139,11 +139,8 @@ class Products {
             // Query our database
             const result = await this.fetchAll();
 
-            // Get our products from the result
-            const resultsArray : SQLProduct[] = JSON.parse( JSON.stringify(result[0]) );
-
             // Create our new array of products will replace the old one with and eventually save it
-            const newProducts = resultsArray.map((product : SQLProduct) => {
+            const newProducts = result.map((product : any) => {
 
                 // If the ID's the same, create our new array of
                 if (product.productid === id) {
@@ -162,10 +159,17 @@ class Products {
                 return product;
             });
             
-            // Update the product in the database where the productId matches the id of the product to update
-            const sqlQuery = (`UPDATE ${tableName} SET title = '${title}', image = '${image}', description = '${description}', price = ${price} WHERE productid = '${id}'`);
-
-            await db.execute(sqlQuery);
+            // Update the result in our sequelize table
+            await SequelizeProducts.update({ 
+                title : title, 
+                image : image, 
+                description : description, 
+                price : price 
+            },{
+                where : {
+                    productid : id
+                }
+            })
 
             return newProducts;
         };
@@ -188,7 +192,6 @@ class Products {
 
         // Execute the delete async code
         deleteProductAsync();
-
     };
 
     // Get the individual product for product details without the ability to edit it

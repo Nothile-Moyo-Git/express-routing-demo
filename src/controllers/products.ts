@@ -31,16 +31,8 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
     // Get async admin edit product
     const getAdminEditProductAsync = async () => {
 
-        // Products
-        const result = await productsInstance.fetchAll();
-
-        // Convert our result from a RowDataPacket to an array
-        const resultsArray = JSON.parse( JSON.stringify(result[0] ));
-
-        // Filter the appropriate product based on the ID
-        const editProductItem = resultsArray.filter((product : SQLProduct) => {
-            return product.productid === request.params.id;
-        });
+        // Get the single product
+        const singleProduct = await productsInstance.getProductById( request.params.id );
 
         // Render the edit products template
         response.render(      
@@ -48,8 +40,8 @@ const getAdminEditProduct = (request : Request, response : Response, next : Next
             { 
                 pageTitle : "Edit Products", 
                 id : request.params.id, 
-                productInformation : editProductItem[0],
-                hasProducts : editProductItem.length !== 0
+                productInformation : singleProduct[0],
+                hasProducts : singleProduct.length !== 0
             }
         );
     };

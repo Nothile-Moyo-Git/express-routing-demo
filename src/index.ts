@@ -44,7 +44,6 @@ app.use( shopRoutes );
 // Use the error page router
 app.use( errorRoutes );
 
-
 // Start our server async
 const startServer = async () => {
 
