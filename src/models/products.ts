@@ -90,9 +90,19 @@ class Products {
                 productid : product.id
             });
 
+            // Get the updated products
+            const result = await SequelizeProducts.findAll({
+                raw : true
+            });
+
+            // Output the new products so we can render them on the products page
+            return result;
         };
 
-        saveProductAsync();
+        const newProducts = saveProductAsync();
+
+        // Return the new products array
+        return newProducts;
     }
 
     // Get products
@@ -180,17 +190,18 @@ class Products {
 
     deleteProduct = (id : string) => {
 
-        // Delete the product from the SQL database
-        const deleteProductAsync = async() => {
+        // Delete products async method
+        const deleteProductAsync = async () => {
 
-            // Sql query to delete the product from the database
-            const sqlQuery = `DELETE FROM products WHERE productid = '${id}'`;
-
-            // Execute the query
-            await db.execute(sqlQuery);
+            // Execute our sequelize query
+            await SequelizeProducts.destroy({
+                where : {
+                    productid : id
+                }
+            });
         };
 
-        // Execute the delete async code
+        // Execute our method
         deleteProductAsync();
     };
 

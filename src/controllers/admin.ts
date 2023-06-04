@@ -16,18 +16,24 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 
 // Post add product controller
 const postAddProduct = (request : Request, response : Response, next : NextFunction) => {
- 
-    // Once we've added the product, save it to the messages.json file found in the data folder
-    productsInstance.saveProduct({ 
-        title : request.body.title,
-        image : request.body.image,
-        description : request.body.description,
-        price : request.body.price,
-        id: uuidv4() 
-    }); 
 
-    // Redirect to the products page
-    response.redirect("/products");
+    // Add product 
+    const addProductAsync = async () => {
+
+        // Once we've added the product, save it to the messages.json file found in the data folder
+        await productsInstance.saveProduct({ 
+            title : request.body.title,
+            image : request.body.image,
+            description : request.body.description,
+            price : request.body.price,
+            id: uuidv4() 
+        });
+
+        // Redirect to the products page
+        response.redirect("/products");
+    };
+
+    addProductAsync();
 };
 
 // Get admin products controller
@@ -77,8 +83,8 @@ const deleteProduct = (request : Request, response : Response, next : NextFuncti
     // Delete the product based on the ID in the JSON array
     productsInstance.deleteProduct(request.params.id);
 
-    // 
-    Cart.deleteProduct( request.params.id );
+    // Delete the product from the cart
+    // Cart.deleteProduct( request.params.id );
 
     // Redirect to the admin products page since we executed admin functionality
     response.redirect("/admin/products");
