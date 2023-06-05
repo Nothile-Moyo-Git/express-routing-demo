@@ -7,6 +7,8 @@ import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import { sequelize } from "./util/database";
 import path from "path";
+import { SequelizeProducts } from "./models/products";
+import { User } from "./models/user";
 
 // Import the .env variables
 dotenv.config();
@@ -47,6 +49,16 @@ app.use( errorRoutes );
 // Start our server async
 const startServer = async () => {
 
+    // Create the one to many relations for the database
+    SequelizeProducts.belongsTo(User,{
+        constraints : true,
+        onDelete : 'CASCADE'
+    });
+
+    // User associate to many
+    User.hasMany(SequelizeProducts);
+
+    // Sync all models to the database and instantiate them
     await sequelize.sync();
 
     // Listen to the port

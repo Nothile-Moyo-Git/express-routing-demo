@@ -14,11 +14,8 @@
 import fs from "fs";
 import path from "path";
 import rootDir from "../util/path";
-import db from "../util/database";
 import { sequelize } from "../util/database";
 import { DataTypes } from "sequelize";
-
-const tableName = "products";
 
 // Setting the interface for the Product objects
 interface Product {
