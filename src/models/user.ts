@@ -19,7 +19,7 @@ const User = sequelize.define("user", {
     name : {
         type : DataTypes.STRING
     },
-    image : {
+    email : {
         type : DataTypes.STRING
     }
 });

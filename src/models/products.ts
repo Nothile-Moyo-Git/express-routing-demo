@@ -36,7 +36,7 @@ interface SQLProduct {
 };
 
 // Sequelize object, creates our table if it doesn't exist
-const SequelizeProducts = sequelize.define("sequelizeProducts", {
+const SequelizeProducts = sequelize.define("products", {
     id : {
         type : DataTypes.INTEGER,
         autoIncrement : true,
