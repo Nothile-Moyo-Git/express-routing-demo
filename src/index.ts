@@ -10,6 +10,14 @@ import path from "path";
 import { SequelizeProducts } from "./models/products";
 import { Request, Response, NextFunction } from 'express';
 import { User } from "./models/user";
+import { Model } from "sequelize";
+
+// Extend the request object in order to set variables in my request object
+interface UserInterface {
+    id : number,
+    name : string,
+    email : string
+}
 
 // Import the .env variables
 dotenv.config();
@@ -43,19 +51,28 @@ app.set('views', 'src/views');
 // Executes on every request
 app.use("*", ( request : Request, response : Response, next : NextFunction ) => {
 
-    console.log("Get user on load");
-
     // Get the dummy User
     const getUserOnLoad = async () => {
 
         // Get the user result data
-        const userResult = await User.findAll({
+        const userResult : any = await User.findAll({
             raw : true,
-            where : { id : 1 }
+            attributes : ["id", "name", "email"],
+            where : { id : 1 },
+
         });
 
         // Extend the Request type here
+        console.clear();
+        console.log("User result");
+        console.log(userResult[0]);
+        console.log("\n\n");
 
+        const newUser = {
+            id : userResult[0]?.id,
+        }
+
+        request.User = userResult[0];
     };
 
     getUserOnLoad();
@@ -107,4 +124,3 @@ const startServer = async () => {
 
 // Execute server start
 startServer();
-;
