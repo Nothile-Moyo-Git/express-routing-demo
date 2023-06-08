@@ -12,6 +12,17 @@
  * @method getProductDetails : ( request : Request, response : Response, next : NextFunction ) => void
  */
 
+// Extend the request object in order to set variables in my request object
+interface UserInterface {
+    id : number,
+    name : string,
+    email : string
+}
+
+interface RequestWithUserRole extends Request{
+    User ?: UserInterface
+}
+
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Cart from "../models/cart";
@@ -21,13 +32,13 @@ import Products from "../models/products";
 const productsInstance = new Products();
 
 // Get the shop index page
-const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
+const getIndex = ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
 
     response.render("shop/index", { pageTitle : "Shop" });
 };
 
 // Get products controller
-const getProducts = (request : Request, response : Response, next : NextFunction) => {
+const getProducts = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Render the products page async
     const getProductsAsync = async() => {
@@ -43,7 +54,7 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 };
 
 // Get the cart
-const getCart = ( request : Request, response : Response, next : NextFunction ) => {
+const getCart = ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
 
     // Instantiate the cart
     const cartInstance = new Cart();

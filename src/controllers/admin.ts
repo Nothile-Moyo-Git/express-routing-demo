@@ -4,6 +4,17 @@ import Products from "../models/products";
 import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
 
+// Extend the request object in order to set variables in my request object
+interface UserInterface {
+    id : number,
+    name : string,
+    email : string
+}
+
+interface RequestWithUserRole extends Request{
+    User ?: UserInterface
+}
+
 // Instantiate our products 
 const productsInstance = new Products();
 
@@ -15,25 +26,30 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 };
 
 // Post add product controller
-const postAddProduct = (request : Request, response : Response, next : NextFunction) => {
+const postAddProduct = async(request : RequestWithUserRole, response : Response, next : NextFunction) => {
+
+    console.log("Request user");
+    console.log(await request.User);
 
     // Add product 
     const addProductAsync = async () => {
 
         // Once we've added the product, save it to the messages.json file found in the data folder
-        await productsInstance.saveProduct({ 
+        /* await productsInstance.saveProduct({ 
             title : request.body.title,
             image : request.body.image,
             description : request.body.description,
             price : request.body.price,
             id: uuidv4() 
-        });
+        });*/
 
         // Redirect to the products page
-        response.redirect("/products");
+        // response.redirect("/products");
+
     };
 
     addProductAsync();
+    response.redirect('back');
 };
 
 // Get admin products controller

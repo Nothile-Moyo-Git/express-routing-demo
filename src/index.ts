@@ -53,7 +53,7 @@ app.set('views', 'src/views');
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
-app.use("*", ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
+app.use(( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
 
     // Get the dummy User
     const getUserOnLoad = async () => {
@@ -71,12 +71,7 @@ app.use("*", ( request : RequestWithUserRole, response : Response, next : NextFu
         // Set the user in the request object
         request.User = tempResults;
 
-        // Extend the Request type here
-        console.clear();
-        console.log("What's in the request object?");
-        console.log(request.User);
-        console.log("\n\n");
-
+        console.log("Get user on load called");
     };
 
     getUserOnLoad();
