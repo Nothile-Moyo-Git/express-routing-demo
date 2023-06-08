@@ -28,8 +28,9 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 // Post add product controller
 const postAddProduct = async(request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
+    console.clear();
     console.log("Request user");
-    console.log(await request.User);
+    console.log(request.User);
 
     // Add product 
     const addProductAsync = async () => {

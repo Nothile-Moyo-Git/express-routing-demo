@@ -71,11 +71,10 @@ app.use(( request : RequestWithUserRole, response : Response, next : NextFunctio
         // Set the user in the request object
         request.User = tempResults;
 
-        console.log("Get user on load called");
+        next();
     };
 
     getUserOnLoad();
-    next();
 });
 
 // Use our admin router which handles the product form and page
