@@ -1,5 +1,5 @@
 // Imports, we're creating an express http server using development variables
-import express from "express";
+import express, { Application } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
@@ -17,6 +17,10 @@ interface UserInterface {
     id : number,
     name : string,
     email : string
+}
+
+interface RequestWithUserRole extends Request{
+    User ?: UserInterface
 }
 
 // Import the .env variables
@@ -49,30 +53,30 @@ app.set('views', 'src/views');
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
-app.use("*", ( request : Request, response : Response, next : NextFunction ) => {
+app.use("*", ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
 
     // Get the dummy User
     const getUserOnLoad = async () => {
 
         // Get the user result data
-        const userResult : any = await User.findAll({
+        const userResult : UserInterface[] | Model<any, any>[] = await User.findAll({
             raw : true,
             attributes : ["id", "name", "email"],
             where : { id : 1 },
 
         });
 
+        const tempResults : UserInterface = JSON.parse(JSON.stringify(userResult[0]));
+
+        // Set the user in the request object
+        request.User = tempResults;
+
         // Extend the Request type here
         console.clear();
-        console.log("User result");
-        console.log(userResult[0]);
+        console.log("What's in the request object?");
+        console.log(request.User);
         console.log("\n\n");
 
-        const newUser = {
-            id : userResult[0]?.id,
-        }
-
-        request.User = userResult[0];
     };
 
     getUserOnLoad();
