@@ -59,7 +59,7 @@ app.use(( request : RequestWithUserRole, response : Response, next : NextFunctio
     const getUserOnLoad = async () => {
 
         // Get the user result data
-        const userResult : UserInterface[] | Model<any, any>[] = await User.findAll({
+        const userResult = await User.findAll({
             raw : true,
             attributes : ["id", "name", "email"],
             where : { id : 1 },
@@ -71,6 +71,7 @@ app.use(( request : RequestWithUserRole, response : Response, next : NextFunctio
         // Set the user in the request object
         request.User = tempResults;
 
+        // Execute the next middleware, call next in the async call so the next middleware executes
         next();
     };
 

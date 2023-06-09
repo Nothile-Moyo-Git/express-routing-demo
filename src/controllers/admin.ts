@@ -12,7 +12,7 @@ interface UserInterface {
 }
 
 interface RequestWithUserRole extends Request{
-    User ?: UserInterface
+    User ?: UserInterface | any
 }
 
 // Instantiate our products 
@@ -29,28 +29,26 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 const postAddProduct = async(request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     console.clear();
-    console.log("Request user");
-    console.log(request.User);
 
     // Add product 
     const addProductAsync = async () => {
 
         // Once we've added the product, save it to the messages.json file found in the data folder
-        /* await productsInstance.saveProduct({ 
+        await productsInstance.saveProduct({ 
             title : request.body.title,
             image : request.body.image,
             description : request.body.description,
             price : request.body.price,
-            id: uuidv4() 
-        });*/
+            userId : request.User.id,
+            id : uuidv4()
+        });
 
         // Redirect to the products page
-        // response.redirect("/products");
-
+        response.redirect("/products");
     };
 
     addProductAsync();
-    response.redirect('back');
+
 };
 
 // Get admin products controller

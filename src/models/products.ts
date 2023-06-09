@@ -23,7 +23,8 @@ interface Product {
     image : string,
     description : string,
     price : number,
-    id : string
+    id : string,
+    userId : number
 };
 
 interface SQLProduct {
@@ -32,7 +33,7 @@ interface SQLProduct {
     description : string,
     price : number,
     id : string,
-    productid : string
+    productid : number
 };
 
 // Sequelize object, creates our table if it doesn't exist
@@ -84,7 +85,8 @@ class Products {
                 image : product.image,
                 price : Number(product.price),
                 description : product.description,
-                productid : product.id
+                productid : product.id,
+                userId : product.userId
             });
 
             // Get the updated products
