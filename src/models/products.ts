@@ -127,26 +127,31 @@ class Products {
     };
 
     // Fetch all products from the database
-    fetchAll = () => {
+    fetchAll = (userId : number) => {
 
         // Save the product to the SQL database
         const getProductsAsync = async() => {
 
             // Create insert query with sequelize
-            return await SequelizeProducts.findAll({ raw : true });
+            return await SequelizeProducts.findAll({ 
+                raw : true,
+                where : {
+                    userId : userId
+                } 
+            });
         };
 
         return getProductsAsync();
     };
 
     // Update a single product in the JSON
-    updateProduct = (title : string, image : string, description : string, price : number, id : string) => {
+    updateProduct = (title : string, image : string, description : string, price : number, id : string, userId : number) => {
 
         // Update product async
         const updateSQLDatabase = async () => {
 
             // Query our database
-            const result = await this.fetchAll();
+            const result = await this.fetchAll( userId );
 
             // Create our new array of products will replace the old one with and eventually save it
             const newProducts = result.map((product : any) => {

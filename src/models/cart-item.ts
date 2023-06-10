@@ -9,13 +9,14 @@
 import { sequelize } from "../util/database";
 import { DataTypes } from "sequelize";
 
-const SequelizeCart = sequelize.define("cart",{
+const SequelizeCartItem = sequelize.define("cartItem",{
     id : {
         type : DataTypes.STRING,
         autoIncrement : true,
         allowNull : false,
         primaryKey : true
-    }
+    },
+    quantity : DataTypes.INTEGER
 });
 
-export default SequelizeCart;
+export default SequelizeCartItem;

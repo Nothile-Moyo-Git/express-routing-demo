@@ -10,7 +10,8 @@ import path from "path";
 import { SequelizeProducts } from "./models/products";
 import { Request, Response, NextFunction } from 'express';
 import { User } from "./models/user";
-import { Model } from "sequelize";
+import SequelizeCart from "./models/cart";
+import SequelizeCartItem from "./models/cart-item";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -93,9 +94,14 @@ const startServer = async () => {
 
     // Create the one to many relations for the database
     SequelizeProducts.belongsTo( User, { constraints : true, onDelete : 'CASCADE' });
+    SequelizeCart.belongsTo( User );
 
     // User associate to many
     User.hasMany( SequelizeProducts );
+    User.hasOne( SequelizeCart );
+
+    // Many to many relationship since one cart can have multiple items, but a product can also be in multiple carts
+
 
     // Sync all models to the database and instantiate them
     // Use { force : true } if you want to rebuild the tables when you create the server

@@ -25,7 +25,6 @@ interface RequestWithUserRole extends Request{
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
-import Cart from "../models/cart";
 import Products from "../models/products";
 
 // Instantiate our products 
@@ -44,7 +43,7 @@ const getProducts = (request : RequestWithUserRole, response : Response, next : 
     const getProductsAsync = async() => {
 
         // Get the result of the SQL query
-        const result = await productsInstance.fetchAll();
+        const result = await productsInstance.fetchAll( request.User.id );
 
         // Render the ejs template file, we don't need a file extension to do this
         response.render("shop/product-list", { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
@@ -52,51 +51,6 @@ const getProducts = (request : RequestWithUserRole, response : Response, next : 
 
     getProductsAsync();
 };
-
-// Get the cart
-const getCart = ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
-
-    // Instantiate the cart
-    const cartInstance = new Cart();
-
-    // Output the cart instance
-    cartInstance.getProducts();
-
-    // Render the cart page
-    response.render("shop/cart", { 
-        pageTitle : "Your Cart", 
-        hasProducts : cartInstance.cartItems.length > 0, 
-        products : cartInstance.cartItems,
-        totalPrice : cartInstance.totalPrice
-    });
-};
-
-const postCartDelete = ( request : Request, response : Response, next : NextFunction ) => {
-
-    // Instantiate the cart
-    const cartInstance = new Cart();
-
-    // Get the product id in order to delete it from the Cart
-    const productId = request.body.productId;
-
-    console.clear();
-
-    // Execute remove item from cart method
-    cartInstance.removeCartItem(productId);
-
-    // Reload the page
-    response.redirect("/cart");
-};
-
-// Handle the post request for the cart
-const postCart = ( request : Request, response : Response, next : NextFunction ) => {
-
-    // Get the params ID 
-    Cart.addProduct( request.body.productId );
-
-    // Redirect to the cart page
-    response.redirect("/cart");
-}
 
 // Get the orders
 const getOrders = ( request : Request, response : Response, next : NextFunction ) => {
@@ -130,4 +84,4 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 };
 
 
-export { getCart, postCart, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+export { getProducts, getCheckout, getIndex, getOrders, getProductDetails };

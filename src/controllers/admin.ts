@@ -1,7 +1,6 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
-import Cart from '../models/cart';
 import { v4 as uuidv4 } from "uuid";
 
 // Extend the request object in order to set variables in my request object
@@ -52,13 +51,13 @@ const postAddProduct = async(request : RequestWithUserRole, response : Response,
 };
 
 // Get admin products controller
-const getProducts = (request : Request, response : Response, next : NextFunction) => {
+const getProducts = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Render the admin products ejs template
     const renderAdminProducts = async () => {
 
         // Find all sequelize results
-        const sequelizeProducts = await productsInstance.fetchAll();
+        const sequelizeProducts = await productsInstance.fetchAll( request.User.id );
 
         // Render the view of the page
         response.render("admin/products", { prods : sequelizeProducts , pageTitle : "Admin Products" , hasProducts : sequelizeProducts.length > 0 } );
@@ -69,7 +68,7 @@ const getProducts = (request : Request, response : Response, next : NextFunction
 };
 
 // Update product controller
-const updateProduct = (request : Request, response : Response, next : NextFunction) => {
+const updateProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Execute update functionality asyncronously
     const updateProductsAsync = async () => {
@@ -80,7 +79,8 @@ const updateProduct = (request : Request, response : Response, next : NextFuncti
             request.body.image,
             request.body.description,
             request.body.price,
-            request.params.id
+            request.params.id,
+            request.User.id
         );
         
         // Render the view of the page
