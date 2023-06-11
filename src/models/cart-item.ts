@@ -11,7 +11,7 @@ import { DataTypes } from "sequelize";
 
 const SequelizeCartItem = sequelize.define("cartItem",{
     id : {
-        type : DataTypes.STRING,
+        type : DataTypes.INTEGER,
         autoIncrement : true,
         allowNull : false,
         primaryKey : true
