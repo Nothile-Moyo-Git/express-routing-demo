@@ -12,6 +12,14 @@
  * @method getProductDetails : ( request : Request, response : Response, next : NextFunction ) => void
  */
 
+// Import the cart sequelize
+import SequelizeCart from "../models/cart";
+
+// import our express types for TypeScript use
+import { Request, Response, NextFunction } from 'express';
+import Products from "../models/products";
+
+
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
     id : number,
@@ -22,10 +30,6 @@ interface UserInterface {
 interface RequestWithUserRole extends Request{
     User ?: UserInterface
 }
-
-// import our express types for TypeScript use
-import { Request, Response, NextFunction } from 'express';
-import Products from "../models/products";
 
 // Instantiate our products 
 const productsInstance = new Products();
@@ -83,5 +87,34 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 
 };
 
+// Get the cart and all the products inside of it
+const getCart = (request : any, response : Response, next : NextFunction) => {
 
-export { getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+    // Get the current cart based on the user
+    const getCartAsync = async () => {
+
+        // Get the cart results
+        const cartResults = await SequelizeCart.findAll({ 
+            where : {
+                userId : request.User.id
+            } 
+        });
+
+        console.log("Cart results");
+        console.log(cartResults);
+
+        // Render the admin products ejs template
+        response.render("shop/cart", { 
+            hasProducts : false, 
+            products : [], 
+            pageTitle : "Your Cart",
+            totalPrice : 0
+         });
+    };
+
+    // Execute get cart functionality
+    getCartAsync();
+};
+
+
+export { getCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };

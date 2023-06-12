@@ -94,15 +94,19 @@ app.use( errorRoutes );
 const startServer = async () => {
 
     // Create the one to many relations for the database
+    // Creates a foreign key which is the userid found in the products table
+    // Also creates a foreign 
     SequelizeProducts.belongsTo( User, { constraints : true, onDelete : 'CASCADE' });
     SequelizeCart.belongsTo( User );
 
     // User associate to many
+    // Creates a join between the products and the cart
     User.hasMany( SequelizeProducts );
     User.hasOne( SequelizeCart );
 
     // Many to many relationship since one cart can have multiple items, but a product can also be in multiple carts
-    SequelizeProducts.belongsToMany(SequelizeCart,{ through: SequelizeCartItem });
+    // Since it's a many to many relationship through the cart item, the product and userid will now be in cart items
+    SequelizeProducts.belongsToMany(SequelizeCart, { through: SequelizeCartItem });
     SequelizeCart.belongsToMany(SequelizeProducts, { through : SequelizeCartItem });
 
     // Sync all models to the database and instantiate them
