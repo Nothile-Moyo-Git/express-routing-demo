@@ -55,23 +55,19 @@ app.set('views', 'src/views');
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
-app.use(( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
+app.use(( request : RequestWithUserRole | any, response : Response, next : NextFunction ) => {
 
     // Get the dummy User
     const getUserOnLoad = async () => {
 
         // Get the user result data
         const userResult = await User.findAll({
-            raw : true,
             attributes : ["id", "name", "email"],
-            where : { id : 1 },
-
+            where : { id : 1 }
         });
 
-        const tempResults : UserInterface = JSON.parse(JSON.stringify(userResult[0]));
-
         // Set the user in the request object
-        request.User = tempResults;
+        request.User = userResult;
 
         // Execute the next middleware, call next in the async call so the next middleware executes
         next();
@@ -106,7 +102,7 @@ const startServer = async () => {
 
     // Many to many relationship since one cart can have multiple items, but a product can also be in multiple carts
     // Since it's a many to many relationship through the cart item, the product and userid will now be in cart items
-    SequelizeProducts.belongsToMany(SequelizeCart, { through: SequelizeCartItem });
+    SequelizeProducts.belongsToMany(SequelizeCart, { through : SequelizeCartItem });
     SequelizeCart.belongsToMany(SequelizeProducts, { through : SequelizeCartItem });
 
     // Sync all models to the database and instantiate them

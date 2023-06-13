@@ -41,13 +41,13 @@ const getIndex = ( request : RequestWithUserRole, response : Response, next : Ne
 };
 
 // Get products controller
-const getProducts = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const getProducts = (request : any, response : Response, next : NextFunction) => {
 
     // Render the products page async
     const getProductsAsync = async() => {
 
         // Get the result of the SQL query
-        const result = await productsInstance.fetchAll( request.User.id );
+        const result = await productsInstance.fetchAll( request.User[0].dataValues.id );
 
         // Render the ejs template file, we don't need a file extension to do this
         response.render("shop/product-list", { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
@@ -88,7 +88,7 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
 };
 
 // Get the cart and all the products inside of it
-const getCart = (request : any, response : Response, next : NextFunction) => {
+const getCart = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Get the current cart based on the user
     const getCartAsync = async () => {
@@ -96,12 +96,17 @@ const getCart = (request : any, response : Response, next : NextFunction) => {
         // Get the cart results
         const cartResults = await SequelizeCart.findAll({ 
             where : {
-                userId : request.User.id
+                userId : request.User[0].dataValues.id
             } 
         });
 
+        console.clear();
         console.log("Cart results");
         console.log(cartResults);
+        console.log("User");
+        console.log(request.User);
+        console.log("What's in the cart");
+        console.log(request.User[0].getCart());
 
         // Render the admin products ejs template
         response.render("shop/cart", { 
