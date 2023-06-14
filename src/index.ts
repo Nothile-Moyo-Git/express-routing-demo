@@ -55,7 +55,7 @@ app.set('views', 'src/views');
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
-app.use(( request : RequestWithUserRole | any, response : Response, next : NextFunction ) => {
+app.use(( request : any, response : Response, next : NextFunction ) => {
 
     // Get the dummy User
     const getUserOnLoad = async () => {

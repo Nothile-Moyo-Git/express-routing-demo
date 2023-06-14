@@ -6,7 +6,8 @@
  */
 
 import { sequelize } from "../util/database";
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from "sequelize";
+
 
 // Sequelize object, creates our table if it doesn't exist
 const User = sequelize.define("user", {
@@ -23,5 +24,16 @@ const User = sequelize.define("user", {
         type : DataTypes.STRING
     }
 });
+
+// Extending the sequelize model for typescript
+class UserModel extends Model<InferAttributes<UserModel>,InferCreationAttributes<UserModel>>{
+
+    // 'CreationOptional' is a special type that marks the field as optional
+    // when creating an instance of the model (such as using Model.create()).
+
+    declare id : CreationOptional<number>;
+    declare name : string;
+    declare email : string;
+}
 
 export { User };

@@ -105,8 +105,10 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
         console.log(cartResults);
         console.log("User");
         console.log(request.User);
-        console.log("What's in the cart");
-        console.log(request.User[0].getCart());
+        console.log("\n\n");
+        console.log("What are the object methods");
+        console.log(Object.getOwnPropertyNames(request.User[0]))
+        //console.log(request.User[0].getCart());
 
         // Render the admin products ejs template
         response.render("shop/cart", { 
