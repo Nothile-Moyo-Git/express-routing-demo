@@ -9,7 +9,7 @@ import { sequelize } from "./util/database";
 import path from "path";
 import { SequelizeProducts } from "./models/products";
 import { Request, Response, NextFunction } from 'express';
-import { User } from "./models/user";
+import { User, UserModel } from "./models/user";
 import SequelizeCart from "./models/cart";
 import SequelizeCartItem from "./models/cart-item";
 // import SequelizeCartItem from "./models/cart-item";
@@ -108,6 +108,13 @@ const startServer = async () => {
     // Sync all models to the database and instantiate them
     // Use { force : true } if you want to rebuild the tables when you create the server
     await sequelize.sync();
+
+    /*
+    await userInstance.create({
+        id : 3,
+        name : "Nothile Moyo",
+        email : "nothile1@gmail.com"
+    }); */
 
     // Check if a user exists, if not, create them
     const testUser = await User.findAll({ raw : true, where : { id : 1 } });

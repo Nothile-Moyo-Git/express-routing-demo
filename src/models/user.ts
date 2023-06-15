@@ -6,7 +6,13 @@
  */
 
 import { sequelize } from "../util/database";
-import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from "sequelize";
+import {
+    Association, DataTypes, HasManyAddAssociationMixin, HasManyCountAssociationsMixin,
+    HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin,
+    HasManySetAssociationsMixin, HasManyAddAssociationsMixin, HasManyHasAssociationsMixin,
+    HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, Model, ModelDefined, Optional,
+    Sequelize, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute, ForeignKey,
+} from 'sequelize';
 
 
 // Sequelize object, creates our table if it doesn't exist
@@ -30,10 +36,15 @@ class UserModel extends Model<InferAttributes<UserModel>,InferCreationAttributes
 
     // 'CreationOptional' is a special type that marks the field as optional
     // when creating an instance of the model (such as using Model.create()).
-
     declare id : CreationOptional<number>;
     declare name : string;
     declare email : string;
+
+    // Timestamps
+    // Can be undefined during creation
+    // declare createdAt: CreationOptional<Date>;
+    // declare updatedAt: CreationOptional<Date>;
 }
 
-export { User };
+export { User, UserModel };
+
