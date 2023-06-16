@@ -109,9 +109,10 @@ const startServer = async () => {
     // Use { force : true } if you want to rebuild the tables when you create the server
     await sequelize.sync();
 
+    // Create new user using the create method
     /*
-    await userInstance.create({
-        id : 3,
+    await sequelize.models.usermodel.create({
+        id : 1,
         name : "Nothile Moyo",
         email : "nothile1@gmail.com"
     }); */
