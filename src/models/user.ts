@@ -6,7 +6,7 @@
  */
 
 import { sequelize } from "../util/database";
-import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize';
+import { DataTypes, Model, Optional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
 // Sequelize object, creates our table if it doesn't exist
 const User = sequelize.define("user", {
@@ -24,8 +24,17 @@ const User = sequelize.define("user", {
     }
 });
 
+// Creating the attributes in the database so we can reference it
+interface UserAttributes extends Model<any, any> {
+    id : number,
+    name : string,
+    email : string
+};
+
+// Optional<UserAttributes, 'id'>>
+
 // Extending the sequelize model for typescript
-class UserModel extends Model<InferAttributes<UserModel>,InferCreationAttributes<UserModel>>{}
+class UserModel extends Model<InferAttributes<UserAttributes>,InferCreationAttributes<Optional<UserAttributes, 'id'>>>{}
 
 // Initialize our model
 UserModel.init({
@@ -43,12 +52,6 @@ UserModel.init({
     email : {
         type : DataTypes.STRING
     },
-    createdAt : {
-        type : DataTypes.DATE
-    },
-    updatedAt : {
-        type : DataTypes.DATE
-    }
 },{
     
     // Other model options go here
