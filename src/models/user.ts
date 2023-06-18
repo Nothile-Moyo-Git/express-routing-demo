@@ -24,14 +24,13 @@ const User = sequelize.define("user", {
     }
 });
 
-// Creating the attributes in the database so we can reference it
+// Creating the attributes in the database so we can reference it with our typescript extension
 interface UserAttributes extends Model<any, any> {
     id : number,
     name : string,
     email : string
 };
 
-// Optional<UserAttributes, 'id'>>
 
 // Extending the sequelize model for typescript
 class UserModel extends Model<InferAttributes<UserAttributes>,InferCreationAttributes<Optional<UserAttributes, 'id'>>>{}

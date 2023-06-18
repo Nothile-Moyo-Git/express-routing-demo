@@ -99,7 +99,7 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
                 userId : request.User[0].dataValues.id
             } 
         });
-
+        
         /*
         console.clear();
         console.log("Cart results");
@@ -108,7 +108,7 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
         console.log(request.User);
         console.log("Current cart");
         console.log(await request.User[0].getCart());
-        */
+        */      
 
         //console.log(request.User[0].getCart());
 
