@@ -69,6 +69,20 @@ app.use(( request : any, response : Response, next : NextFunction ) => {
         // Set the user in the request object
         request.User = userResult;
 
+        // Check if the cart exists
+        const cartResult = await SequelizeCart.findAll({
+            where : { userid : 1 }
+        });
+
+        // Output the cart result
+        console.clear();
+        console.log(cartResult.length);
+        console.log("\n\n");
+
+        if (cartResult.length === 0){
+            request.User[0].createCart();
+        }
+
         // Execute the next middleware, call next in the async call so the next middleware executes
         next();
     };
@@ -134,7 +148,6 @@ const startServer = async () => {
             name : "Nothile Moyo",
             email : "nothile1@gmail.com",
         });
-
     }
     
     // Listen to the port

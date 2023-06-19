@@ -100,15 +100,16 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
             } 
         });
         
-        /*
+        
         console.clear();
-        console.log("Cart results");
-        console.log(cartResults);
-        console.log("User");
-        console.log(request.User);
-        console.log("Current cart");
-        console.log(await request.User[0].getCart());
-        */      
+        console.log( "Get cart" );
+        console.log( await request.User[0].getCart() );
+        console.log( "\n\n" );
+        console.log( "Get products" );
+        console.log( await request.User[0].getProducts() );
+
+        const products = await request.User[0].getProducts();
+            
 
         //console.log(request.User[0].getCart());
 
