@@ -75,10 +75,6 @@ app.use(( request : any, response : Response, next : NextFunction ) => {
         });
 
         // Output the cart result
-        console.clear();
-        console.log(cartResult.length);
-        console.log("\n\n");
-
         if (cartResult.length === 0){
             request.User[0].createCart();
         }

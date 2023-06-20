@@ -94,29 +94,30 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
     const getCartAsync = async () => {
 
         // Get the cart results
-        const cartResults = await SequelizeCart.findAll({ 
-            where : {
-                userId : request.User[0].dataValues.id
-            } 
-        });
-        
+        const cart = await request.User[0].getCart();       
+        const products = await request.User[0].getProducts();
         
         console.clear();
         console.log( "Get cart" );
-        console.log( await request.User[0].getCart() );
+        // console.log( cart.addProduct() );
         console.log( "\n\n" );
         console.log( "Get products" );
-        console.log( await request.User[0].getProducts() );
+        console.log( products );
 
-        const products = await request.User[0].getProducts();
+        // Add a product if our cart is empty for testing
+        if (products.length === 0) {
             
-
-        //console.log(request.User[0].getCart());
+            cart.addProduct({
+                id : 1,
+                quantity : 1,
+                cartId : 1
+            }); 
+        }
 
         // Render the admin products ejs template
         response.render("shop/cart", { 
             hasProducts : false, 
-            products : [], 
+            products : products, 
             pageTitle : "Your Cart",
             totalPrice : 0
          });

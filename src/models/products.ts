@@ -57,7 +57,7 @@ const SequelizeProducts = sequelize.define("products", {
         type : DataTypes.DOUBLE,
         allowNull : false
     },
-    productid : {
+    productId : {
         type : DataTypes.STRING,
         allowNull : false
     }
@@ -85,7 +85,7 @@ class Products {
                 image : product.image,
                 price : Number(product.price),
                 description : product.description,
-                productid : product.id,
+                productId : product.id,
                 userId : product.userId
             });
 
@@ -165,7 +165,7 @@ class Products {
                         description : description,
                         price : price, 
                         id : product.id,
-                        productid : id
+                        productId : id
                     };
                 }
 
@@ -181,7 +181,7 @@ class Products {
                 price : price 
             },{
                 where : {
-                    productid : id
+                    productId : id
                 }
             })
 
@@ -200,7 +200,7 @@ class Products {
             // Execute our sequelize query
             await SequelizeProducts.destroy({
                 where : {
-                    productid : id
+                    productId : id
                 }
             });
         };
@@ -218,7 +218,7 @@ class Products {
             const sequelizeResult = await SequelizeProducts.findAll({
                 raw : true,
                 where : {
-                    productid : id
+                    productId : id
                 }
             });
 
