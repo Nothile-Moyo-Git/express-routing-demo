@@ -57,7 +57,10 @@ const getProducts = (request : RequestWithUserRole, response : Response, next : 
     const renderAdminProducts = async () => {
 
         // Find all sequelize results
-        const sequelizeProducts = await productsInstance.fetchAll( request.User.id );
+        const sequelizeProducts = await productsInstance.fetchAll( request.User[0].dataValues.id );
+        console.clear();
+        console.log(request.User[0].dataValues.id);
+        console.log(sequelizeProducts);
 
         // Render the view of the page
         response.render("admin/products", { prods : sequelizeProducts , pageTitle : "Admin Products" , hasProducts : sequelizeProducts.length > 0 } );

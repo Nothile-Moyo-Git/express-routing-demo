@@ -99,7 +99,7 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
         
         console.clear();
         console.log( "Get cart" );
-        // console.log( cart.addProduct() );
+        console.log( cart );
         console.log( "\n\n" );
         console.log( "Get products" );
         console.log( products );
@@ -107,11 +107,13 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
         // Add a product if our cart is empty for testing
         if (products.length === 0) {
             
+            /*
             cart.addProduct({
                 id : 1,
                 quantity : 1,
-                cartId : 1
-            }); 
+                cartId : 1,
+                productId : 1
+            }); */
         }
 
         // Render the admin products ejs template
