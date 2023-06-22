@@ -96,30 +96,12 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
         // Get the cart results
         const cart = await request.User[0].getCart();       
         const products = await request.User[0].getProducts();
+        const cartProducts = await cart.getProducts();
         
-        console.clear();
-        console.log( "Get cart" );
-        console.log( cart );
-        console.log( "\n\n" );
-        console.log( "Get products" );
-        console.log( products );
-
-        // Add a product if our cart is empty for testing
-        if (products.length === 0) {
-            
-            /*
-            cart.addProduct({
-                id : 1,
-                quantity : 1,
-                cartId : 1,
-                productId : 1
-            }); */
-        }
-
         // Render the admin products ejs template
         response.render("shop/cart", { 
             hasProducts : false, 
-            products : products, 
+            products : cartProducts, 
             pageTitle : "Your Cart",
             totalPrice : 0
          });
@@ -129,5 +111,40 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
     getCartAsync();
 };
 
+// Add a new product to the cart using sequelize and a many to many relational mapper
+const postCart = (request : any, response : Response, next : NextFunction) => {
 
-export { getCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+    // Add a product to my cart
+    const postCartAsync = async () => {
+
+        // Get the cart
+        const cart = await request.User[0].getCart();
+
+        // Get the products associated with that cart
+        const products = await cart.getProducts({ where : { id : request.body.productId }});
+
+        console.clear();
+        console.log("\n\n\n\n\n");
+        console.log("Product");
+        console.log(products);
+
+        // If we have a product, add quantity to it
+        let product;
+        let newQuantity = 1;
+
+        // Set the product if it already exists
+        if (products.length > 0) {
+            product = products[0];
+        }
+
+        // Add to the quantity or create a new quantity
+
+        // Redirect to the cart page
+        response.redirect("/cart");
+    };
+
+    postCartAsync();
+}
+
+
+export { getCart, postCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
