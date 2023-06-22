@@ -3,13 +3,14 @@
 import express from "express";
 
 // Import our router renderers
-import { getCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails } from "../controllers/shop";
+import { getCart, postCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails } from "../controllers/shop";
 
 const shopRoutes = express.Router();
 
 // Base middleware response, 
 shopRoutes.get("/", getIndex),
 shopRoutes.get("/cart", getCart);
+shopRoutes.post("/cart", postCart);
 shopRoutes.get("/orders", getOrders);
 shopRoutes.get("/checkout", getCheckout);
 shopRoutes.get("/products", getProducts);
