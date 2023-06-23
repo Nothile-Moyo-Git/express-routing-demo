@@ -14,6 +14,8 @@
 
 // Import the cart sequelize
 import SequelizeCart from "../models/cart";
+import { SequelizeProducts } from "../models/products";
+import SequelizeCartItem from "../models/cart-item";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
@@ -114,6 +116,9 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
 // Add a new product to the cart using sequelize and a many to many relational mapper
 const postCart = (request : any, response : Response, next : NextFunction) => {
 
+    // Setting the product id from the request.body object
+    const productId = request.body.productId;
+
     // Add a product to my cart
     const postCartAsync = async () => {
 
@@ -121,16 +126,15 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
         const cart = await request.User[0].getCart();
 
         // Get the products associated with that cart
-        const products = await cart.getProducts({ where : { id : request.body.productId }});
+        const products = await cart.getProducts({ where : { id : productId }});
 
         console.clear();
         console.log("\n\n\n\n\n");
-        console.log("Product");
-        console.log(products);
 
         // If we have a product, add quantity to it
         let product;
         let newQuantity = 1;
+        let result;
 
         // Set the product if it already exists
         if (products.length > 0) {
@@ -138,6 +142,21 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
         }
 
         // Add to the quantity or create a new quantity
+        if (product) {
+            console.log("Product exists");
+        }else{
+            console.log("Product doesn't exist");
+        }
+
+        // Get product based on the product id
+        const currentProduct = await SequelizeProducts.findAll({ where : { id : productId } });
+
+        // If we get a project, add it to the cart
+        if ( currentProduct ) {
+            // result = await cart.addProduct(currentProduct[0], { through : SequelizeCartItem });
+        }
+        console.log("Current project");
+        console.log(currentProduct[0]);
 
         // Redirect to the cart page
         response.redirect("/cart");
