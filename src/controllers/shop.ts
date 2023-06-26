@@ -151,9 +151,13 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
         // Get product based on the product id
         const currentProduct = await SequelizeProducts.findAll({ where : { id : productId } });
 
-        // If we get a project, add it to the cart
+        // If we get a project, add it to the cart through the quantity which allows the field to be set
         if ( currentProduct ) {
-            // result = await cart.addProduct(currentProduct[0], { through : SequelizeCartItem });
+            result = await cart.addProduct(currentProduct[0], { 
+                through : {
+                    quantity : newQuantity
+                }
+            });
         }
         console.log("Current project");
         console.log(currentProduct[0]);

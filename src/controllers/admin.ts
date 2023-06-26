@@ -38,7 +38,7 @@ const postAddProduct = async(request : RequestWithUserRole, response : Response,
             image : request.body.image,
             description : request.body.description,
             price : request.body.price,
-            userId : request.User.id,
+            userId : request.User[0].dataValues.id,
             id : uuidv4()
         });
 
@@ -85,7 +85,6 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
         
         // Render the view of the page
         response.render("admin/products", { prods : results , pageTitle : "Admin Products" , hasProducts : results.length > 0 } );
-    
     };
 
     // Render the page with the new products

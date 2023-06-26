@@ -1,21 +1,21 @@
 [
 	{
 		"title": "Kengan Omega",
-		"image": "https://picsum.photos/300/175",
+		"image": "https://images8.alphacoders.com/111/1118774.jpg",
 		"description": "A cool fighting Manga!!",
 		"price": 12,
 		"id": "488ccdde-aaf4-44d6-a5b8-239dcc95006e"
 	},
 	{
 		"title": "Gantz",
-		"image": "https://picsum.photos/300/175",
+		"image": "https://images.alphacoders.com/122/1227873.jpg",
 		"description": "A manga about fighting aliens!",
 		"price": 18,
 		"id": "44f6b3a3-9fdf-4ff2-bc9c-9cf2cfaf7b1a"
 	},
 	{
 		"title": "Berzerk",
-		"image": "https://picsum.photos/300/175",
+		"image": "https://images2.alphacoders.com/122/1220054.jpg",
 		"description": "A fantasy story about cheating death",
 		"price": 15,
 		"id": "9af91eca-2ab2-4dd2-8add-cd6a3be5f48e"
