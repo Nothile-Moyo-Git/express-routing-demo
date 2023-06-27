@@ -143,24 +143,29 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
 
         // Add to the quantity or create a new quantity
         if (product) {
-            console.log("Product exists");
+
+            // When getting a product through the cart, they're linked through a cartitem and an associative query pulls the "through" item through as well
+            const cartItem = products[0].dataValues.cartItem;
+
+            // Cart products in the cart items schema and not the products schema as these have the many to many relationship through cart items
+            newQuantity = cartItem.dataValues.quantity + 1;
+
         }else{
-            console.log("Product doesn't exist");
+
+            // Get product based on the product id
+            const currentProduct = await SequelizeProducts.findAll({ where : { id : productId } });
+
+            // If we get a project, add it to the cart through the quantity which allows the field to be set
+            if ( currentProduct ) {
+
+                result = await cart.addProduct(currentProduct[0], { 
+                    through : {
+                        quantity : newQuantity
+                    }
+                });
+            }
         }
 
-        // Get product based on the product id
-        const currentProduct = await SequelizeProducts.findAll({ where : { id : productId } });
-
-        // If we get a project, add it to the cart through the quantity which allows the field to be set
-        if ( currentProduct ) {
-            result = await cart.addProduct(currentProduct[0], { 
-                through : {
-                    quantity : newQuantity
-                }
-            });
-        }
-        console.log("Current project");
-        console.log(currentProduct[0]);
 
         // Redirect to the cart page
         response.redirect("/cart");
