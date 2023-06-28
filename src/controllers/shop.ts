@@ -150,6 +150,16 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
             // Cart products in the cart items schema and not the products schema as these have the many to many relationship through cart items
             newQuantity = cartItem.dataValues.quantity + 1;
 
+            // Add the product by updating the quantity
+            result = await cart.addProduct(product, {
+                through : {
+                    quantity : newQuantity
+                },
+                where : {
+                    productId : productId
+                }
+            });
+
         }else{
 
             // Get product based on the product id
