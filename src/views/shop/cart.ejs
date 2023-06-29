@@ -16,13 +16,20 @@
                             <p class="cart__modal-column">Cost</p>
                         </li>
                         <%  products.forEach((product) => {    %>
+                        <% 
+                            const id = product.dataValues.id;
+                            const title = product.dataValues.title;
+                            const quantity = product.dataValues.cartItem.dataValues.quantity;
+                            const price = product.dataValues.price;  
+                        %>
+
                             <li class="cart__modal-row">
-                                <p class="cart__modal-column"><%= product.title %></p>
-                                <p class="cart__modal-column"><%= product.quantity %></p>
-                                <p class="cart__modal-column">£<%= product.price * product.quantity %></p>
+                                <p class="cart__modal-column"><%= title %></p>
+                                <p class="cart__modal-column"><%= quantity %></p>
+                                <p class="cart__modal-column">£<%= price * quantity %></p>
                                 <form class="cart__modal-column" action="/cart-delete-item" method="POST">
                                     <button class="cart__modal-button" type="submit">X</button>
-                                    <input type="hidden" name="productId" value=<%= `${product.id}` %>/>
+                                    <input type="hidden" name="productId" value=<%= `${id}` %>/>
                                 </form>
                             </li>
                         <%  }); %>

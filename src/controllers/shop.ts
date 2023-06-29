@@ -97,12 +97,11 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
 
         // Get the cart results
         const cart = await request.User[0].getCart();       
-        const products = await request.User[0].getProducts();
         const cartProducts = await cart.getProducts();
-        
+
         // Render the admin products ejs template
         response.render("shop/cart", { 
-            hasProducts : false, 
+            hasProducts : cartProducts.length > 0, 
             products : cartProducts, 
             pageTitle : "Your Cart",
             totalPrice : 0
