@@ -99,12 +99,28 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
         const cart = await request.User[0].getCart();       
         const cartProducts = await cart.getProducts();
 
+        // Create a variable so we can calculate the total price
+        let totalPrice = 0;
+        console.clear();
+
+        // Loop through each cart item so we can get the price and quatity for total price
+        cartProducts.forEach((singleProduct) => {
+
+            // Get price and quantity from single cart item
+            // Each cart item comes with a "cartItem" object as it's used as the "through" value in the many to many relationship
+            const singlePrice : number = singleProduct.price;
+            const quantity : number = singleProduct.cartItem.dataValues.quantity;  
+
+            // Add to the base total price
+            totalPrice += (singlePrice * quantity);
+        });
+
         // Render the admin products ejs template
         response.render("shop/cart", { 
             hasProducts : cartProducts.length > 0, 
             products : cartProducts, 
             pageTitle : "Your Cart",
-            totalPrice : 0
+            totalPrice : totalPrice
          });
     };
 
@@ -127,9 +143,6 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
         // Get the products associated with that cart
         const products = await cart.getProducts({ where : { id : productId }});
 
-        console.clear();
-        console.log("\n\n\n\n\n");
-
         // If we have a product, add quantity to it
         let product;
         let newQuantity = 1;
@@ -146,7 +159,7 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
             // When getting a product through the cart, they're linked through a cartitem and an associative query pulls the "through" item through as well
             const cartItem = products[0].dataValues.cartItem;
 
-            // Cart products in the cart items schema and not the products schema as these have the many to many relationship through cart items
+            // Add another item to the quantity
             newQuantity = cartItem.dataValues.quantity + 1;
 
             // Add the product by updating the quantity
