@@ -101,10 +101,9 @@ const getCart = (request : RequestWithUserRole, response : Response, next : Next
 
         // Create a variable so we can calculate the total price
         let totalPrice = 0;
-        console.clear();
 
         // Loop through each cart item so we can get the price and quatity for total price
-        cartProducts.forEach((singleProduct) => {
+        cartProducts.forEach((singleProduct: { price: number; cartItem: { dataValues: { quantity: number; }; }; }) => {
 
             // Get price and quantity from single cart item
             // Each cart item comes with a "cartItem" object as it's used as the "through" value in the many to many relationship
@@ -196,5 +195,31 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
     postCartAsync();
 }
 
+// Delete an item from the cart using cart item
+const postCartDelete = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-export { getCart, postCart, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+    const postCartDeleteAsync = async () => {
+
+        // Get the product id, slice is used to remove the trailing / at the end
+        const productId = request.body.productId.slice(0, -1);
+
+        // Get the cart
+        const cart = await request.User[0].getCart();
+
+        // Delete the item from the cart using cartItem
+        const products = await cart.getProducts({
+            where : {
+                id : productId
+            }
+        });
+
+        // Destroy the product from using cart item since there's a many to many association
+        await products[0].cartItem.destroy();
+    }
+
+    postCartDeleteAsync();
+
+    response.redirect('back');
+};
+
+export { getCart, postCart, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
