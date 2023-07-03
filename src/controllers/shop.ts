@@ -222,4 +222,14 @@ const postCartDelete = (request : RequestWithUserRole, response : Response, next
     response.redirect('back');
 };
 
-export { getCart, postCart, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+// Create an order in the SQL backend
+const postOrderCreate = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+
+    console.clear();
+    console.log("Request failed");
+
+    // Go back to the cart page for now
+    response.redirect("back");
+};
+
+export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
