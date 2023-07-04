@@ -225,8 +225,35 @@ const postCartDelete = (request : RequestWithUserRole, response : Response, next
 // Create an order in the SQL backend
 const postOrderCreate = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    console.clear();
-    console.log("Request failed");
+    // Get the totalPrice from request body and remove the trailing slash
+    const totalPrice = request.body.totalPrice.replace("/","");
+    
+    // Get the current user
+    const user = request.User[0];
+
+    // Post order create async method
+    const postOrderCreateAsync = async () => {
+
+        // Get the cart
+        const cart = await user.getCart();
+
+        // Get the products associated with that cart
+        const products = await cart.getProducts({
+            raw : true
+        });
+
+        console.clear();
+        console.log("Total price");
+        console.log(totalPrice);
+        console.log("\n\n\n");
+        console.log("User");
+        console.log(user);
+        console.log("\n\n\n");
+        console.log("Cart");
+        console.log(cart);
+    };
+
+    postOrderCreateAsync();
 
     // Go back to the cart page for now
     response.redirect("back");

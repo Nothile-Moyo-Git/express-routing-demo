@@ -124,7 +124,7 @@ const startServer = async () => {
         through: SequelizeOrderItems
     });
 
-    // Sync all models to the database and instantiate them
+    // Sync all models to the database and instantiate them 
     // Use { force : true } if you want to rebuild the tables when you create the server
     await sequelize.sync();
 
