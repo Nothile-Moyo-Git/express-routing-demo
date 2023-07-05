@@ -226,7 +226,7 @@ const postCartDelete = (request : RequestWithUserRole, response : Response, next
 const postOrderCreate = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Get the totalPrice from request body and remove the trailing slash
-    const totalPrice = request.body.totalPrice.replace("/","");
+    // const totalPrice = request.body.totalPrice.replace("/","");
     
     // Get the current user
     const user = request.User[0];
@@ -242,15 +242,25 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
             raw : true
         });
 
+        // Check if an order already exists before adding an item to it
+        const orders = await user.getOrders({
+            raw : true
+        });
+
+        // Create an order with the user id
+        // const result = await user.createOrder();
+
+        // Get the order id of the order we've created so we can add all the products to it alongside their quantity
+        // const orderId = result.order;
+         
         console.clear();
-        console.log("Total price");
-        console.log(totalPrice);
-        console.log("\n\n\n");
-        console.log("User");
-        console.log(user);
-        console.log("\n\n\n");
-        console.log("Cart");
-        console.log(cart);
+        console.log("Result");
+        // console.log(result); 
+        console.log("Order id");
+        // console.log(orderId);
+
+        // Add each product to order items with the quantity from the order item
+
     };
 
     postOrderCreateAsync();

@@ -1,12 +1,12 @@
 // Imports, we're creating an express http server using development variables
-import express, { Application } from "express";
+import path from "path";
+import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import { sequelize } from "./util/database";
-import path from "path";
 import { SequelizeProducts } from "./models/products";
 import { Request, Response, NextFunction } from 'express';
 import { User, UserModel } from "./models/user";
