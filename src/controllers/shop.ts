@@ -248,18 +248,31 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         });
 
         // Create an order with the user id
-        // const result = await user.createOrder();
+        const result = await user.createOrder();
 
         // Get the order id of the order we've created so we can add all the products to it alongside their quantity
-        // const orderId = result.order;
-         
-        console.clear();
-        console.log("Result");
-        // console.log(result); 
-        console.log("Order id");
-        // console.log(orderId);
+        const orderId = result.dataValues.id;
 
-        // Add each product to order items with the quantity from the order item
+        // Get the individual order
+        console.clear();
+
+        console.log("Result");
+        console.log(result); 
+
+        console.log("\n\n\n");
+        console.log("Order id");
+        console.log(orderId);
+
+        console.log("\n\n\n");
+        console.log("Products");
+        console.log(products);
+
+        console.log("\n\n\n");
+        console.log("Order");
+        console.log(orders);
+        
+        // 
+        
 
     };
 
