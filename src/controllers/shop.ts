@@ -33,6 +33,25 @@ interface RequestWithUserRole extends Request{
     User ?: UserInterface
 }
 
+// Sequelize Product Interface
+interface SequelizeProductInterface {
+    addOrder : any,
+    id : number,
+    title : string,
+    image : string,
+    description : string,
+    price : number,
+    productId : string,
+    createdAt : Date,
+    updatedAt : Date,
+    userId : number,
+    'cartItem.id' : number,
+    'cartItem.quantity' : number,
+    'cartItem.createdAt' : Date,
+    'cartItem.productId' : Date,
+    'cartItem.cartId' : number
+}
+
 // Instantiate our products 
 const productsInstance = new Products();
 
@@ -254,26 +273,51 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         const orderId = result.dataValues.id;
 
         // Get the individual order
+        /*
         console.clear();
-
         console.log("Result");
         console.log(result); 
-
         console.log("\n\n\n");
         console.log("Order id");
         console.log(orderId);
-
         console.log("\n\n\n");
         console.log("Products");
         console.log(products);
-
         console.log("\n\n\n");
         console.log("Order");
-        console.log(orders);
-        
-        // 
-        
+        console.log(orders); 
+        */
 
+        // Get the newly created order
+        const order = await user.getOrders({
+            raw : true,
+            where : {
+                id : orderId
+            }
+        })
+
+        //
+        console.clear(); 
+        console.log("Products");
+        
+        // Add each product to the order item
+        products.forEach(async (product) => {
+
+            console.log("Order");
+            console.log(order[0]);
+
+           /* const result = await order[0].addProduct({
+                through : {
+                    quantity : product['cartItem.quantity']
+                }
+            }); */
+
+            const result = await product.addOrder(order[0],{
+                through : {
+                    quantity : product['cartItem.quantity']
+                }  
+            });
+        }); 
     };
 
     postOrderCreateAsync();
