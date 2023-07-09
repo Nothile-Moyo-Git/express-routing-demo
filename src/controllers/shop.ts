@@ -13,9 +13,9 @@
  */
 
 // Import the cart sequelize
-import SequelizeCart from "../models/cart";
 import { SequelizeProducts } from "../models/products";
 import SequelizeCartItem from "../models/cart-item";
+import SequelizeOrders from "../models/order";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
@@ -261,16 +261,11 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
             raw : true
         });
 
-        // Check if an order already exists before adding an item to it
-        const orders = await user.getOrders({
-            raw : true
-        });
-
         // Create an order with the user id
-        const result = await user.createOrder();
+        const newOrder = await user.createOrder();
 
         // Get the order id of the order we've created so we can add all the products to it alongside their quantity
-        const orderId = result.dataValues.id;
+        const orderId = newOrder.dataValues.id;
 
         // Get the individual order
         /*
@@ -288,35 +283,35 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         console.log(orders); 
         */
 
-        // Get the newly created order
-        const order = await user.getOrders({
-            raw : true,
-            where : {
-                id : orderId
-            }
-        })
-
-        //
-        console.clear(); 
+        console.clear();
         console.log("Products");
-        
+        console.log(products);
+
         // Add each product to the order item
-        products.forEach(async (product) => {
+        products.forEach(async (product : SequelizeProductInterface) => {
 
-            console.log("Order");
-            console.log(order[0]);
 
-           /* const result = await order[0].addProduct({
+            // Create our order item to insert into the database
+            const orderItem = {
+                quantity : product['cartItem.quantity'],
+                createdAt : product.createdAt,
+                updatedAt : product.updatedAt,
+                orderId : orderId,
+                productId : product.id
+            };
+            
+            const result = await newOrder.addProducts(products, {
                 through : {
-                    quantity : product['cartItem.quantity']
+                    quantity : product ['cartItem.quantity']
+                },
+                where : {
+                   id : orderId 
                 }
-            }); */
+            }); 
 
-            const result = await product.addOrder(order[0],{
-                through : {
-                    quantity : product['cartItem.quantity']
-                }  
-            });
+            console.log("\n\n\n");
+            console.log("Result");
+            console.log(result);
         }); 
     };
 
