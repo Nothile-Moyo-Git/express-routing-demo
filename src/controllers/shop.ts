@@ -300,13 +300,9 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
                 productId : product.id
             };
             
-            const result = await newOrder.addProducts(products, {
-                through : {
-                    quantity : product ['cartItem.quantity']
-                },
-                where : {
-                   id : orderId 
-                }
+            const result = await newOrder.addProduct(product, 
+            {
+                raw : true
             }); 
 
             console.log("\n\n\n");
