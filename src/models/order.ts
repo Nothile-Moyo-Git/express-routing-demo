@@ -13,7 +13,8 @@ const SequelizeOrders = sequelize.define("order",{
         type : DataTypes.INTEGER,
         autoIncrement : true,
         allowNull : false,
-        primaryKey : true
+        primaryKey : true,
+        unique : false
     }
 });
 

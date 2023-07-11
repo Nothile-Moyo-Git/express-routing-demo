@@ -256,13 +256,13 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         // Get the cart
         const cart = await user.getCart();
 
-        // Create an order with the user id
-        const newOrder = await user.createOrder();
-
         // Get the products associated with that cart
-        const products = await newOrder.getProducts({
+        const products = await cart.getProducts({
             raw : true
         });
+
+        // Create an order with the user id
+        const newOrder = await user.createOrder();
 
         // Get the order id of the order we've created so we can add all the products to it alongside their quantity
         const orderId = newOrder.dataValues.id;
@@ -271,16 +271,10 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         console.log("Products");
         console.log(products);
 
-        // Add products to the database
-        /*
-        const result = await newOrder.addProducts(products, {
-            through : {
-                quantity : product['cartItem.quantity']
-            }
-        }); */
-
+        
         // Add each product to the order item
         products.forEach(async (product : any) => {
+
 
             // Create our order item to insert into the database
             const orderItem = {
@@ -289,10 +283,17 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
                 orderId : orderId,
                 productId : product.id
             };
+            
+            
+            const result = await newOrder.addProduct(product, {
+                through : {
+                    quantity : product['cartItem.quantity']
+                }
+            });
 
             console.log("\n\n\n");
-            console.log("product");
-            console.log(product);
+            console.log("Result");
+            console.log(result);
         }); 
     };
 
