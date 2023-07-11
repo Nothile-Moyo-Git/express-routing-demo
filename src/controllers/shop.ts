@@ -256,58 +256,43 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         // Get the cart
         const cart = await user.getCart();
 
-        // Get the products associated with that cart
-        const products = await cart.getProducts({
-            raw : true
-        });
-
         // Create an order with the user id
         const newOrder = await user.createOrder();
+
+        // Get the products associated with that cart
+        const products = await newOrder.getProducts({
+            raw : true
+        });
 
         // Get the order id of the order we've created so we can add all the products to it alongside their quantity
         const orderId = newOrder.dataValues.id;
 
-        // Get the individual order
-        /*
         console.clear();
-        console.log("Result");
-        console.log(result); 
-        console.log("\n\n\n");
-        console.log("Order id");
-        console.log(orderId);
-        console.log("\n\n\n");
         console.log("Products");
         console.log(products);
-        console.log("\n\n\n");
-        console.log("Order");
-        console.log(orders); 
-        */
 
-        console.clear();
-        console.log("Products");
-        console.log(products);
+        // Add products to the database
+        /*
+        const result = await newOrder.addProducts(products, {
+            through : {
+                quantity : product['cartItem.quantity']
+            }
+        }); */
 
         // Add each product to the order item
-        products.forEach(async (product : SequelizeProductInterface) => {
-
+        products.forEach(async (product : any) => {
 
             // Create our order item to insert into the database
             const orderItem = {
-                quantity : product['cartItem.quantity'],
                 createdAt : product.createdAt,
                 updatedAt : product.updatedAt,
                 orderId : orderId,
                 productId : product.id
             };
-            
-            const result = await newOrder.addProduct(product, 
-            {
-                raw : true
-            }); 
 
             console.log("\n\n\n");
-            console.log("Result");
-            console.log(result);
+            console.log("product");
+            console.log(product);
         }); 
     };
 
