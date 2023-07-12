@@ -121,7 +121,11 @@ const startServer = async () => {
     SequelizeOrders.belongsTo(User);
     User.hasMany(SequelizeOrders);
     SequelizeOrders.belongsToMany(SequelizeProducts, {
-        through: SequelizeOrderItems
+        through: SequelizeOrderItems,
+        as : {
+            singular : 'product',
+            plural : 'products'
+        }
     });
 
     // Sync all models to the database and instantiate them 

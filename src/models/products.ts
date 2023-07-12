@@ -58,7 +58,7 @@ const SequelizeProducts = sequelize.define("products", {
         allowNull : false
     },
     productId : {
-        type : DataTypes.STRING,
+        type : DataTypes.TEXT,
         allowNull : false
     }
 });
