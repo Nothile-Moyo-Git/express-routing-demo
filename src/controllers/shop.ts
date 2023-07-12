@@ -14,13 +14,11 @@
 
 // Import the cart sequelize
 import { SequelizeProducts } from "../models/products";
-import SequelizeCartItem from "../models/cart-item";
-import SequelizeOrders from "../models/order";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
-
+import { sequelize } from "../util/database";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -258,23 +256,20 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
 
         // Get the products associated with that cart
         const products = await cart.getProducts({
-            raw : true
+            attributes : {
+               exclude : ['productId'] 
+            },
+            raw : true,
         });
 
         // Create an order with the user id
         const newOrder = await user.createOrder();
-
-        // Get the order id of the order we've created so we can add all the products to it alongside their quantity
         const orderId = newOrder.dataValues.id;
 
         console.clear();
-        console.log("Products");
-        console.log(products);
 
-        
         // Add each product to the order item
         products.forEach(async (product : any) => {
-
 
             // Create our order item to insert into the database
             const orderItem = {
@@ -283,18 +278,15 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
                 orderId : orderId,
                 productId : product.id
             };
-            
-            
-            const result = await newOrder.addProduct(product, {
-                through : {
-                    quantity : product['cartItem.quantity']
-                }
-            });
 
-            console.log("\n\n\n");
-            console.log("Result");
-            console.log(result);
-        }); 
+            const output = await sequelize.query(`INSERT INTO orderItems ("id","quantity","createdAt","updatedAt","orderId","productId") VALUES (${null},${Number(1)},"2023-07-12 20:11:46","2023-07-12 20:11:46",${Number(4)},${Number(1)}`);
+
+            console.log("Testing output");
+            console.log(output);
+
+            
+        });  
+
     };
 
     postOrderCreateAsync();
