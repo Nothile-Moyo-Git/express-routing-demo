@@ -19,6 +19,7 @@ import { SequelizeProducts } from "../models/products";
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
 import { sequelize } from "../util/database";
+import { QueryTypes } from "sequelize";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -256,14 +257,13 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
 
         // Get the products associated with that cart
         const products = await cart.getProducts({
-            attributes : {
-               exclude : ['productId'] 
-            },
-            raw : true,
+            raw : true
         });
 
         // Create an order with the user id
         const newOrder = await user.createOrder();
+
+        // Get the order id for reference
         const orderId = newOrder.dataValues.id;
 
         console.clear();
@@ -271,22 +271,16 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         // Add each product to the order item
         products.forEach(async (product : any) => {
 
-            // Create our order item to insert into the database
-            const orderItem = {
-                createdAt : product.createdAt,
-                updatedAt : product.updatedAt,
-                orderId : orderId,
-                productId : product.id
-            };
+            // Query to create a new order item
+            const query = `INSERT INTO orderItems(id, quantity, orderId, productId) VALUES (${null}, ${product['cartItem.quantity']}, ${orderId}, ${product.id})`;
 
-            const output = await sequelize.query(`INSERT INTO orderItems ("id","quantity","createdAt","updatedAt","orderId","productId") VALUES (${null},${Number(1)},"2023-07-12 20:11:46","2023-07-12 20:11:46",${Number(4)},${Number(1)}`);
-
-            console.log("Testing output");
-            console.log(output);
-
-            
+            // Execute the query and add the product to the database
+            await sequelize.query(query,
+                {
+                    type : QueryTypes.INSERT
+                }
+            );
         });  
-
     };
 
     postOrderCreateAsync();
