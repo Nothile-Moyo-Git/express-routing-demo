@@ -241,7 +241,7 @@ const postCartDelete = (request : RequestWithUserRole, response : Response, next
 };
 
 // Create an order in the SQL backend
-const postOrderCreate = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const postOrderCreate = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Get the totalPrice from request body and remove the trailing slash
     // const totalPrice = request.body.totalPrice.replace("/","");
@@ -266,27 +266,62 @@ const postOrderCreate = (request : RequestWithUserRole, response : Response, nex
         // Get the order id for reference
         const orderId = newOrder.dataValues.id;
 
-        console.clear();
-
         // Add each product to the order item
-        products.forEach(async (product : any) => {
+        products.forEach( async ( product : SequelizeProductInterface ) => {
 
             // Query to create a new order item
             const query = `INSERT INTO orderItems(id, quantity, orderId, productId) VALUES (${null}, ${product['cartItem.quantity']}, ${orderId}, ${product.id})`;
 
             // Execute the query and add the product to the database
-            await sequelize.query(query,
-                {
-                    type : QueryTypes.INSERT
-                }
-            );
+            await sequelize.query(query, { type : QueryTypes.INSERT });
         });  
     };
 
+    // Empty the contents of our cart
+    const clearCartAfterCreatingOrder = async () => {
+
+        // Get the cart
+        const cart = await request.User[0].getCart();
+
+        // Get the current products from the current cart item
+        const products = await cart.getProducts();
+
+        // Loop through each cart item and remove it form the cart
+        products.forEach( async ( product : any ) => {
+
+            // Get current cart item
+            const cartItem = product.cartItem;
+
+            // Delete the cart item
+            cartItem.destroy();
+        });
+    };
+
+    // Create the new order & order items and insert them into the database using a custom query
+    // A custom query is used because the one to many association in sequelize doesn't work properly here
     postOrderCreateAsync();
 
+    // Call clear cart method
+    clearCartAfterCreatingOrder();
+
+    // Get the orders for the current user and render them on the orders page 
+    const products = await user.getProducts();
+    const orders = await user.getOrders();
+
+    console.clear();
+    console.log("console cleared");
+
+    orders.forEach((order : any) => {
+
+        const orderProducts = order.getProducts();
+
+        console.log("\n\n\n");
+        console.log("products");
+        console.log(orderProducts);
+    });
+
     // Go back to the cart page for now
-    response.redirect("back");
+    response.render("shop/orders", { pageTitle : "Orders Page" });
 };
 
 export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
