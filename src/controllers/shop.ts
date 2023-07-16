@@ -51,6 +51,18 @@ interface SequelizeProductInterface {
     'cartItem.cartId' : number
 }
 
+// Order interface for our array, we will use an array of objects which contains an array of products and a total amount
+interface OrderProductInterface{
+    quantity : number,
+    name : string,
+    price : number
+}
+
+interface OrderArrayInterface{
+    totalPrice : number,
+    products : OrderProductInterface[]
+}
+
 // Instantiate our products 
 const productsInstance = new Products();
 
@@ -77,7 +89,57 @@ const getProducts = (request : any, response : Response, next : NextFunction) =>
 };
 
 // Get the orders
-const getOrders = ( request : Request, response : Response, next : NextFunction ) => {
+const getOrders = async ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
+
+    // Get the user & the orders
+    const user = request.User[0];
+    const orders = await user.getOrders();
+    const formattedOrders : OrderArrayInterface[] = [];
+    const loopSize = orders.length;
+
+    console.clear();
+    console.log("console cleared");
+
+    // Get the details for each order
+    // We use a for loop so we can render on the final iteration
+    for (let index = 0; index < loopSize; index++) {
+
+        // Get the products for the order
+        const products = [];
+
+        // Set the total price for the order
+        let totalPrice = 0;
+
+        const orderProducts = await orders[index].getProducts({ raw : true });
+
+        orderProducts.forEach((orderProduct : any) => {
+
+            totalPrice += orderProduct.price * orderProduct['orderItems.quantity'];
+
+            const product : OrderProductInterface = {
+                quantity : orderProduct['orderItems.quantity'],
+                price : orderProduct.price * orderProduct['orderItems.quantity'],
+                name : orderProduct.title
+            };
+
+            products.push(product);
+
+        });
+
+        formattedOrders.push({
+            totalPrice : totalPrice,
+            products : products
+        });
+    };
+
+    console.log("\n\n\n");
+    console.log("formatted orders 2");
+    console.log(formattedOrders);
+
+    console.log("\n\n\n");
+    console.log("array size");
+    console.log(loopSize);
+
 
     response.render("shop/orders", { pageTitle : "Orders" });
 };
