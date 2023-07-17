@@ -19,7 +19,7 @@ import { SequelizeProducts } from "../models/products";
 import { Request, Response, NextFunction } from 'express';
 import Products from "../models/products";
 import { sequelize } from "../util/database";
-import { QueryTypes } from "sequelize";
+import { QueryTypes, DataTypes } from "sequelize";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -60,7 +60,8 @@ interface OrderProductInterface{
 
 interface OrderArrayInterface{
     totalPrice : number,
-    products : OrderProductInterface[]
+    products : OrderProductInterface[],
+    date : string
 }
 
 // Instantiate our products 
@@ -109,39 +110,40 @@ const getOrders = async ( request : RequestWithUserRole, response : Response, ne
 
         // Set the total price for the order
         let totalPrice = 0;
+        let createdDate = new Date();
 
         const orderProducts = await orders[index].getProducts({ raw : true });
 
         orderProducts.forEach((orderProduct : any) => {
 
+            // Get the total price of the order
             totalPrice += orderProduct.price * orderProduct['orderItems.quantity'];
 
+            // Get the date of the order 
+            createdDate = orderProduct.updatedAt;
+
+            // Create the new product
             const product : OrderProductInterface = {
                 quantity : orderProduct['orderItems.quantity'],
                 price : orderProduct.price * orderProduct['orderItems.quantity'],
                 name : orderProduct.title
             };
 
+            // Add the product to the products array
             products.push(product);
-
         });
 
+        // Add to our orders
         formattedOrders.push({
             totalPrice : totalPrice,
-            products : products
+            products : products,
+            date : createdDate.toDateString()
         });
     };
 
-    console.log("\n\n\n");
-    console.log("formatted orders 2");
     console.log(formattedOrders);
 
-    console.log("\n\n\n");
-    console.log("array size");
-    console.log(loopSize);
-
-
-    response.render("shop/orders", { pageTitle : "Orders" });
+    response.render("shop/orders", { pageTitle : "Orders", orders : formattedOrders });
 };
 
 // Get the checkout page from the cart

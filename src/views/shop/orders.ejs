@@ -5,6 +5,16 @@
 
         <main class="cart">
             <h1>Nothing there!</h1>
+
+            <section class="orders-list">
+                <ul>
+                    <% orders.forEach((order) => { %>
+                        <li>
+                            <p>TotalPrice : <%= order.totalPrice %></p>
+                        </li>
+                    <% }) %>
+                </ul>
+            </section>
         </main>
 
     </body>
