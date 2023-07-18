@@ -1,20 +1,43 @@
 <%- include('../includes/head'); %>
-    <body>
+    <body class="orders-page">
 
         <%- include('../includes/navigation'); %>
 
-        <main class="cart">
-            <h1>Nothing there!</h1>
+        <main class="orders">
 
-            <section class="orders-list">
-                <ul>
-                    <% orders.forEach((order) => { %>
-                        <li>
-                            <p>TotalPrice : <%= order.totalPrice %></p>
-                        </li>
-                    <% }) %>
-                </ul>
-            </section>
+            <% if (hasProducts === true) { %>
+
+            <ul class="orders__products">
+                <% orders.forEach((order) => { %>
+
+                    <li class="orders__product">
+                        <p>TotalPrice : <%= order.totalPrice %></p>
+
+                        <div>
+
+                            <p>Products</p>
+
+                            <ul>
+                                <% order.products.forEach((product) => { %>
+                                    <li>
+                                        <p><%= product.name %> x <%= product.quantity%></p>
+                                        <p>£<%= product.price %></p>
+                                    </li>
+                                <% }) %>
+                            </ul>
+
+                        </div>
+                    </li>
+
+                <% }) %>
+            </ul>
+
+            <% } else { %>
+
+                <h1 class="orders__empty">No orders found</h1>
+
+            <% } %>
+
         </main>
 
     </body>

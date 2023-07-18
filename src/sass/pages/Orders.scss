@@ -1,6 +1,19 @@
-
-
 .orders-page{
 
-    
+}
+
+.orders{
+    width: calc(100% - 2rem);
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    &__products{
+        color : white;
+        display : flex;
+        flex-direction : column;
+    }
+
+    &__product{
+
+    }
 }

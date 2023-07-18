@@ -98,9 +98,6 @@ const getOrders = async ( request : RequestWithUserRole, response : Response, ne
     const formattedOrders : OrderArrayInterface[] = [];
     const loopSize = orders.length;
 
-    console.clear();
-    console.log("console cleared");
-
     // Get the details for each order
     // We use a for loop so we can render on the final iteration
     for (let index = 0; index < loopSize; index++) {
@@ -141,9 +138,10 @@ const getOrders = async ( request : RequestWithUserRole, response : Response, ne
         });
     };
 
-    console.log(formattedOrders);
+    // Check if we have products
+    const hasProducts = formattedOrders.length > 0;
 
-    response.render("shop/orders", { pageTitle : "Orders", orders : formattedOrders });
+    response.render("shop/orders", { pageTitle : "Orders", orders : formattedOrders, hasProducts : hasProducts });
 };
 
 // Get the checkout page from the cart
@@ -269,7 +267,6 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
             }
         }
 
-
         // Redirect to the cart page
         response.redirect("/cart");
     };
@@ -306,18 +303,13 @@ const postCartDelete = (request : RequestWithUserRole, response : Response, next
 
 // Create an order in the SQL backend
 const postOrderCreate = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
-
-    // Get the totalPrice from request body and remove the trailing slash
-    // const totalPrice = request.body.totalPrice.replace("/","");
     
     // Get the current user
     const user = request.User[0];
+    const cart = await user.getCart();
 
     // Post order create async method
     const postOrderCreateAsync = async () => {
-
-        // Get the cart
-        const cart = await user.getCart();
 
         // Get the products associated with that cart
         const products = await cart.getProducts({
@@ -341,51 +333,15 @@ const postOrderCreate = async (request : RequestWithUserRole, response : Respons
         });  
     };
 
-    // Empty the contents of our cart
-    const clearCartAfterCreatingOrder = async () => {
-
-        // Get the cart
-        const cart = await request.User[0].getCart();
-
-        // Get the current products from the current cart item
-        const products = await cart.getProducts();
-
-        // Loop through each cart item and remove it form the cart
-        products.forEach( async ( product : any ) => {
-
-            // Get current cart item
-            const cartItem = product.cartItem;
-
-            // Delete the cart item
-            cartItem.destroy();
-        });
-    };
-
     // Create the new order & order items and insert them into the database using a custom query
     // A custom query is used because the one to many association in sequelize doesn't work properly here
     postOrderCreateAsync();
 
-    // Call clear cart method
-    clearCartAfterCreatingOrder();
+    // Clear the cart by setting the products to null
+    cart.setProducts(null);
 
-    // Get the orders for the current user and render them on the orders page 
-    const products = await user.getProducts();
-    const orders = await user.getOrders();
-
-    console.clear();
-    console.log("console cleared");
-
-    orders.forEach((order : any) => {
-
-        const orderProducts = order.getProducts();
-
-        console.log("\n\n\n");
-        console.log("products");
-        console.log(orderProducts);
-    });
-
-    // Go back to the cart page for now
-    response.render("shop/orders", { pageTitle : "Orders Page" });
+    // Move to the orders page
+    response.redirect("orders");
 };
 
 export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };

@@ -201,6 +201,15 @@
     .add-product__button:hover, .add-product__button:focus {
       filter: contrast(120%); }
 
+.orders {
+  width: calc(100% - 2rem);
+  margin-left: 1rem;
+  margin-right: 1rem; }
+  .orders__products {
+    color: white;
+    display: flex;
+    flex-direction: column; }
+
 .product-detail {
   max-width: 350px;
   color: white;
@@ -527,6 +536,15 @@ h1 {
     filter: contrast(95%); }
     .edit-product__button:hover, .edit-product__button:focus {
       filter: contrast(120%); }
+
+.orders {
+  width: calc(100% - 2rem);
+  margin-left: 1rem;
+  margin-right: 1rem; }
+  .orders__products {
+    color: white;
+    display: flex;
+    flex-direction: column; }
 
 .product-detail {
   max-width: 350px;
