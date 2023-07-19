@@ -7,26 +7,29 @@
 
             <% if (hasProducts === true) { %>
 
-            <ul class="orders__products">
+            <ul class="orders__details">
                 <% orders.forEach((order) => { %>
 
-                    <li class="orders__product">
-                        <p>TotalPrice : <%= order.totalPrice %></p>
+                    <li class="orders__row">
 
-                        <div>
+                        <div class="orders__items">
 
-                            <p>Products</p>
+                            <p class="orders__products-title">Products</p>
 
-                            <ul>
+                            <ul class="orders__item">
                                 <% order.products.forEach((product) => { %>
-                                    <li>
-                                        <p><%= product.name %> x <%= product.quantity%></p>
+
+                                    <li class="orders__product-details">
+                                        <p><%= product.quantity %> x <%= product.name %></p> 
                                         <p>£<%= product.price %></p>
                                     </li>
+
                                 <% }) %>
                             </ul>
 
                         </div>
+
+                        <p class="orders__price">Total : £<%= order.totalPrice %></p>
                     </li>
 
                 <% }) %>
