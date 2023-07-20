@@ -7,35 +7,44 @@
         color : white;
         display : flex;
         flex-direction : column;
+        max-width: 400px;
+        margin: auto;
     }
 
     &__row{
-        padding: 1rem;
+        padding: 0.5rem;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         grid-column-gap: 2rem;
         justify-content: space-between;
-    }
+        overflow: hidden;
+        position: relative;
+        border-radius: 2px;
 
-    &__items{
-        display: flex;
-        flex-grow: 1;
-        flex-direction: column;
-    }
+        &:nth-child(even){
+            color: black;
+            box-shadow: $box_shadow_yellow;
 
-    &__price{
-        display: flex;
-        align-items: center;
-    }
-
-    &__product{
-        display: flex;
-        flex-direction: row;
-        grid-column-gap: 0.5rem;
+            @include backgroundGradientEffect{
+                background: $gradient_color_one;
+            }
+        }
     }
 
     &__product-details{
         display: flex;
         justify-content: space-between;
+    }
+
+    &__row-item{
+        width: 100%;
+
+        &--title{
+            font-size: 1.1rem;
+        }
+
+        &--total{
+            text-align: right;
+        }
     }
 }

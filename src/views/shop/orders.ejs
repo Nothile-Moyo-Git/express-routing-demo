@@ -12,24 +12,21 @@
 
                     <li class="orders__row">
 
-                        <div class="orders__items">
+                        <p class="orders__row-item orders__row-item--title">Products</p>
 
-                            <p class="orders__products-title">Products</p>
+                        <ul class="orders__row-item orders__row-item--products">
+                            <% order.products.forEach((product) => { %>
 
-                            <ul class="orders__item">
-                                <% order.products.forEach((product) => { %>
+                                <li class="orders__product-details">
+                                    <p><%= product.name %> x <%= product.quantity %></p> 
+                                    <p>£<%= product.price %></p>
+                                </li>
 
-                                    <li class="orders__product-details">
-                                        <p><%= product.quantity %> x <%= product.name %></p> 
-                                        <p>£<%= product.price %></p>
-                                    </li>
+                            <% }) %>
+                        </ul>
 
-                                <% }) %>
-                            </ul>
+                        <p class="orders__row-item orders__row-item--total">Total : £<%= order.totalPrice %></p>
 
-                        </div>
-
-                        <p class="orders__price">Total : £<%= order.totalPrice %></p>
                     </li>
 
                 <% }) %>
