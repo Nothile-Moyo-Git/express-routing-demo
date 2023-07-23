@@ -70,16 +70,6 @@ app.use(( request : any, response : Response, next : NextFunction ) => {
         // Set the user in the request object
         request.User = userResult;
 
-        // Check if the cart exists
-        const cartResult = await SequelizeCart.findAll({
-            where : { userid : 1 }
-        });
-
-        // Output the cart result
-        if (cartResult.length === 0){
-            request.User[0].createCart();
-        }
-
         // Execute the next middleware, call next in the async call so the next middleware executes
         next();
     };
@@ -99,34 +89,6 @@ app.use( errorRoutes );
 
 // Start our server async
 const startServer = async () => {
-
-    // Create the one to many relations for the database
-    // Creates a foreign key which is the userid found in the products table
-    // Also creates a foreign 
-    SequelizeProducts.belongsTo( User, { constraints : true, onDelete : 'CASCADE' });
-    SequelizeCart.belongsTo( User );
-
-    // User associate to many
-    // Creates a join between the products and the cart
-    User.hasMany( SequelizeProducts );
-    User.hasOne( SequelizeCart );
-
-    // Many to many relationship since one cart can have multiple items, but a product can also be in multiple carts
-    // Since it's a many to many relationship through the cart item, the product and userid will now be in cart items
-    SequelizeProducts.belongsToMany(SequelizeCart, { through : SequelizeCartItem });
-    SequelizeCart.belongsToMany(SequelizeProducts, { through : SequelizeCartItem });
-
-    // Since users can have multiple orders and each order belongs to a user
-    // This is a one to many relationship
-    SequelizeOrders.belongsTo(User);
-    User.hasMany(SequelizeOrders);
-    SequelizeOrders.belongsToMany(SequelizeProducts, {
-        through: SequelizeOrderItems,
-        as : {
-            singular : 'product',
-            plural : 'products'
-        }
-    });
 
     // Sync all models to the database and instantiate them 
     // Use { force : true } if you want to rebuild the tables when you create the server
