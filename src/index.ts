@@ -6,14 +6,10 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
+import { mongoConnect } from "./data/connection";
 import { sequelize } from "./util/database";
-import { SequelizeProducts } from "./models/products";
 import { Request, Response, NextFunction } from 'express';
 import { User, UserModel } from "./models/user";
-import SequelizeCart from "./models/cart";
-import SequelizeCartItem from "./models/cart-item";
-import SequelizeOrders from "./models/order";
-import SequelizeOrderItems from "./models/order-item";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -123,6 +119,9 @@ const startServer = async () => {
     
     // Listen to the port
     app.listen(port, () => {
+
+        // Test mongoDB connection
+        mongoConnect(() => {});
         console.log(`[server]: Server is running on http://localhost:${port}`);
     });
 };
