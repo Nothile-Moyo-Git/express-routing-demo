@@ -12,12 +12,9 @@
  * @method getProductDetails : ( request : Request, response : Response, next : NextFunction ) => void
  */
 
-// Import the cart sequelize
-import { SequelizeProducts } from "../models/products";
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
-import Products from "../models/products";
 import { sequelize } from "../util/database";
 import { QueryTypes, DataTypes } from "sequelize";
 
@@ -64,9 +61,6 @@ interface OrderArrayInterface{
     date : string
 }
 
-// Instantiate our products 
-const productsInstance = new Products();
-
 // Get the shop index page
 const getIndex = ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
 
@@ -79,11 +73,8 @@ const getProducts = (request : any, response : Response, next : NextFunction) =>
     // Render the products page async
     const getProductsAsync = async() => {
 
-        // Get the result of the SQL query
-        const result = await productsInstance.fetchAll( request.User[0].dataValues.id );
-
         // Render the ejs template file, we don't need a file extension to do this
-        response.render("shop/product-list", { prods : result, pageTitle: "Shop", path: "/", hasProducts : result.length > 0 });
+        response.render("shop/product-list", { prods : [], pageTitle: "Shop", path: "/", hasProducts : false });
     };
 
     getProductsAsync();
@@ -156,13 +147,10 @@ const getProductDetails = ( request : Request, response : Response, next : NextF
     // Get product details async
     const getProductDetailsAsync = async() => {
 
-        const result = await productsInstance.getProductById( request.params.id );
-
         let hasValue : boolean;
-        result.length > 0 ? hasValue = true : hasValue = false;
     
         // Render the admin products ejs template
-        response.render("shop/product-detail", { hasProduct : hasValue, productDetails : result[0], pageTitle : "Product Details" });
+        response.render("shop/product-detail", { hasProduct : hasValue, productDetails : [], pageTitle : "Product Details" });
     };
 
     getProductDetailsAsync();
@@ -253,18 +241,7 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
 
         }else{
 
-            // Get product based on the product id
-            const currentProduct = await SequelizeProducts.findAll({ where : { id : productId } });
 
-            // If we get a project, add it to the cart through the quantity which allows the field to be set
-            if ( currentProduct ) {
-
-                result = await cart.addProduct(currentProduct[0], { 
-                    through : {
-                        quantity : newQuantity
-                    }
-                });
-            }
         }
 
         // Redirect to the cart page
