@@ -17,12 +17,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { sequelize } from "../util/database";
 import { QueryTypes, DataTypes } from "sequelize";
+import Product from "../models/products";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
     id : number,
     name : string,
     email : string
+}
+
+// Product interface for mongoDB
+interface ProductInterface {
+
 }
 
 interface RequestWithUserRole extends Request{
@@ -73,8 +79,16 @@ const getProducts = (request : any, response : Response, next : NextFunction) =>
     // Render the products page async
     const getProductsAsync = async() => {
 
+        // Initiate our product instance
+        const products = Product.getAll();
+        const testProducts = await Product.getAll();
+
+        console.log("products");
+        console.log(products);
+        console.log(testProducts);
+
         // Render the ejs template file, we don't need a file extension to do this
-        response.render("shop/product-list", { prods : [], pageTitle: "Shop", path: "/", hasProducts : false });
+        response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : false });
     };
 
     getProductsAsync();
