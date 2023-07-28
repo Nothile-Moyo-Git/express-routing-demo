@@ -1,6 +1,6 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from "uuid";
+import Product from '../models/products';
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -23,16 +23,18 @@ const getAddProduct = (request : Request, response : Response, next : NextFuncti
 // Post add product controller
 const postAddProduct = async(request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    console.clear();
+    // Get the variables from our request body
+    const title = String(request.body.title);
+    const image = String(request.body.image);
+    const description = String(request.body.description);
+    const price = Number(request.body.price);
 
-    // Add product 
-    const addProductAsync = async () => {
+    // Create new instance of product
+    const productInstance = new Product(title, price, description, image);
 
-        // Redirect to the products page
-        response.redirect("/products");
-    };
+    await productInstance.save();
 
-    addProductAsync();
+    response.redirect("http://localhost:3000/products");
 
 };
 

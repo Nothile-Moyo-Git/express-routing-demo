@@ -7,6 +7,14 @@
 
 import { getDB } from "../data/connection";
 
+// Product interface for our dynamic schema
+interface ProductInterface {
+    title : string,
+    price : number,
+    description : string,
+    image : string
+}
+
 class Product {
 
     protected title : string;
@@ -25,16 +33,24 @@ class Product {
     async save(){
 
         // Get database information
-        const db = getDB();
+        const db = await getDB();
 
         // Start the collection
         const collection = db.collection("products");
+
+        // Insert a new product
+        await collection.insertOne({
+            title : this.title, 
+            price : this.price,
+            description : this.description,
+            image : this.imageUrl
+        });
     }
 
     static async getAll(){
 
         // Get database information
-        const db = getDB();
+        const db = await getDB();
 
         // Start the collection object
         const collection = db.collection("products");

@@ -74,24 +74,13 @@ const getIndex = ( request : RequestWithUserRole, response : Response, next : Ne
 };
 
 // Get products controller
-const getProducts = (request : any, response : Response, next : NextFunction) => {
+const getProducts = async (request : any, response : Response, next : NextFunction) => {
 
-    // Render the products page async
-    const getProductsAsync = async() => {
+    // Get products
+    const products = await Product.getAll();
 
-        // Initiate our product instance
-        const products = Product.getAll();
-        const testProducts = await Product.getAll();
-
-        console.log("products");
-        console.log(products);
-        console.log(testProducts);
-
-        // Render the ejs template file, we don't need a file extension to do this
-        response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : false });
-    };
-
-    getProductsAsync();
+    // Render the products view
+    response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : products.length > 0 });
 };
 
 // Get the orders
