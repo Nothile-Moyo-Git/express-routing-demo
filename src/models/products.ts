@@ -63,6 +63,10 @@ class Product {
 
         return productsArray;
     }
+
+    static async getSingle(){
+        
+    }
 }
 
 export default Product;
