@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
-import { mongoExecuteCallback } from "./data/connection";
+import mongoConnect from "./data/connection";
 import { sequelize } from "./util/database";
 import { Request, Response, NextFunction } from 'express';
 import { User, UserModel } from "./models/user";
@@ -117,16 +117,15 @@ const startServer = async () => {
         });
     }
     
-    // Listen to the port
-    app.listen(port, () => {
+    mongoConnect(() => {
 
-        // Test mongoDB connection
-        mongoExecuteCallback(() => {
-
+        // Listen to the port
+        app.listen(port, () => {  
+            console.log(`[server]: Server is running on http://localhost:${port}`);
         });
-  
-        console.log(`[server]: Server is running on http://localhost:${port}`);
     });
+
+
 };
 
 // Execute server start
