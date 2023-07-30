@@ -19,7 +19,7 @@
                                 class="card__img"
                             />
                             <p class="card__price">£<%= product.price %></p>
-                            <p class="card__desc"><%=  product.description %></p>
+                            <p class="card__desc"><%= product.description %></p>
                             <div class="card__forms">
                                 <a class="card__button" href="<%= `/product-detail/${product._id.toString()}` %>">Details</a>
                                 <form action="/cart" method="POST">
