@@ -6,6 +6,7 @@
  */
 
 import { getDB } from "../data/connection";
+import { ObjectId } from "mongodb";
 
 // Product interface for our dynamic schema
 interface ProductInterface {
@@ -64,8 +65,23 @@ class Product {
         return productsArray;
     }
 
-    static async getSingle(){
+    static async getProduct(id : string){
         
+        // Get the database
+        const db = await getDB();
+
+        // Get the collection
+        const collection = db.collection("products");
+
+        const objectId = new ObjectId(id);
+
+        // Get the cursor and product response
+        const query = { _id : objectId };
+
+        // Get the individual document
+        const product = await collection.findOne(query);
+
+        return product;
     }
 }
 

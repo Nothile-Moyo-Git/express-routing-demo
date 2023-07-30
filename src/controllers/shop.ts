@@ -145,18 +145,20 @@ const getCheckout = ( request : Request, response : Response, next : NextFunctio
 };
 
 // Get product detail controller
-const getProductDetails = ( request : Request, response : Response, next : NextFunction ) => {
+const getProductDetails = async ( request : Request, response : Response, next : NextFunction ) => {
 
-    // Get product details async
-    const getProductDetailsAsync = async() => {
+    // Get product ID from the POST request
+    const productId = request.params.id;
 
-        let hasValue : boolean;
-    
-        // Render the admin products ejs template
-        response.render("shop/product-detail", { hasProduct : hasValue, productDetails : [], pageTitle : "Product Details" });
-    };
+    // Get single product details
+    const productDetails = await Product.getProduct(productId);
 
-    getProductDetailsAsync();
+    // Check if the single values are empty
+    const hasValue = productDetails ? true : false;
+
+    // Render the admin products ejs template
+    response.render("shop/product-detail", { hasProduct : hasValue, productDetails : productDetails, pageTitle : productDetails.title ? productDetails.title : "Product details" });
+
 
 };
 
