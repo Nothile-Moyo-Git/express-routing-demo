@@ -39,33 +39,23 @@ const postAddProduct = async(request : RequestWithUserRole, response : Response,
 };
 
 // Get admin products controller
-const getProducts = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const getProducts = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    // Render the admin products ejs template
-    const renderAdminProducts = async () => {
+    // Get the produts for the admin page
+    const products = await Product.getAll();
 
-
-
-        // Render the view of the page
-        response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
-    };
-
-    // Execute the async function in order to render our view after finishing our sql query
-    renderAdminProducts();
+    // Render the view of the page
+    response.render("admin/products", { prods : products , pageTitle : "Admin Products" , hasProducts : products.length > 0 } );
 };
 
 // Update product controller
 const updateProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    // Execute update functionality asyncronously
-    const updateProductsAsync = async () => {
-        
-        // Render the view of the page
-        response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
-    };
+    console.log("Outputting request parameters");
+    console.log(request.params);
 
-    // Render the page with the new products
-    updateProductsAsync();
+    // Render the view of the page
+    response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
 };
 
 // Delete product controller

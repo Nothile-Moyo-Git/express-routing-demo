@@ -151,7 +151,7 @@ const getProductDetails = async ( request : Request, response : Response, next :
     const productId = request.params.id;
 
     // Get single product details
-    const productDetails = await Product.getProduct(productId);
+    const productDetails = await Product.findById(productId);
 
     // Check if the single values are empty
     const hasValue = productDetails ? true : false;

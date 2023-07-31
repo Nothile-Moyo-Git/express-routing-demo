@@ -10,6 +10,7 @@
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
+import Product from '../models/products';
 
 // Sql product interface
 interface SQLProduct {
@@ -23,25 +24,24 @@ interface SQLProduct {
 
 
 // Get admin edit product controller
-const getAdminEditProduct = (request : Request, response : Response, next : NextFunction) => {
-    
-    // Get async admin edit product
-    const getAdminEditProductAsync = async () => {
+const getAdminEditProduct = async (request : Request, response : Response, next : NextFunction) => {
 
-        // Render the edit products template
-        response.render(      
-            "admin/edit-product", 
-            { 
-                pageTitle : "Edit Products", 
-                id : request.params.id, 
-                productInformation : [],
-                hasProducts : false
-            }
-        );
-    };
+    // Get the product id
+    const productId = request.params.id;
 
-    getAdminEditProductAsync();
+    // Get single product info
+    const singleProduct = await Product.findById(productId);
 
+    // Render the edit products template
+    response.render(      
+        "admin/edit-product", 
+        { 
+            pageTitle : "Edit Products", 
+            id : productId, 
+            productInformation : singleProduct,
+            hasProducts : singleProduct ? true : false
+        }
+    );
 };
 
 export { getAdminEditProduct };

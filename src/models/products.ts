@@ -65,7 +65,7 @@ class Product {
         return productsArray;
     }
 
-    static async getProduct(id : string){
+    static async findById(id : string){
         
         // Get the database
         const db = await getDB();
