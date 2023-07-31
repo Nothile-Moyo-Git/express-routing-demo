@@ -73,6 +73,7 @@ class Product {
         // Get the collection
         const collection = db.collection("products");
 
+        // Create a new object id for searching cursors in the database
         const objectId = new ObjectId(id);
 
         // Get the cursor and product response
