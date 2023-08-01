@@ -57,9 +57,6 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
     const description = request.body.description;
     const price = Number(request.body.price);
 
-    console.log("Price");
-    console.log(price);
-
     // Instantiate products
     const productInstance = new Product(title,price,description,image);
 
@@ -68,7 +65,6 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
 
     // Render the view of the page
     response.redirect("/admin/products");
-    // response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
 };
 
 // Delete product controller
