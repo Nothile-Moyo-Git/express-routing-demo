@@ -51,11 +51,24 @@ const getProducts = async (request : RequestWithUserRole, response : Response, n
 // Update product controller
 const updateProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    console.log("Outputting request parameters");
-    console.log(request.params);
+    // Get values from the request body
+    const title = request.body.title;
+    const image = request.body.image;
+    const description = request.body.description;
+    const price = Number(request.body.price);
+
+    console.log("Price");
+    console.log(price);
+
+    // Instantiate products
+    const productInstance = new Product(title,price,description,image);
+
+    // Update the product
+    productInstance.updateById(request.params.id)
 
     // Render the view of the page
-    response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
+    response.redirect("/admin/products");
+    // response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
 };
 
 // Delete product controller

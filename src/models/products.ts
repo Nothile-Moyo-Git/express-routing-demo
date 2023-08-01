@@ -22,6 +22,7 @@ class Product {
     protected price : number;
     protected description : string;
     protected imageUrl : string;
+    protected id : string;
 
     // Instantiate the product when it's saved
     constructor(title : string, price : number, description : string, imageUrl : string){
@@ -83,6 +84,29 @@ class Product {
         const product = await collection.findOne(query);
 
         return product;
+    }
+
+    async updateById(id : string){
+
+        // Get the database
+        const db = await getDB();
+
+        // Get the collection
+        const collection = db.collection("products");
+
+        // Create a new object id for cursors
+        const objectId = new ObjectId(id);
+
+        // Update the product and check the response
+        const response = await collection.updateOne(
+            { "_id" : objectId },
+            { $set : {
+                title : this.title,
+                image : this.imageUrl,
+                description : this.description,
+                price : this.price
+            }}
+        );
     }
 }
 
