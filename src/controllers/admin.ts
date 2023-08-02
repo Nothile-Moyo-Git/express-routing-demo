@@ -35,7 +35,6 @@ const postAddProduct = async(request : RequestWithUserRole, response : Response,
     await productInstance.save();
 
     response.redirect("http://localhost:3000/products");
-
 };
 
 // Get admin products controller
@@ -68,7 +67,14 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
 };
 
 // Delete product controller
-const deleteProduct = (request : Request, response : Response, next : NextFunction) => {
+const deleteProduct = async (request : Request, response : Response, next : NextFunction) => {
+
+    // Request parameters
+    console.log("Request params");
+    console.log(request.params);
+
+    // Delete product
+    await Product.deleteById(request.params.id);
 
     // Redirect to the admin products page since we executed admin functionality
     response.redirect("/admin/products");

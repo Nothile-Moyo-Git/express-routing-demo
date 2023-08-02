@@ -2,19 +2,10 @@
  * Products model
  * Currently creates an instance of the product class
  * This can add products or show them in a list on a page
- *
  */
 
 import { getDB } from "../data/connection";
 import { ObjectId } from "mongodb";
-
-// Product interface for our dynamic schema
-interface ProductInterface {
-    title : string,
-    price : number,
-    description : string,
-    image : string
-}
 
 class Product {
 
@@ -32,6 +23,7 @@ class Product {
         this.description = description;
     }
 
+    // Store the item in the database
     async save(){
 
         // Get database information
@@ -49,6 +41,7 @@ class Product {
         });
     }
 
+    // Get the items from the collection 
     static async getAll(){
 
         // Get database information
@@ -66,6 +59,7 @@ class Product {
         return productsArray;
     }
 
+    //
     static async findById(id : string){
         
         // Get the database
@@ -98,7 +92,7 @@ class Product {
         const objectId = new ObjectId(id);
 
         // Update the product and check the response
-        const response = await collection.updateOne(
+        await collection.updateOne(
             { "_id" : objectId },
             { $set : {
                 title : this.title,
@@ -107,6 +101,21 @@ class Product {
                 price : this.price
             }}
         );
+    }
+
+
+    static async deleteById(id : string){
+
+        // Get the database
+        const db = await getDB();
+
+        // Get the collection
+        const collection = db.collection("products");
+
+        // Create a new object id
+        const objectId = new ObjectId(id);
+
+        await collection.deleteOne({ "_id" : objectId});
     }
 }
 
