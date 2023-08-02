@@ -115,6 +115,7 @@ class Product {
         // Create a new object id
         const objectId = new ObjectId(id);
 
+        // Delete the object from Mongodb
         await collection.deleteOne({ "_id" : objectId});
     }
 }
