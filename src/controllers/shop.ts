@@ -160,11 +160,7 @@ const getProductDetails = async ( request : Request, response : Response, next :
 
 // Get the cart and all the products inside of it
 const getCart = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
-
-    const user = new User("Nothile", "nothile1@gmail.com");
-    console.log("User");
-    console.log(user);
-
+ 
     // Render the admin products ejs template
     response.render("shop/cart", { 
         hasProducts : false, 
