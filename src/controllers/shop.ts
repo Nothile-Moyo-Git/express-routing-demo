@@ -16,19 +16,15 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import { sequelize } from "../util/database";
-import { QueryTypes, DataTypes } from "sequelize";
+import { QueryTypes } from "sequelize";
 import Product from "../models/products";
+import User from "../models/user";
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
     id : number,
     name : string,
     email : string
-}
-
-// Product interface for mongoDB
-interface ProductInterface {
-
 }
 
 interface RequestWithUserRole extends Request{
@@ -163,41 +159,19 @@ const getProductDetails = async ( request : Request, response : Response, next :
 };
 
 // Get the cart and all the products inside of it
-const getCart = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const getCart = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    // Get the current cart based on the user
-    const getCartAsync = async () => {
+    const user = new User("Nothile", "nothile1@gmail.com");
+    console.log("User");
+    console.log(user);
 
-        // Get the cart results
-        const cart = await request.User[0].getCart();       
-        const cartProducts = await cart.getProducts();
-
-        // Create a variable so we can calculate the total price
-        let totalPrice = 0;
-
-        // Loop through each cart item so we can get the price and quatity for total price
-        cartProducts.forEach((singleProduct: { price: number; cartItem: { dataValues: { quantity: number; }; }; }) => {
-
-            // Get price and quantity from single cart item
-            // Each cart item comes with a "cartItem" object as it's used as the "through" value in the many to many relationship
-            const singlePrice : number = singleProduct.price;
-            const quantity : number = singleProduct.cartItem.dataValues.quantity;  
-
-            // Add to the base total price
-            totalPrice += (singlePrice * quantity);
-        });
-
-        // Render the admin products ejs template
-        response.render("shop/cart", { 
-            hasProducts : cartProducts.length > 0, 
-            products : cartProducts, 
-            pageTitle : "Your Cart",
-            totalPrice : totalPrice
-         });
-    };
-
-    // Execute get cart functionality
-    getCartAsync();
+    // Render the admin products ejs template
+    response.render("shop/cart", { 
+        hasProducts : false, 
+        products : [], 
+        pageTitle : "Your Cart",
+        totalPrice : 0
+    });
 };
 
 // Add a new product to the cart using sequelize and a many to many relational mapper
@@ -206,79 +180,12 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
     // Setting the product id from the request.body object
     const productId = request.body.productId;
 
-    // Add a product to my cart
-    const postCartAsync = async () => {
-
-        // Get the cart
-        const cart = await request.User[0].getCart();
-
-        // Get the products associated with that cart
-        const products = await cart.getProducts({ where : { id : productId }});
-
-        // If we have a product, add quantity to it
-        let product;
-        let newQuantity = 1;
-        let result;
-
-        // Set the product if it already exists
-        if (products.length > 0) {
-            product = products[0];
-        }
-
-        // Add to the quantity or create a new quantity
-        if (product) {
-
-            // When getting a product through the cart, they're linked through a cartitem and an associative query pulls the "through" item through as well
-            const cartItem = products[0].dataValues.cartItem;
-
-            // Add another item to the quantity
-            newQuantity = cartItem.dataValues.quantity + 1;
-
-            // Add the product by updating the quantity
-            result = await cart.addProduct(product, {
-                through : {
-                    quantity : newQuantity
-                },
-                where : {
-                    productId : productId
-                }
-            });
-
-        }else{
-
-
-        }
-
-        // Redirect to the cart page
-        response.redirect("/cart");
-    };
-
-    postCartAsync();
+    // Redirect to the cart page
+    response.redirect("/cart");
 }
 
 // Delete an item from the cart using cart item
 const postCartDelete = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
-
-    const postCartDeleteAsync = async () => {
-
-        // Get the product id, slice is used to remove the trailing / at the end
-        const productId = request.body.productId.slice(0, -1);
-
-        // Get the cart
-        const cart = await request.User[0].getCart();
-
-        // Delete the item from the cart using cartItem
-        const products = await cart.getProducts({
-            where : {
-                id : productId
-            }
-        });
-
-        // Destroy the product from using cart item since there's a many to many association
-        await products[0].cartItem.destroy();
-    }
-
-    postCartDeleteAsync();
 
     response.redirect('back');
 };

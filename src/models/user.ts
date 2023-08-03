@@ -5,58 +5,41 @@
  * Also handles the functionality in order to have a user generated cart
  */
 
-import { sequelize } from "../util/database";
-import { DataTypes, Model, Optional, InferAttributes, InferCreationAttributes } from 'sequelize';
+import { getDB } from "../data/connection";
+import { ObjectId } from "mongodb";
 
-// Sequelize object, creates our table if it doesn't exist
-const User = sequelize.define("user", {
-    id : {
-        type : DataTypes.INTEGER,
-        autoIncrement : true,
-        allowNull : false,
-        primaryKey : true
-    },
-    name : {
-        type : DataTypes.STRING
-    },
-    email : {
-        type : DataTypes.STRING
+// Prototype of the User class
+class User {
+
+    protected name : string;
+    protected email : string;
+
+    // Instantiate our user to be saved to the database
+    constructor(name : string, email : string){
+        this.name = name;
+        this.email = email;
     }
-});
 
-// Creating the attributes in the database so we can reference it with our typescript extension
-interface UserAttributes extends Model<any, any> {
-    id : number,
-    name : string,
-    email : string
+    // Save our newly created user to the users collection
+    async save(){
+
+        // Get database information
+        const db = await getDB();
+
+        // Start the collection
+        const collection = db.collection("users");
+
+        // Create a new user
+        await collection.insertOne({
+            name : this.name,
+            email : this.email
+        });
+    }
+
+    // Find the user by ID
+    static async findById(id : string){
+
+    }
 };
 
-
-// Extending the sequelize model for typescript
-class UserModel extends Model<InferAttributes<UserAttributes>,InferCreationAttributes<Optional<UserAttributes, 'id'>>>{}
-
-// Initialize our model
-UserModel.init({
-    
-    // Model attributes are defined here
-    id : {
-        type : DataTypes.INTEGER,
-        autoIncrement : true,
-        allowNull : false,
-        primaryKey : true
-    },
-    name : {
-        type : DataTypes.STRING
-    },
-    email : {
-        type : DataTypes.STRING
-    },
-},{
-    
-    // Other model options go here
-    sequelize,
-    modelName : "usermodel"
-});
-
-export { User, UserModel };
-
+export default User;
