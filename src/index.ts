@@ -8,6 +8,8 @@ import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import mongoConnect from "./data/connection";
 import { Response, NextFunction } from 'express';
+import User from "./models/user";
+import { UserInterface } from "./models/user";
 
 // Import the .env variables
 dotenv.config();
@@ -45,6 +47,8 @@ app.use(( request : any, response : Response, next : NextFunction ) => {
     const getUserOnLoad = async () => {
 
         // Please get your initial user here with the check method found in users.ts
+        // Check if there are users currently in the collection
+        const users : UserInterface[] = await User.checkIfRootExists();
 
         // Execute the next middleware, call next in the async call so the next middleware executes
         next();

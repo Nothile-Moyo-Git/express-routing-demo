@@ -65,12 +65,6 @@ const getProductDetails = async ( request : Request, response : Response, next :
 
 // Get the cart and all the products inside of it
 const getCart = async (request : Request, response : Response, next : NextFunction) => {
-
-    // Check if there are users currently in the collection
-    const users : UserInterface[] = await User.checkIfRootExists();
-    
-    console.log("Users");
-    console.log(users);
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
