@@ -7,15 +7,7 @@ import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
 import mongoConnect from "./data/connection";
-import { sequelize } from "./util/database";
-import { Request, Response, NextFunction } from 'express';
-
-// Extend the request object in order to set variables in my request object
-interface UserInterface {
-    id : number,
-    name : string,
-    email : string
-}
+import { Response, NextFunction } from 'express';
 
 // Import the .env variables
 dotenv.config();
@@ -52,6 +44,8 @@ app.use(( request : any, response : Response, next : NextFunction ) => {
     // Get the dummy User
     const getUserOnLoad = async () => {
 
+        // Please get your initial user here with the check method found in users.ts
+
         // Execute the next middleware, call next in the async call so the next middleware executes
         next();
     };
@@ -68,7 +62,6 @@ app.use( shopRoutes );
 // Use the error page router
 app.use( errorRoutes );
 
-
 // Start our server async
 const startServer = async () => {
     
@@ -79,8 +72,6 @@ const startServer = async () => {
             console.log(`[server]: Server is running on http://localhost:${port}`);
         });
     });
-
-
 };
 
 // Execute server start

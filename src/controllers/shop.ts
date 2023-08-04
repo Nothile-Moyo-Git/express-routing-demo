@@ -15,56 +15,12 @@
 
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
-import { sequelize } from "../util/database";
-import { QueryTypes } from "sequelize";
 import Product from "../models/products";
+import { UserInterface } from '../models/user';
 import User from "../models/user";
 
-// Extend the request object in order to set variables in my request object
-interface UserInterface {
-    id : number,
-    name : string,
-    email : string
-}
-
-interface RequestWithUserRole extends Request{
-    User ?: UserInterface
-}
-
-// Sequelize Product Interface
-interface SequelizeProductInterface {
-    addOrder : any,
-    id : number,
-    title : string,
-    image : string,
-    description : string,
-    price : number,
-    productId : string,
-    createdAt : Date,
-    updatedAt : Date,
-    userId : number,
-    'cartItem.id' : number,
-    'cartItem.quantity' : number,
-    'cartItem.createdAt' : Date,
-    'cartItem.productId' : Date,
-    'cartItem.cartId' : number
-}
-
-// Order interface for our array, we will use an array of objects which contains an array of products and a total amount
-interface OrderProductInterface{
-    quantity : number,
-    name : string,
-    price : number
-}
-
-interface OrderArrayInterface{
-    totalPrice : number,
-    products : OrderProductInterface[],
-    date : string
-}
-
 // Get the shop index page
-const getIndex = ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
+const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
 
     response.render("shop/index", { pageTitle : "Shop" });
 };
@@ -80,58 +36,9 @@ const getProducts = async (request : any, response : Response, next : NextFuncti
 };
 
 // Get the orders
-const getOrders = async ( request : RequestWithUserRole, response : Response, next : NextFunction ) => {
+const getOrders = async ( request : Request, response : Response, next : NextFunction ) => {
 
-    // Get the user & the orders
-    const user = request.User[0];
-    const orders = await user.getOrders();
-    const formattedOrders : OrderArrayInterface[] = [];
-    const loopSize = orders.length;
-
-    // Get the details for each order
-    // We use a for loop so we can render on the final iteration
-    for (let index = 0; index < loopSize; index++) {
-
-        // Get the products for the order
-        const products = [];
-
-        // Set the total price for the order
-        let totalPrice = 0;
-        let createdDate = new Date();
-
-        const orderProducts = await orders[index].getProducts({ raw : true });
-
-        orderProducts.forEach((orderProduct : any) => {
-
-            // Get the total price of the order
-            totalPrice += orderProduct.price * orderProduct['orderItems.quantity'];
-
-            // Get the date of the order 
-            createdDate = orderProduct.updatedAt;
-
-            // Create the new product
-            const product : OrderProductInterface = {
-                quantity : orderProduct['orderItems.quantity'],
-                price : orderProduct.price * orderProduct['orderItems.quantity'],
-                name : orderProduct.title
-            };
-
-            // Add the product to the products array
-            products.push(product);
-        });
-
-        // Add to our orders
-        formattedOrders.push({
-            totalPrice : totalPrice,
-            products : products,
-            date : createdDate.toDateString()
-        });
-    };
-
-    // Check if we have products
-    const hasProducts = formattedOrders.length > 0;
-
-    response.render("shop/orders", { pageTitle : "Orders", orders : formattedOrders, hasProducts : hasProducts });
+    response.render("shop/orders", { pageTitle : "Orders", orders : [], hasProducts : false });
 };
 
 // Get the checkout page from the cart
@@ -154,12 +61,16 @@ const getProductDetails = async ( request : Request, response : Response, next :
 
     // Render the admin products ejs template
     response.render("shop/product-detail", { hasProduct : hasValue, productDetails : productDetails, pageTitle : productDetails.title ? productDetails.title : "Product details" });
-
-
 };
 
 // Get the cart and all the products inside of it
-const getCart = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const getCart = async (request : Request, response : Response, next : NextFunction) => {
+
+    // Check if there are users currently in the collection
+    const users : UserInterface[] = await User.checkIfRootExists();
+    
+    console.log("Users");
+    console.log(users);
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
@@ -181,50 +92,14 @@ const postCart = (request : any, response : Response, next : NextFunction) => {
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const postCartDelete = (request : Request, response : Response, next : NextFunction) => {
 
     response.redirect('back');
 };
 
 // Create an order in the SQL backend
-const postOrderCreate = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const postOrderCreate = async (request : Request, response : Response, next : NextFunction) => {
     
-    // Get the current user
-    const user = request.User[0];
-    const cart = await user.getCart();
-
-    // Post order create async method
-    const postOrderCreateAsync = async () => {
-
-        // Get the products associated with that cart
-        const products = await cart.getProducts({
-            raw : true
-        });
-
-        // Create an order with the user id
-        const newOrder = await user.createOrder();
-
-        // Get the order id for reference
-        const orderId = newOrder.dataValues.id;
-
-        // Add each product to the order item
-        products.forEach( async ( product : SequelizeProductInterface ) => {
-
-            // Query to create a new order item
-            const query = `INSERT INTO orderItems(id, quantity, orderId, productId) VALUES (${null}, ${product['cartItem.quantity']}, ${orderId}, ${product.id})`;
-
-            // Execute the query and add the product to the database
-            await sequelize.query(query, { type : QueryTypes.INSERT });
-        });  
-    };
-
-    // Create the new order & order items and insert them into the database using a custom query
-    // A custom query is used because the one to many association in sequelize doesn't work properly here
-    postOrderCreateAsync();
-
-    // Clear the cart by setting the products to null
-    cart.setProducts(null);
-
     // Move to the orders page
     response.redirect("orders");
 };

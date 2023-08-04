@@ -84,6 +84,7 @@ class Product {
         return product;
     }
 
+    
     async updateById(id : string){
 
         // Get the database
