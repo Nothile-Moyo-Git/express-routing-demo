@@ -9,7 +9,7 @@
  */
 
 import { getDB } from "../data/connection";
-import { Document, WithId } from "mongodb";
+import { Document, ObjectId, WithId } from "mongodb";
 
 // We use a regular interface here so we don't have to deal with errors exporting our inherited interface
 interface UserInterface{
@@ -52,11 +52,7 @@ class User {
     }
 
     // Check if the user exists in the database
-    static async checkIfRootExists(){
-
-        // Use my current ID as I'm building the app
-        // const idString = "64cbf9c421ce8d8b4ac8b66f";
-        // const _id = new ObjectId(idString);
+    static async getUsers(){
 
         // Get database information
         const db = await getDB();
@@ -81,6 +77,57 @@ class User {
         });
 
         return users;
+    }
+
+    // Get users from the database
+    static async getRootUser(){
+
+        // Set the object ID
+        const idString = "64cbf9c421ce8d8b4ac8b66f";
+        const id = new ObjectId(idString); 
+
+        // Get database information
+        const db = await getDB();
+
+        // Start the collection
+        const collection = db.collection("users");
+
+        // Create our query
+        const query = { _id : id };
+
+        // Get the user
+        const user = await collection.findOne(query);
+
+        // Return user details
+        return user;
+    }
+
+    // Create a new root user if it doesn't exist for me
+    async createIfRootIsNull(){
+
+        // Id
+        const idString = "64cbf9c421ce8d8b4ac8b66f";
+        const id = new ObjectId(idString); 
+
+        // Get database information
+        const db = await getDB();
+
+        // Start the collection
+        const collection = db.collection("users");
+        
+        // Create our query
+        const user = { 
+            _id : id,
+            name : this.name,
+            email : this.email
+        };
+
+        // Create a new user
+        await collection.insertOne(user);
+
+        console.log("User created");
+
+        return user;
     }
 
     // Find the user by ID

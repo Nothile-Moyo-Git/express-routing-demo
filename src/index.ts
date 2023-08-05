@@ -9,7 +9,6 @@ import errorRoutes from "./routes/error";
 import mongoConnect from "./data/connection";
 import { Response, NextFunction } from 'express';
 import User from "./models/user";
-import { UserInterface } from "./models/user";
 
 // Import the .env variables
 dotenv.config();
@@ -41,20 +40,28 @@ app.set('views', 'src/views');
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
-app.use(( request : any, response : Response, next : NextFunction ) => {
+app.use( async( request : any, response : Response, next : NextFunction ) => {
 
-    // Get the dummy User
-    const getUserOnLoad = async () => {
+    // Check if my initial user exists
+    const user = await User.getRootUser();
+    let requestUser = {};
 
-        // Please get your initial user here with the check method found in users.ts
-        // Check if there are users currently in the collection
-        const users : UserInterface[] = await User.checkIfRootExists();
+    if (user === null) {
 
-        // Execute the next middleware, call next in the async call so the next middleware executes
-        next();
-    };
+        // Create user
+        const userInstance = new User( "Nothile", "nothile1@gmail.com");
+        requestUser = await userInstance.createIfRootIsNull();
+    } else{
+        requestUser = user;
+    }
 
-    getUserOnLoad();
+    // Add the user details to the request here
+    request.user = requestUser
+
+    console.log(requestUser);
+
+    next();
+    
 });
 
 // Use our admin router which handles the product form and page
