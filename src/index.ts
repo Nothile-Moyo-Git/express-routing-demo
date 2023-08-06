@@ -1,3 +1,12 @@
+/**
+ * The index file. This serves as our "main" method
+ * This file imports all of the TS files that we compile into ES5
+ * We start our server and create our connection pool here
+ * 
+ * @method startServer : async () => void
+ */
+
+
 // Imports, we're creating an express http server using development variables
 import path from "path";
 import express from "express";
