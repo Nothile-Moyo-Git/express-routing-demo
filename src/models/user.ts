@@ -5,23 +5,15 @@
  * Also handles the functionality in order to have a user generated cart
  * When checking if we have users or when querying them, we extend the WithId<Document> interface so we can work with the cursor Id's
  * 
- * 
+ * @method save : async() => void
+ * @method getUsers : static async() => []
+ * @method getRootUser : static async () => {user}
+ * @method createIfRootIsNull : async () => {user}
+ * @method findById : static async () => {user}
  */
 
 import { getDB } from "../data/connection";
 import { Document, ObjectId, WithId } from "mongodb";
-
-// We use a regular interface here so we don't have to deal with errors exporting our inherited interface
-interface UserInterface{
-    name : string,
-    email : string
-}
-
-// Mongo user interface
-interface MongoUserInterface extends WithId<Document>{
-    name : string,
-    email : string
-}
 
 // Prototype of the User class
 class User {
@@ -67,7 +59,7 @@ class User {
         const cursorArray = await cursor.toArray();
 
         // We format the array so that it works with TypeScript and avoids the WithId<Document> error
-        const users = cursorArray.map((item : MongoUserInterface) => {
+        const users = cursorArray.map((item: WithId<Document>) => {
 
             return {
                 _id: new Object(item._id),
@@ -136,5 +128,4 @@ class User {
     }
 };
 
-export { UserInterface };
 export default User;

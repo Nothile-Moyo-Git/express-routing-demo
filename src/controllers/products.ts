@@ -12,16 +12,6 @@
 import { Request, Response, NextFunction } from 'express';
 import Product from '../models/products';
 
-// Sql product interface
-interface SQLProduct {
-    title : string,
-    image : string,
-    description : string,
-    price : number,
-    id : string,
-    productid : string
-};
-
 
 // Get admin edit product controller
 const getAdminEditProduct = async (request : Request, response : Response, next : NextFunction) => {

@@ -1,20 +1,27 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Product from '../models/products';
+import { ObjectId } from 'mongodb';
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
-    id : number,
+    _id : ObjectId,
     name : string,
     email : string
 }
 
 interface RequestWithUserRole extends Request{
-    User ?: UserInterface | any
+    User : UserInterface
 }
 
 // Add product controller
-const getAddProduct = (request : Request, response : Response, next : NextFunction) => {
+const getAddProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+
+    const userId = String(request.User._id.toString());
+
+    console.log("\n");
+    console.log("User id");
+    console.log(userId);
 
     // Send our HTML file to the browser
     response.render("admin/add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
@@ -28,9 +35,10 @@ const postAddProduct = async(request : RequestWithUserRole, response : Response,
     const image = String(request.body.image);
     const description = String(request.body.description);
     const price = Number(request.body.price);
+    const _id = new ObjectId(request.User._id);
 
     // Create new instance of product
-    const productInstance = new Product(title, price, description, image);
+    const productInstance = new Product(title, price, description, image, _id);
 
     await productInstance.save();
 
@@ -55,9 +63,10 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
     const image = request.body.image;
     const description = request.body.description;
     const price = Number(request.body.price);
+    const _id = new ObjectId(request.User._id);
 
     // Instantiate products
-    const productInstance = new Product(title,price,description,image);
+    const productInstance = new Product(title, price, description, image, _id);
 
     // Update the product
     productInstance.updateById(request.params.id)

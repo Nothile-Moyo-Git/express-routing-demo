@@ -44,11 +44,12 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
 
     // Check if my initial user exists
     const user = await User.getRootUser();
+    
     let requestUser = {};
 
     if (user === null) {
 
-        // Create user
+        // Create user if they're null
         const userInstance = new User( "Nothile", "nothile1@gmail.com");
         requestUser = await userInstance.createIfRootIsNull();
     } else{
@@ -56,12 +57,15 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     }
 
     // Add the user details to the request here
-    request.user = requestUser
+    request.User = requestUser
 
+    console.clear();
+    console.log(`[server]: Server is running on http://localhost:${port}`);
+    console.log("\n");
+    console.log("User");
     console.log(requestUser);
 
     next();
-    
 });
 
 // Use our admin router which handles the product form and page
@@ -79,9 +83,7 @@ const startServer = async () => {
     mongoConnect(() => {
 
         // Listen to the port
-        app.listen(port, () => {  
-            console.log(`[server]: Server is running on http://localhost:${port}`);
-        });
+        app.listen(port);
     });
 };
 

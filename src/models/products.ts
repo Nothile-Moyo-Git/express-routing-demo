@@ -6,6 +6,12 @@
  * The constructor is used in order to create a new Product we can store in our colletion
  * 
  * The static methods are for CRUD functionality
+ * 
+ * @method save : async () => void
+ * @method getAll : static async () => [product]
+ * @method findById : static async () => {product}
+ * @method updateById : async () => void
+ * @method deleteById : async () => void 
  */
 
 import { getDB } from "../data/connection";
@@ -18,13 +24,15 @@ class Product {
     protected description : string;
     protected imageUrl : string;
     protected id : string;
+    protected userId : ObjectId;
 
     // Instantiate the product when it's saved
-    constructor(title : string, price : number, description : string, imageUrl : string){
+    constructor(title : string, price : number, description : string, imageUrl : string, _id : ObjectId){
         this.title = title;
         this.price = price;
         this.imageUrl = imageUrl;
         this.description = description;
+        this.userId = _id;
     }
 
     // Store the item in the database
@@ -41,7 +49,8 @@ class Product {
             title : this.title, 
             price : this.price,
             description : this.description,
-            image : this.imageUrl
+            image : this.imageUrl,
+            userId : this.userId
         });
     }
 
