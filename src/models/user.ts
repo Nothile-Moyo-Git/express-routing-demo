@@ -4,6 +4,7 @@
  * Handles the functionality to allow a user to be able to create products
  * Also handles the functionality in order to have a user generated cart
  * When checking if we have users or when querying them, we extend the WithId<Document> interface so we can work with the cursor Id's
+ * Since the cart has a 1 to 1 relation 
  * 
  * @method save : async() => void
  * @method getUsers : static async() => []
@@ -15,16 +16,30 @@
 import { getDB } from "../data/connection";
 import { Document, ObjectId, WithId } from "mongodb";
 
+interface CartItem {
+    productId : ObjectId,
+    quantity : number,
+    price : number
+}
+
+// Since we're using the 1 to 1 relation, we actually store the cart on the user and not its own collection, so we need an interface here
+interface Cart {
+    items : CartItem[],
+    totalPrice : number
+}
+
 // Prototype of the User class
 class User {
 
     protected name : string;
     protected email : string;
+    protected cart : Cart;
 
     // Instantiate our user to be saved to the database
     constructor(name : string, email : string){
         this.name = name;
         this.email = email;
+        this.cart = { items : [], totalPrice : 0 };
     }
 
     // Save our newly created user to the users collection
@@ -117,14 +132,30 @@ class User {
         // Create a new user
         await collection.insertOne(user);
 
-        console.log("User created");
-
+        // Return our user
         return user;
     }
 
     // Find the user by ID
     static async findById(id : string){
 
+        // Create an object ID
+        const _id = new ObjectId(id);
+
+        // Get database information
+        const db = await getDB();
+
+        // Start the collection
+        const collection = db.collection("users");
+
+        // Query of the string
+        const query = { _id : _id };
+
+        // Get user from the backend based on the Object id
+        const response = await collection.findOne(query);
+
+        // Return the user object
+        return response;
     }
 };
 

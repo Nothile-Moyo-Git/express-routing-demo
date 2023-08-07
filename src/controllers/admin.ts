@@ -17,12 +17,6 @@ interface RequestWithUserRole extends Request{
 // Add product controller
 const getAddProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
-    const userId = String(request.User._id.toString());
-
-    console.log("\n");
-    console.log("User id");
-    console.log(userId);
-
     // Send our HTML file to the browser
     response.render("admin/add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
 };
