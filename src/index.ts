@@ -59,7 +59,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     if (user === null) {
 
         // Create user if they're null
-        const userInstance = new User( "Nothile", "nothile1@gmail.com");
+        const userInstance = new User( "Nothile", "nothile1@gmail.com", {items : [], totalPrice : 0});
         requestUser = await userInstance.createIfRootIsNull();
     } else{
         requestUser = user;

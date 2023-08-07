@@ -36,10 +36,10 @@ class User {
     protected cart : Cart;
 
     // Instantiate our user to be saved to the database
-    constructor(name : string, email : string){
+    constructor(name : string, email : string, cart : Cart){
         this.name = name;
         this.email = email;
-        this.cart = { items : [], totalPrice : 0 };
+        this.cart = cart;
     }
 
     // Save our newly created user to the users collection
@@ -57,6 +57,12 @@ class User {
             email : this.email
         });
     }
+
+    // Add to cart
+    async addToCart(){
+        
+    }
+
 
     // Check if the user exists in the database
     static async getUsers(){
