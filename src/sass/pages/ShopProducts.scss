@@ -61,8 +61,8 @@
     }
 
     &__form{
-        width: max-content;
-        margin: 0;
+        height: 100%;
+        display: flex;
     }
 
     &__buttons{
@@ -89,6 +89,7 @@
         z-index: 1;
         overflow: hidden;
         color: white;
+        margin: 0;
 
         @include backgroundGradientEffect(){
             background: $gradient_color_two;

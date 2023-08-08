@@ -65,7 +65,10 @@ class User {
     async addToCart(product : WithId<Document>){
 
         // Cart product
-        // const cartProduct = this.cart.items.findIndex()
+        /*
+        const cartProduct = this.cart.items.findIndex((item : CartItem) => {
+            return item.productId === product._id;
+        }); */
         
         // Set the quantity
         product.quantity = 1;

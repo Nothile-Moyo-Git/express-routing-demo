@@ -73,11 +73,19 @@ const getCart = async (request : Request, response : Response, next : NextFuncti
     });
 };
 
-// Add a new product to the cart using sequelize and a many to many relational mapper
+// Add a new product to the cart using a post request
+// Acts as an add product handler
 const postCart = (request : any, response : Response, next : NextFunction) => {
 
     // Setting the product id from the request.body object
     const productId = request.body.productId;
+
+    console.log("Product Id");
+    console.log(productId);
+
+    // Test request, please remove this if found
+    console.log("Request user");
+    console.log(request.User);
 
     // Redirect to the cart page
     response.redirect("/cart");

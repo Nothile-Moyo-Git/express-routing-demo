@@ -82,11 +82,6 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     // Add the user details to the request here
     request.User = requestUser
 
-    console.clear();
-    console.log(`[server]: Server is running on http://localhost:${port}`);
-    console.log("\n");
-    console.log(requestUser);
-
     next();
 });
 
@@ -105,7 +100,9 @@ const startServer = async () => {
     mongoConnect(() => {
 
         // Listen to the port
-        app.listen(port);
+        app.listen(port, () => {
+            console.log(`[server]: Server is running on http://localhost:${port}`);
+        });
     });
 };
 

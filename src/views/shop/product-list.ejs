@@ -22,11 +22,11 @@
                             <p class="card__desc"><%= product.description %></p>
                             <div class="card__forms">
                                 <a class="card__button" href="<%= `/product-detail/${product._id.toString()}` %>">Details</a>
-                                <form action="/cart" method="POST">
+                                
+                                <form action="/cart" method="POST" class="card__form">
                                     <button class="card__button">Add To Cart</button>
                                     <input type="hidden" name="productId" value="<%= product._id.toString() %>"/>
                                 </form>
- 
                             </div>
                         </li>
                     <% }) %>
