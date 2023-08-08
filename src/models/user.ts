@@ -28,7 +28,6 @@ interface Cart {
     totalPrice : number
 }
 
-// Prototype of the User class
 class User {
 
     protected name : string;
@@ -54,15 +53,25 @@ class User {
         // Create a new user
         await collection.insertOne({
             name : this.name,
-            email : this.email
+            email : this.email,
+            cart : { 
+                items : [], 
+                totalPrice : 0
+            }
         });
     }
 
-    // Add to cart
-    async addToCart(){
-        
-    }
+    // Add a product to the cart
+    async addToCart(product : WithId<Document>){
 
+        // Cart product
+        // const cartProduct = this.cart.items.findIndex()
+        
+        // Set the quantity
+        product.quantity = 1;
+
+        // const 
+    }
 
     // Check if the user exists in the database
     static async getUsers(){
@@ -137,9 +146,6 @@ class User {
 
         // Create a new user
         await collection.insertOne(user);
-
-        // Return our user
-        return user;
     }
 
     // Find the user by ID

@@ -2,6 +2,7 @@
  * The index file. This serves as our "main" method
  * This file imports all of the TS files that we compile into ES5
  * We start our server and create our connection pool here
+ * We also create a root user if one doesn't exist, and we pass the instance through so we can call the methods on any request
  * 
  * @method startServer : async () => void
  */
@@ -58,11 +59,24 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
 
     if (user === null) {
 
-        // Create user if they're null
-        const userInstance = new User( "Nothile", "nothile1@gmail.com", {items : [], totalPrice : 0});
-        requestUser = await userInstance.createIfRootIsNull();
+        // Instantiate a user so we have a reference of them
+        const userInstance = new User( "Nothile", "nothile1@gmail.com", { items : [], totalPrice : 0 });
+        
+        // Create a new user with the details provided, we also use an object ID for the root user in the User model
+        await userInstance.createIfRootIsNull();
+
+        // Set our request user so we stay within block scope
+        requestUser = userInstance;
+
     } else{
-        requestUser = user;
+
+        // Create new instance of user so we can access the methods in our middleware restful handlers
+        const userInstance = new User(user.name, user.email, user.cart ? user.cart : { 
+            items : [], 
+            totalPrice : 0
+        });
+
+        requestUser = userInstance;
     }
 
     // Add the user details to the request here
@@ -71,7 +85,6 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     console.clear();
     console.log(`[server]: Server is running on http://localhost:${port}`);
     console.log("\n");
-    console.log("User");
     console.log(requestUser);
 
     next();

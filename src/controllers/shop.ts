@@ -16,7 +16,6 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
-import User from '../models/user';
 
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
