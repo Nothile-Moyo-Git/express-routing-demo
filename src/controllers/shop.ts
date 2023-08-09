@@ -87,6 +87,9 @@ const postCart = async (request : any, response : Response, next : NextFunction)
     // Execute the add to cart method
     request.User.addToCart(product);
 
+    console.log("User information");
+    console.log(request.User);
+    
     // Redirect to the cart page
     response.redirect("/cart");
 }

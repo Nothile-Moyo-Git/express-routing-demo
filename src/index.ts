@@ -19,6 +19,7 @@ import errorRoutes from "./routes/error";
 import mongoConnect from "./data/connection";
 import { Response, NextFunction } from 'express';
 import User from "./models/user";
+import { ObjectId } from "mongodb";
 
 // Import the .env variables
 dotenv.config();
@@ -55,6 +56,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     // Check if my initial user exists
     const user = await User.getRootUser();
     
+    let userId = null;
     let requestUser = {};
 
     if (user === null) {
@@ -64,6 +66,9 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
         
         // Create a new user with the details provided, we also use an object ID for the root user in the User model
         await userInstance.createIfRootIsNull();
+
+        // Get the user ID
+        userId = new ObjectId("64cbf9c421ce8d8b4ac8b66f");
 
         // Set our request user so we stay within block scope
         requestUser = userInstance;
@@ -76,8 +81,17 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
             totalPrice : 0
         });
 
+        // Set the user id for queries we want to output
+        userId = user._id;
+
+        // Set the request user 
         requestUser = userInstance;
     }
+
+    console.log("User");
+    console.log(user);
+    console.log("User id");
+    console.log(userId);
 
     // Add the user details to the request here
     request.User = requestUser

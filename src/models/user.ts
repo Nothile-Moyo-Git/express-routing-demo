@@ -80,11 +80,16 @@ class User {
                 totalPrice : 0
             };
 
-            console.clear();
-            console.log("Item added to cart");
+            console.log("Cart item added");
         }
 
-        // const 
+        // Get database connection
+        const db = await getDB();
+
+        // Reference our user collection
+        const collection = db.collection("users");
+
+        
     }
 
     // Check if the user exists in the database
