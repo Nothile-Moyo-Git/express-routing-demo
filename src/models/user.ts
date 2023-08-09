@@ -65,13 +65,24 @@ class User {
     async addToCart(product : WithId<Document>){
 
         // Cart product
-        /*
-        const cartProduct = this.cart.items.findIndex((item : CartItem) => {
+        const itemIndex = this.cart.items.findIndex((item : CartItem) => {
             return item.productId === product._id;
-        }); */
-        
-        // Set the quantity
-        product.quantity = 1;
+        }); 
+
+        // Check if cart is empty
+        const isCartEmpty = this.cart.items.length === 0;
+
+        // If we don't have the product on out Cart, let's create it
+        if (itemIndex === -1 && isCartEmpty) {
+
+            this.cart = {
+                items: [],
+                totalPrice : 0
+            };
+
+            console.clear();
+            console.log("Item added to cart");
+        }
 
         // const 
     }

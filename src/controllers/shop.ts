@@ -16,6 +16,7 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
+import { ObjectId } from 'mongodb';
 
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
@@ -75,17 +76,16 @@ const getCart = async (request : Request, response : Response, next : NextFuncti
 
 // Add a new product to the cart using a post request
 // Acts as an add product handler
-const postCart = (request : any, response : Response, next : NextFunction) => {
+const postCart = async (request : any, response : Response, next : NextFunction) => {
 
     // Setting the product id from the request.body object
     const productId = request.body.productId;
 
-    console.log("Product Id");
-    console.log(productId);
+    // Fetch our product by Id
+    const product = await Product.findById(productId);
 
-    // Test request, please remove this if found
-    console.log("Request user");
-    console.log(request.User);
+    // Execute the add to cart method
+    request.User.addToCart(product);
 
     // Redirect to the cart page
     response.redirect("/cart");
