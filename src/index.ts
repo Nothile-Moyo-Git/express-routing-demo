@@ -56,7 +56,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     // Check if my initial user exists
     const user = await User.getRootUser();
     
-    let userId = null;
+    let userId = new ObjectId(0);
     let requestUser = {};
 
     if (user === null) {
@@ -88,13 +88,9 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
         requestUser = userInstance;
     }
 
-    console.log("User");
-    console.log(user);
-    console.log("User id");
-    console.log(userId);
-
     // Add the user details to the request here
     request.User = requestUser
+    request.Userid = userId;
 
     next();
 });
