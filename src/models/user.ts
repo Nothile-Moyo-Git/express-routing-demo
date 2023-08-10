@@ -64,16 +64,19 @@ class User {
     // Add a product to the cart
     async addToCart(product : WithId<Document>, userId : ObjectId){
 
+        // Instantiate our total price variable
+        let totalPrice : number = 0;
+
         // Cart product
         const itemIndex = this.cart.items.findIndex((item : CartItem) => {
-            return item.productId === product._id;
+            return item.productId.toString() === product._id.toString();
         }); 
 
         // Check if cart is empty
         const isCartEmpty = this.cart.items.length === 0;
 
         // If we don't have the product on out Cart, let's create it
-        if (itemIndex === -1 && isCartEmpty) {
+        if (itemIndex < 0 && isCartEmpty) {
 
             // Create a new cart with the single product information inside it
             this.cart = {
@@ -86,9 +89,18 @@ class User {
             }
         }
 
+        // If our cart isn't empty, add the new product to it
+        
+
         // If we have other items on the cart, then we add a new product
-        console.log("Cart");
-        console.log(this.cart);
+        console.log( "\n\n" );
+        console.log( "Cart" );
+        console.log( this.cart );
+        console.log( "Item Index" );
+        console.log( itemIndex );
+
+
+
 
         // Get database connection
         const db = await getDB();
@@ -96,14 +108,13 @@ class User {
         // Reference our user collection
         const collection = db.collection("users");
 
-        // Update the user with the new cart 
-        /*
-        const response = await collection.updateOne(
-        { "_id" :  },
-        {   $set : {
+        // Update the user with the new cart     
+        await collection.updateOne(
+            { "_id" : userId },
+            { $set : { cart : this.cart } }
+        );
 
-            }
-        }); */
+        
 
     }
 
