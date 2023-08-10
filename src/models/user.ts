@@ -62,7 +62,7 @@ class User {
     }
 
     // Add a product to the cart
-    async addToCart(product : WithId<Document>){
+    async addToCart(product : WithId<Document>, userId : ObjectId){
 
         // Cart product
         const itemIndex = this.cart.items.findIndex((item : CartItem) => {
@@ -75,13 +75,20 @@ class User {
         // If we don't have the product on out Cart, let's create it
         if (itemIndex === -1 && isCartEmpty) {
 
+            // Create a new cart with the single product information inside it
             this.cart = {
-                items: [],
-                totalPrice : 0
-            };
-
-            console.log("Cart item added");
+                items: [{
+                    productId : product._id, 
+                    quantity : 1,
+                    price : product.price
+                }],
+                totalPrice : product.price
+            }
         }
+
+        // If we have other items on the cart, then we add a new product
+        console.log("Cart");
+        console.log(this.cart);
 
         // Get database connection
         const db = await getDB();
@@ -89,7 +96,15 @@ class User {
         // Reference our user collection
         const collection = db.collection("users");
 
-        
+        // Update the user with the new cart 
+        /*
+        const response = await collection.updateOne(
+        { "_id" :  },
+        {   $set : {
+
+            }
+        }); */
+
     }
 
     // Check if the user exists in the database

@@ -90,7 +90,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
 
     // Add the user details to the request here
     request.User = requestUser
-    request.Userid = userId;
+    request.UserId = userId;
 
     next();
 });

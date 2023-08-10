@@ -18,6 +18,11 @@ import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 
+// Set up interface to include the user role which we pass through
+interface RequestWithUser{
+    
+}
+
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
 
@@ -85,10 +90,12 @@ const postCart = async (request : any, response : Response, next : NextFunction)
     const product = await Product.findById(productId);
 
     // Execute the add to cart method
-    request.User.addToCart(product);
+    request.User.addToCart(product, request.UserId);
 
-    console.log("User information");
+    console.log("User");
     console.log(request.User);
+    console.log("UserId");
+    console.log(request.UserId);
     
     // Redirect to the cart page
     response.redirect("/cart");
