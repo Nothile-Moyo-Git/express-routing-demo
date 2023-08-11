@@ -42,7 +42,7 @@ class User {
     }
 
     // Save our newly created user to the users collection
-    async save(){
+    public async save(){
 
         // Get database information
         const db = await getDB();
@@ -61,11 +61,21 @@ class User {
         });
     }
 
-    // Add a product to the cart
-    async addToCart(product : WithId<Document>, userId : ObjectId){
+    private updateTotalPrice(){
 
-        // Instantiate our total price variable
-        let totalPrice : number = 0;
+        let totalPrice = 0;
+
+         // Calculate the total price based on each 
+        this.cart.items.forEach((item : CartItem) => {
+            totalPrice += (item.price * item.quantity);
+        });
+
+        // Set the new totalPrice
+        this.cart.totalPrice = totalPrice;
+    }
+
+    // Add a product to the cart
+    public async addToCart(product : WithId<Document>, userId : ObjectId){
 
         // Cart product
         const itemIndex = this.cart.items.findIndex((item : CartItem) => {
@@ -89,18 +99,28 @@ class User {
             }
         }
 
+        // If we have the product, add one to the quantity of it
+        if (itemIndex >= 0) {
+
+            // Increment quantity
+            this.cart.items[itemIndex].quantity++;
+
+            // Update the total price
+            this.updateTotalPrice();
+        }
+
         // If our cart isn't empty, add the new product to it
-        
+        if (itemIndex < 0 && !isCartEmpty) {
 
-        // If we have other items on the cart, then we add a new product
-        console.log( "\n\n" );
-        console.log( "Cart" );
-        console.log( this.cart );
-        console.log( "Item Index" );
-        console.log( itemIndex );
+            // Add the new product to the cart
+            this.cart.items.push({
+                productId : product._id,
+                quantity : 1,
+                price : product.price
+            });
 
-
-
+            this.updateTotalPrice();
+        }
 
         // Get database connection
         const db = await getDB();
@@ -113,13 +133,10 @@ class User {
             { "_id" : userId },
             { $set : { cart : this.cart } }
         );
-
-        
-
     }
 
     // Check if the user exists in the database
-    static async getUsers(){
+    public static async getUsers(){
 
         // Get database information
         const db = await getDB();
@@ -147,7 +164,7 @@ class User {
     }
 
     // Get users from the database
-    static async getRootUser(){
+    public static async getRootUser(){
 
         // Set the object ID
         const idString = "64cbf9c421ce8d8b4ac8b66f";
@@ -170,7 +187,7 @@ class User {
     }
 
     // Create a new root user if it doesn't exist for me
-    async createIfRootIsNull(){
+    public async createIfRootIsNull(){
 
         // Id
         const idString = "64cbf9c421ce8d8b4ac8b66f";
@@ -194,7 +211,7 @@ class User {
     }
 
     // Find the user by ID
-    static async findById(id : string){
+    public static async findById(id : string){
 
         // Create an object ID
         const _id = new ObjectId(id);
