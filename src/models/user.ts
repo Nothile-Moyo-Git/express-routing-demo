@@ -7,6 +7,7 @@
  * Since the cart has a 1 to 1 relation 
  * 
  * @method save : async() => void
+ * @method updateTotalPrice : () => void
  * @method getUsers : static async() => []
  * @method getRootUser : static async () => {user}
  * @method createIfRootIsNull : async () => {user}
