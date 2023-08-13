@@ -236,8 +236,11 @@ class User {
         return response;
     }
 
-    public static async getCart(){
+    public static async deleteFromCart(id : string){
 
+        console.clear();
+        console.log("Product Id");
+        console.log(id);
     }
 };
 

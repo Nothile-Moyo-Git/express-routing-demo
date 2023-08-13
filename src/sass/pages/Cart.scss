@@ -68,6 +68,8 @@
         display: flex;
         padding-left: 2rem;
         padding-right: 2rem;
+        margin-top: 1rem;
+   
         flex-direction: row;
         justify-content: space-between;
 
@@ -87,6 +89,11 @@
         cursor: pointer;
         transition: all 0.3s linear;
         filter: contrast(95%);
+        margin-right: 0.25rem;
+
+        @include breakpoint(tablet){
+            margin-right: 0.5rem;
+        }
 
         @include state(){
             filter: contrast(120%);

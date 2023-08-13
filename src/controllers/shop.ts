@@ -17,6 +17,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
+import User from "../models/user";
 
 interface CartItem{
     productId : ObjectId,
@@ -28,7 +29,7 @@ interface Cart {
     items : CartItem[]
 }
 
-interface User {
+interface UserInterface {
     name : string,
     email : string,
     cart : Cart
@@ -36,7 +37,7 @@ interface User {
 
 // Set up interface to include the user role which we pass through
 interface RequestWithUser extends Request{
-    User : User,
+    User : UserInterface,
     UserId : ObjectId
 }
 
@@ -87,14 +88,6 @@ const getProductDetails = async ( request : Request, response : Response, next :
 // Get the cart and all the products inside of it
 const getCart = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
-    console.clear();
-    console.log("Request User");
-    console.log(request.User);
-    console.log("Request User id");
-    console.log(request.UserId);
-    console.log("Cart items");
-    console.log(request.User.cart);
-
     const items = request.User.cart.items;
     const hasProducts = items.length > 0;
  
@@ -103,7 +96,7 @@ const getCart = async (request : RequestWithUser, response : Response, next : Ne
         hasProducts : hasProducts, 
         products : request.User.cart.items, 
         pageTitle : "Your Cart",
-        totalPrice : 0
+        totalPrice : request.User.cart.totalPrice
     });
 };
 
@@ -119,18 +112,17 @@ const postCart = async (request : any, response : Response, next : NextFunction)
 
     // Execute the add to cart method
     request.User.addToCart(product, request.UserId);
-
-    console.log("User");
-    console.log(request.User);
-    console.log("UserId");
-    console.log(request.UserId);
     
     // Redirect to the cart page
     response.redirect("/cart");
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = (request : Request, response : Response, next : NextFunction) => {
+const postCartDelete = (request : RequestWithUser, response : Response, next : NextFunction) => {
+
+    const productId = request.body.productId.toString().slice(0, -1);
+
+    User.deleteFromCart(productId);
 
     response.redirect('back');
 };
