@@ -18,9 +18,26 @@ import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 
+interface CartItem{
+    productId : ObjectId,
+    quantity : number,
+    price : number
+}
+interface Cart {
+    totalPrice : number,
+    items : CartItem[]
+}
+
+interface User {
+    name : string,
+    email : string,
+    cart : Cart
+}
+
 // Set up interface to include the user role which we pass through
-interface RequestWithUser{
-    
+interface RequestWithUser extends Request{
+    User : User,
+    UserId : ObjectId
 }
 
 // Get the shop index page
@@ -68,12 +85,23 @@ const getProductDetails = async ( request : Request, response : Response, next :
 };
 
 // Get the cart and all the products inside of it
-const getCart = async (request : Request, response : Response, next : NextFunction) => {
+const getCart = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+
+    console.clear();
+    console.log("Request User");
+    console.log(request.User);
+    console.log("Request User id");
+    console.log(request.UserId);
+    console.log("Cart items");
+    console.log(request.User.cart);
+
+    const items = request.User.cart.items;
+    const hasProducts = items.length > 0;
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
-        hasProducts : false, 
-        products : [], 
+        hasProducts : hasProducts, 
+        products : request.User.cart.items, 
         pageTitle : "Your Cart",
         totalPrice : 0
     });

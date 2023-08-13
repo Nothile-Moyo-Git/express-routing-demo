@@ -17,10 +17,10 @@
                         </li>
                         <%  products.forEach((product) => {    %>
                         <% 
-                            const id = product.dataValues.id;
-                            const title = product.dataValues.title;
-                            const quantity = product.dataValues.cartItem.dataValues.quantity;
-                            const price = product.dataValues.price;  
+                            const id = product._id.toString();
+                            const title = product.title;
+                            const quantity = product.quantity;
+                            const price = product.price;  
                         %>
 
                             <li class="cart__modal-row">

@@ -20,6 +20,7 @@ import { Document, ObjectId, WithId } from "mongodb";
 interface CartItem {
     productId : ObjectId,
     quantity : number,
+    title : string,
     price : number
 }
 
@@ -94,6 +95,7 @@ class User {
                 items: [{
                     productId : product._id, 
                     quantity : 1,
+                    title : product.title,
                     price : product.price
                 }],
                 totalPrice : product.price
@@ -117,7 +119,8 @@ class User {
             this.cart.items.push({
                 productId : product._id,
                 quantity : 1,
-                price : product.price
+                price : product.price,
+                title : product.title
             });
 
             this.updateTotalPrice();
@@ -152,7 +155,7 @@ class User {
         const cursorArray = await cursor.toArray();
 
         // We format the array so that it works with TypeScript and avoids the WithId<Document> error
-        const users = cursorArray.map((item: WithId<Document>) => {
+        const users = cursorArray.map((item : WithId<Document>) => {
 
             return {
                 _id: new Object(item._id),
@@ -231,6 +234,10 @@ class User {
 
         // Return the user object
         return response;
+    }
+
+    public static async getCart(){
+
     }
 };
 
