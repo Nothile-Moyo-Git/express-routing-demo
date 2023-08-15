@@ -34,7 +34,8 @@ interface UserInterface {
     name : string,
     email : string,
     cart : Cart,
-    addToCart : (product : WithId<Document>, userId : ObjectId) => {}
+    addToCart : (product : WithId<Document>, userId : ObjectId) => {},
+    deleteFromCart : (id : string, userId : ObjectId) => {}
 }
 
 // Set up interface to include the user role which we pass through
@@ -127,9 +128,13 @@ const postCart = async (request : RequestWithUser, response : Response, next : N
 // Delete an item from the cart using cart item
 const postCartDelete = (request : RequestWithUser, response : Response, next : NextFunction) => {
 
+    // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
 
-    User.deleteFromCart(productId);
+    // Get user Id
+    const userId = request.UserId;
+
+    request.User.deleteFromCart(productId, userId);
 
     response.redirect('back');
 };

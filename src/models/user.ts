@@ -239,7 +239,7 @@ class User {
         return response;
     }
 
-    public async deleteFromCart(id : string){
+    public async deleteFromCart(id : string, userId : ObjectId){
 
         // Get database information
         const db = await getDB();
@@ -258,10 +258,10 @@ class User {
         // Query our collection
         const collection = db.collection("users");
 
-        // Update the user with the new cart     
+        // Update the user with the new cart   
         await collection.updateOne(
-            { "_id" :  },
-            { $set : { cart : this.cart } }
+            { "_id" : userId },
+            { $set : { cart : newCart } }
         );
     }
 };
