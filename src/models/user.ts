@@ -250,15 +250,17 @@ class User {
         }); 
 
         // Create new array that we're going to mutate
-        const newCart = Array.from(this.cart.items);
+        const newCart = this.cart;
 
         // Create a new array that removes the previous one based on the index
-        newCart.splice(itemIndex, 1);
+        newCart.items.splice(itemIndex, 1);
 
         // Query our collection
         const collection = db.collection("users");
 
-        // Update the user with the new cart   
+        this.updateTotalPrice();
+
+        // Update the user with the new cart  
         await collection.updateOne(
             { "_id" : userId },
             { $set : { cart : newCart } }
