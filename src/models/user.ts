@@ -79,6 +79,9 @@ class User {
     // Add a product to the cart
     public async addToCart(product : WithId<Document>, userId : ObjectId){
 
+        // Nullish coalescing operator
+        this.cart.items = this.cart.items || [];
+
         // Cart product
         const itemIndex = this.cart.items.findIndex((item : CartItem) => {
             return item.productId.toString() === product._id.toString();
@@ -241,6 +244,8 @@ class User {
         console.clear();
         console.log("Product Id");
         console.log(id);
+
+        
     }
 };
 

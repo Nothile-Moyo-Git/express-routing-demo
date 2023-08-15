@@ -16,8 +16,9 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 import User from "../models/user";
+import { Document } from 'mongodb';
 
 interface CartItem{
     productId : ObjectId,
@@ -32,7 +33,8 @@ interface Cart {
 interface UserInterface {
     name : string,
     email : string,
-    cart : Cart
+    cart : Cart,
+    addToCart : (product : WithId<Document>, userId : ObjectId) => {}
 }
 
 // Set up interface to include the user role which we pass through
@@ -86,15 +88,20 @@ const getProductDetails = async ( request : Request, response : Response, next :
 };
 
 // Get the cart and all the products inside of it
-const getCart = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const getCart = async (request : any, response : Response, next : NextFunction) => {
 
     const items = request.User.cart.items;
-    const hasProducts = items.length > 0;
+
+    let hasProducts = false;
+
+    if (items !== undefined) {
+        hasProducts = true;
+    }
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
         hasProducts : hasProducts, 
-        products : request.User.cart.items, 
+        products : hasProducts ? items : [], 
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice
     });
@@ -102,7 +109,7 @@ const getCart = async (request : RequestWithUser, response : Response, next : Ne
 
 // Add a new product to the cart using a post request
 // Acts as an add product handler
-const postCart = async (request : any, response : Response, next : NextFunction) => {
+const postCart = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Setting the product id from the request.body object
     const productId = request.body.productId;
