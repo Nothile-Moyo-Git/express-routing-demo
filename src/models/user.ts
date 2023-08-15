@@ -239,13 +239,30 @@ class User {
         return response;
     }
 
-    public static async deleteFromCart(id : string){
+    public async deleteFromCart(id : string){
 
-        console.clear();
-        console.log("Product Id");
-        console.log(id);
+        // Get database information
+        const db = await getDB();
 
-        
+        // Cart product
+        const itemIndex = this.cart.items.findIndex((item : CartItem) => {
+            return item.productId.toString() === id;
+        }); 
+
+        // Create new array that we're going to mutate
+        const newCart = Array.from(this.cart.items);
+
+        // Create a new array that removes the previous one based on the index
+        newCart.splice(itemIndex, 1);
+
+        // Query our collection
+        const collection = db.collection("users");
+
+        // Update the user with the new cart     
+        await collection.updateOne(
+            { "_id" :  },
+            { $set : { cart : this.cart } }
+        );
     }
 };
 
