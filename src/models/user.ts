@@ -268,7 +268,7 @@ class User {
         );
     }
 
-    public async getOrders(){
+    public async addOrder(){
 
 
         // Get database information
@@ -277,8 +277,27 @@ class User {
         // Start the collection, if it doesn't exist, create it
         const collection = db.collection("orders");
 
-        // Change the order to the cart
-        
+        // Create a new date based on our current date
+        const date = new Date();
+        const text = date.toLocaleString();
+
+        // Create a new order object
+        const newOrder = Object.create(null);
+
+        // Assign properties to our object
+        newOrder.items = {...this.cart.items};
+        newOrder.totalPrice = this.cart.totalPrice;
+        newOrder.datePurchased = text;
+ 
+
+        console.log("New object without prototypes");
+        console.log(newOrder);
+
+        // Create our order in our orders collection
+        await collection.insertOne(newOrder);
+
+
+
     }
 };
 

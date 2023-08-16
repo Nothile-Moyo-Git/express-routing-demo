@@ -35,7 +35,8 @@ interface UserInterface {
     email : string,
     cart : Cart,
     addToCart : (product : WithId<Document>, userId : ObjectId) => {},
-    deleteFromCart : (id : string, userId : ObjectId) => {}
+    deleteFromCart : (id : string, userId : ObjectId) => {},
+    addOrder : () => {}
 }
 
 // Set up interface to include the user role which we pass through
@@ -140,7 +141,10 @@ const postCartDelete = (request : RequestWithUser, response : Response, next : N
 };
 
 // Create an order in the SQL backend
-const postOrderCreate = async (request : Request, response : Response, next : NextFunction) => {
+const postOrderCreate = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+
+    // Call the addOrder method from the User model
+    request.User.addOrder();
     
     // Move to the orders page
     response.redirect("orders");

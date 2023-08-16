@@ -259,6 +259,9 @@
       font-size: 1.1rem; }
     .orders__row-item--total {
       text-align: right; }
+  .orders__empty {
+    text-align: center;
+    margin-top: 2rem; }
 
 .product-detail {
   max-width: 350px;
@@ -652,6 +655,9 @@ h1 {
       font-size: 1.1rem; }
     .orders__row-item--total {
       text-align: right; }
+  .orders__empty {
+    text-align: center;
+    margin-top: 2rem; }
 
 .product-detail {
   max-width: 350px;
