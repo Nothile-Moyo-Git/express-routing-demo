@@ -239,6 +239,7 @@ class User {
         return response;
     }
 
+    // 
     public async deleteFromCart(id : string, userId : ObjectId){
 
         // Get database information
@@ -265,6 +266,19 @@ class User {
             { "_id" : userId },
             { $set : { cart : newCart } }
         );
+    }
+
+    public async getOrders(){
+
+
+        // Get database information
+        const db = await getDB();
+
+        // Start the collection, if it doesn't exist, create it
+        const collection = db.collection("orders");
+
+        // Change the order to the cart
+        
     }
 };
 
