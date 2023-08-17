@@ -268,8 +268,7 @@ class User {
         );
     }
 
-    public async addOrder(){
-
+    public async addOrder(userId : ObjectId){
 
         // Get database information
         const db = await getDB();
@@ -288,16 +287,31 @@ class User {
         newOrder.items = {...this.cart.items};
         newOrder.totalPrice = this.cart.totalPrice;
         newOrder.datePurchased = text;
+        newOrder.userId = userId;
  
-
-        console.log("New object without prototypes");
-        console.log(newOrder);
-
         // Create our order in our orders collection
         await collection.insertOne(newOrder);
+    }
 
+    public static async getOrders(userId : ObjectId){
 
+        // Get database information
+        const db = await getDB();
 
+        // Start the collection, if it doesn't exist, create it
+        const collection = db.collection("orders");
+
+        // We want to get the orders for the current user
+        const query = { userId : userId };
+
+        // Get the collection of orders
+        const response = collection.find(query);
+
+        // Convert the orders cursor to an array
+        const orders = await response.toArray();
+
+        // Return orders
+        return orders;
     }
 };
 

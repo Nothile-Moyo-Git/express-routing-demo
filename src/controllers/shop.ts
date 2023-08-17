@@ -36,7 +36,7 @@ interface UserInterface {
     cart : Cart,
     addToCart : (product : WithId<Document>, userId : ObjectId) => {},
     deleteFromCart : (id : string, userId : ObjectId) => {},
-    addOrder : () => {}
+    addOrder : (userId : ObjectId) => {}
 }
 
 // Set up interface to include the user role which we pass through
@@ -62,7 +62,13 @@ const getProducts = async (request : any, response : Response, next : NextFuncti
 };
 
 // Get the orders
-const getOrders = async ( request : Request, response : Response, next : NextFunction ) => {
+const getOrders = async ( request : RequestWithUser, response : Response, next : NextFunction ) => {
+
+    // Get the orders for the current user
+    const orders = await User.getOrders(request.UserId);
+
+    console.log("Orders");
+    console.log(orders);
 
     response.render("shop/orders", { pageTitle : "Orders", orders : [], hasProducts : false });
 };
@@ -144,7 +150,7 @@ const postCartDelete = (request : RequestWithUser, response : Response, next : N
 const postOrderCreate = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Call the addOrder method from the User model
-    request.User.addOrder();
+    request.User.addOrder(request.UserId);
     
     // Move to the orders page
     response.redirect("orders");
