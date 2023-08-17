@@ -211,12 +211,16 @@
   width: calc(100% - 2rem);
   margin-left: 1rem;
   margin-right: 1rem; }
+  .orders__header {
+    text-align: center;
+    width: 100%; }
   .orders__details {
     color: white;
     display: flex;
     flex-direction: column;
     max-width: 400px;
-    margin: auto; }
+    margin: auto;
+    grid-row-gap: 1rem; }
   .orders__row {
     padding: 0.5rem;
     display: flex;
@@ -226,10 +230,10 @@
     overflow: hidden;
     position: relative;
     border-radius: 2px; }
-    .orders__row:nth-child(even) {
+    .orders__row:nth-child(odd) {
       color: black;
       box-shadow: 0px 0px 10px 0px #dbc441; }
-      .orders__row:nth-child(even):after {
+      .orders__row:nth-child(odd):after {
         content: "";
         position: absolute;
         left: 0;
@@ -259,6 +263,10 @@
       font-size: 1.1rem; }
     .orders__row-item--total {
       text-align: right; }
+    .orders__row-item--date {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between; }
   .orders__empty {
     text-align: center;
     margin-top: 2rem; }
@@ -607,12 +615,16 @@ h1 {
   width: calc(100% - 2rem);
   margin-left: 1rem;
   margin-right: 1rem; }
+  .orders__header {
+    text-align: center;
+    width: 100%; }
   .orders__details {
     color: white;
     display: flex;
     flex-direction: column;
     max-width: 400px;
-    margin: auto; }
+    margin: auto;
+    grid-row-gap: 1rem; }
   .orders__row {
     padding: 0.5rem;
     display: flex;
@@ -622,10 +634,10 @@ h1 {
     overflow: hidden;
     position: relative;
     border-radius: 2px; }
-    .orders__row:nth-child(even) {
+    .orders__row:nth-child(odd) {
       color: black;
       box-shadow: 0px 0px 10px 0px #dbc441; }
-      .orders__row:nth-child(even):after {
+      .orders__row:nth-child(odd):after {
         content: "";
         position: absolute;
         left: 0;
@@ -655,6 +667,10 @@ h1 {
       font-size: 1.1rem; }
     .orders__row-item--total {
       text-align: right; }
+    .orders__row-item--date {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between; }
   .orders__empty {
     text-align: center;
     margin-top: 2rem; }

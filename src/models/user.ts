@@ -284,13 +284,25 @@ class User {
         const newOrder = Object.create(null);
 
         // Assign properties to our object
-        newOrder.items = {...this.cart.items};
+        newOrder.items = [...this.cart.items];
         newOrder.totalPrice = this.cart.totalPrice;
         newOrder.datePurchased = text;
         newOrder.userId = userId;
  
         // Create our order in our orders collection
         await collection.insertOne(newOrder);
+
+        // Start the collection, if it doesn't exist, create it
+        const users = db.collection("users");
+
+        // Empty out our cart
+        this.cart = { items : [], totalPrice : 0 };
+
+        // Update the user with the new cart  
+        await users.updateOne(
+            { "_id" : userId },
+            { $set : { cart : this.cart } }
+        );
     }
 
     public static async getOrders(userId : ObjectId){

@@ -3,12 +3,18 @@
     margin-left: 1rem;
     margin-right: 1rem;
 
+    &__header{
+        text-align: center;
+        width: 100%;
+    }
+
     &__details{
         color : white;
         display : flex;
         flex-direction : column;
         max-width: 400px;
         margin: auto;
+        grid-row-gap: 1rem;
     }
 
     &__row{
@@ -21,7 +27,7 @@
         position: relative;
         border-radius: 2px;
 
-        &:nth-child(even){
+        &:nth-child(odd){
             color: black;
             box-shadow: $box_shadow_yellow;
 
@@ -45,6 +51,12 @@
 
         &--total{
             text-align: right;
+        }
+
+        &--date{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
     }
 

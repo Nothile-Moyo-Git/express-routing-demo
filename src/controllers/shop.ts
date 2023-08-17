@@ -67,10 +67,11 @@ const getOrders = async ( request : RequestWithUser, response : Response, next :
     // Get the orders for the current user
     const orders = await User.getOrders(request.UserId);
 
-    console.log("Orders");
-    console.log(orders);
+    // Orders will either return an array of BSON(Binary JSON) objects or an empty array
+    const hasProducts = orders.length > 0;
 
-    response.render("shop/orders", { pageTitle : "Orders", orders : [], hasProducts : false });
+    // Render the view page
+    response.render("shop/orders", { pageTitle : "Orders", orders : orders, hasProducts : hasProducts });
 };
 
 // Get the checkout page from the cart

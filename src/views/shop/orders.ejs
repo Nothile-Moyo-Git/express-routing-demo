@@ -6,32 +6,38 @@
         <main class="orders">
 
             <% if (hasProducts === true) { %>
+                <h1 class="orders__header">Orders</h1>
 
-            <ul class="orders__details">
-                <% orders.forEach((order) => { %>
+                <ul class="orders__details">
+                    <% orders.forEach((order) => { %>
 
-                    <li class="orders__row">
+                        <li class="orders__row">
 
-                        <p class="orders__row-item orders__row-item--title">Products</p>
+                            <p class="orders__row-item orders__row-item--title">Products</p>
 
-                        <ul class="orders__row-item orders__row-item--products">
-                            <% order.products.forEach((product) => { %>
+                            <% order.items.forEach((item) => { %>
+                                <ul class="orders__row-item orders__row-item--products">
 
-                                <li class="orders__product-details">
-                                    <p><%= product.name %> x <%= product.quantity %></p> 
-                                    <p>£<%= product.price %></p>
-                                </li>
+                                    <li class="orders__product-details">
+                                        <p><%= item.title %> x <%= item.quantity %></p> 
+                                        <p>£<%= item.price %></p>
+                                    </li>
 
+                                </ul>
                             <% }) %>
-                        </ul>
 
-                        <p class="orders__row-item orders__row-item--total">Total : £<%= order.totalPrice %></p>
+                            <span class="orders__row-item orders__row-item--date">
+                                <p>Purchased : </p>
+                                <p><%= order.datePurchased %></p>
+                            </span>
 
-                    </li>
+                            <p class="orders__row-item orders__row-item--total">Total : £<%= order.totalPrice %></p>
 
-                <% }) %>
-            </ul>
+                        </li>
 
+                    <% }) %>
+                </ul>
+                
             <% } else { %>
 
                 <h1 class="orders__empty">No orders found</h1>
