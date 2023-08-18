@@ -26,6 +26,11 @@
         overflow: hidden;
         position: relative;
         border-radius: 2px;
+        transition: all 0.15s linear;
+
+        @include state(){
+            transform: scale(1.025);
+        }
 
         &:nth-child(odd){
             color: black;
@@ -51,6 +56,12 @@
 
         &--total{
             text-align: right;
+        }
+
+        &--name{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
 
         &--date{

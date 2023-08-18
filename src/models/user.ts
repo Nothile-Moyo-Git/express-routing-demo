@@ -287,7 +287,10 @@ class User {
         newOrder.items = [...this.cart.items];
         newOrder.totalPrice = this.cart.totalPrice;
         newOrder.datePurchased = text;
-        newOrder.userId = userId;
+        newOrder.user = {
+            _id : userId,
+            name : this.name
+        };
  
         // Create our order in our orders collection
         await collection.insertOne(newOrder);
@@ -298,7 +301,7 @@ class User {
         // Empty out our cart
         this.cart = { items : [], totalPrice : 0 };
 
-        // Update the user with the new cart  
+        // Update the user with the new cart         
         await users.updateOne(
             { "_id" : userId },
             { $set : { cart : this.cart } }
@@ -314,7 +317,7 @@ class User {
         const collection = db.collection("orders");
 
         // We want to get the orders for the current user
-        const query = { userId : userId };
+        const query = { "user._id" : userId };
 
         // Get the collection of orders
         const response = collection.find(query);

@@ -67,6 +67,10 @@ const getOrders = async ( request : RequestWithUser, response : Response, next :
     // Get the orders for the current user
     const orders = await User.getOrders(request.UserId);
 
+    console.clear();
+    console.log("Orders");
+    console.log(orders);
+
     // Orders will either return an array of BSON(Binary JSON) objects or an empty array
     const hasProducts = orders.length > 0;
 
