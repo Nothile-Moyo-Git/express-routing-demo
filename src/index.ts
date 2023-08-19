@@ -3,6 +3,7 @@
  * This file imports all of the TS files that we compile into ES5
  * We start our server and create our connection pool here
  * We also create a root user if one doesn't exist, and we pass the instance through so we can call the methods on any request
+ * This index file currently uses both MongoDB and Mongoose. We use Mongoose as our ODM (Object Document Mapper). An ODM works very similarly to an ORM
  * 
  * @method startServer : async () => void
  */
@@ -16,7 +17,7 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import errorRoutes from "./routes/error";
-import mongoConnect from "./data/connection";
+import { createMongooseConnection } from "./data/connection";
 import { Response, NextFunction } from 'express';
 import User from "./models/user";
 import { ObjectId } from "mongodb";
@@ -106,8 +107,9 @@ app.use( errorRoutes );
 
 // Start our server async
 const startServer = async () => {
-    
-    mongoConnect(() => {
+
+    // Create a Mongoose connection
+    await createMongooseConnection(() => {
 
         // Listen to the port
         app.listen(port, () => {

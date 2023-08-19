@@ -15,6 +15,7 @@
   "dependencies": {
     "@types/ejs": "^3.1.2",
     "@types/express-handlebars": "^6.0.0",
+    "@types/mongoose": "^5.11.97",
     "@types/pug": "^2.0.6",
     "body-parser": "^1.20.2",
     "consolidate": "^0.16.0",
@@ -23,6 +24,7 @@
     "express": "^4.18.2",
     "express-handlebars": "^7.0.4",
     "mongodb": "^5.7.0",
+    "mongoose": "^7.4.3",
     "mysql2": "^3.3.1",
     "pug": "^3.0.2",
     "sequelize": "^6.31.1",
