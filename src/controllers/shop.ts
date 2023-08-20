@@ -54,9 +54,11 @@ const getIndex = ( request : Request, response : Response, next : NextFunction )
 // Get products controller
 const getProducts = async (request : any, response : Response, next : NextFunction) => {
 
+    // Find the product. If we need to find a collection, we can pass the conditionals through in an object
+    const products = await Product.find();
 
     // Render the products view
-    response.render("shop/product-list", { prods : [], pageTitle: "My Products", path: "/", hasProducts : false });
+    response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : products.length > 0 });
 };
 
 // Get the orders

@@ -22,16 +22,31 @@ const getAddProduct = (request : RequestWithUserRole, response : Response, next 
 };
 
 // Post add product controller
-const postAddProduct = async(request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const postAddProduct = async(request : Request, response : Response, next : NextFunction) => {
 
-    response.redirect("http://localhost:3000/products");
+    // Instantiate our product
+    const product = new Product({
+        title : request.body.title,
+        image : request.body.image,
+        description : request.body.description,
+        price : Number(request.body.price),    
+    });
+
+    // Save our new product to the database
+    // Note : This method is inherited from the Mongoose model
+    product.save();
+
+    response.redirect("/products");
 };
 
 // Get admin products controller
-const getProducts = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const getProducts = async (request : Request, response : Response, next : NextFunction) => {
+
+    // Find the product. If we need to find a collection, we can pass the conditionals through in an object
+    const products = await Product.find();
 
     // Render the view of the page
-    response.render("admin/products", { prods : [] , pageTitle : "Admin Products" , hasProducts : false } );
+    response.render("admin/products", { prods : products , pageTitle : "Admin Products" , hasProducts : products.length > 0 } );
 };
 
 // Update product controller
