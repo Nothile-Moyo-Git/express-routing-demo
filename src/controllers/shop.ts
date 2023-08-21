@@ -77,17 +77,21 @@ const getCheckout = ( request : Request, response : Response, next : NextFunctio
 // Get product detail controller
 const getProductDetails = async ( request : Request, response : Response, next : NextFunction ) => {
 
-    // Create a new product Id
-    const productId = new ObjectId(request.params.id);
+    // Check if our Object id is valid in case we do onto a bad link
+    // This is more of a pre-emptive fix for production builds
+    const isObjectIdValid = ObjectId.isValid(request.params.id);
+
+    // Create a new product Id and guard it
+    const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
     // Get single product details
-    const singleProduct = await Product.find({_id : productId});
+    const singleProduct = isObjectIdValid ? await Product.findById(productId) : null;
 
     // Check if we have products
-    const hasProduct = singleProduct.length > 0;
+    const hasProduct = singleProduct !== null;
 
     // Render the admin products ejs template, make sure it's for the first object we get since Mongoose returns an array of BSON objects
-    response.render("shop/product-detail", { hasProduct : hasProduct, productDetails : singleProduct[0], pageTitle : "Product details" });
+    response.render("shop/product-detail", { hasProduct : hasProduct, productDetails : singleProduct, pageTitle : "Product details" });
 };
 
 // Get the cart and all the products inside of it

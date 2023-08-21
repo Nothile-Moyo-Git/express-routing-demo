@@ -58,6 +58,20 @@ const getProducts = async (request : Request, response : Response, next : NextFu
 // Update product controller
 const updateProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
+    // Get the fields in order to update our product
+    const title = request.body.title;
+    const price = request.body.price;
+    const description = request.body.description;
+    const image = request.body.image;
+
+    // We're going to execute the updateone method from our Mongoose Instance. This is a static method
+    console.clear();
+    console.log("Render our outputs");
+    console.log("Title");
+    console.log(title);
+    console.log("Request params");
+    console.log(request.params);
+
     // Render the view of the page
     response.redirect("/admin/products");
 };
