@@ -77,8 +77,17 @@ const getCheckout = ( request : Request, response : Response, next : NextFunctio
 // Get product detail controller
 const getProductDetails = async ( request : Request, response : Response, next : NextFunction ) => {
 
-    // Render the admin products ejs template
-    response.render("shop/product-detail", { hasProduct : false, productDetails : {}, pageTitle : "Product details" });
+    // Create a new product Id
+    const productId = new ObjectId(request.params.id);
+
+    // Get single product details
+    const singleProduct = await Product.find({_id : productId});
+
+    // Check if we have products
+    const hasProduct = singleProduct.length > 0;
+
+    // Render the admin products ejs template, make sure it's for the first object we get since Mongoose returns an array of BSON objects
+    response.render("shop/product-detail", { hasProduct : hasProduct, productDetails : singleProduct[0], pageTitle : "Product details" });
 };
 
 // Get the cart and all the products inside of it

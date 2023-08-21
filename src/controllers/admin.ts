@@ -24,12 +24,18 @@ const getAddProduct = (request : RequestWithUserRole, response : Response, next 
 // Post add product controller
 const postAddProduct = async(request : Request, response : Response, next : NextFunction) => {
 
+    // Fields
+    const title = request.body.title;
+    const image = request.body.image;
+    const price = Number(request.body.price);
+    const description = request.body.description;
+
     // Instantiate our product
     const product = new Product({
-        title : request.body.title,
-        image : request.body.image,
-        description : request.body.description,
-        price : Number(request.body.price),    
+        title : title,
+        image : image,
+        description : description,
+        price : price,    
     });
 
     // Save our new product to the database
