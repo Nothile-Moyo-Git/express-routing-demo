@@ -56,7 +56,7 @@ const getProducts = async (request : Request, response : Response, next : NextFu
 };
 
 // Update product controller
-const updateProduct = (request : RequestWithUserRole, response : Response, next : NextFunction) => {
+const updateProduct = async (request : RequestWithUserRole, response : Response, next : NextFunction) => {
 
     // Get the fields in order to update our product
     const title = request.body.title;
@@ -64,13 +64,20 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
     const description = request.body.description;
     const image = request.body.image;
 
-    // We're going to execute the updateone method from our Mongoose Instance. This is a static method
-    console.clear();
-    console.log("Render our outputs");
-    console.log("Title");
-    console.log(title);
-    console.log("Request params");
-    console.log(request.params);
+    // Check if our Object id is valid in case we do onto a bad link
+    // This is more of a pre-emptive fix for production builds
+    const isObjectIdValid = ObjectId.isValid(request.params.id);
+
+    // Create a new product Id and guard it
+    const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
+
+    // Update the product information using mongoose's updateOne method with the id provided previously
+    await Product.updateOne({ _id : productId },{ 
+        title : title,
+        price : price,
+        description : description,
+        image : image
+    });
 
     // Render the view of the page
     response.redirect("/admin/products");
@@ -78,6 +85,15 @@ const updateProduct = (request : RequestWithUserRole, response : Response, next 
 
 // Delete product controller
 const deleteProduct = async (request : Request, response : Response, next : NextFunction) => {
+
+    // Check if our Object id is valid in case we do onto a bad link
+    // This is more of a pre-emptive fix for production builds
+    const isObjectIdValid = ObjectId.isValid(request.params.id);
+
+    // Create a new product Id and guard it
+    const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
+
+    await Product.deleteOne( {_id : productId} );
 
     // Redirect to the admin products page since we executed admin functionality
     response.redirect("/admin/products");
