@@ -15,9 +15,18 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
+import User from "./models/user";
 import errorRoutes from "./routes/error";
 import { createMongooseConnection } from "./data/connection";
 import { Response, NextFunction } from 'express';
+import { ObjectId } from "mongodb";
+
+// Set the interface for the current user
+interface UserInterface {
+    name : string,
+    email : string,
+    _id : ObjectId
+}
 
 // Import the .env variables
 dotenv.config();
@@ -50,6 +59,35 @@ app.set('views', 'src/views');
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
 app.use( async( request : any, response : Response, next : NextFunction ) => {
+
+    // Check if we have any users
+    const userCount = await User.countDocuments();
+
+    // If we have no users, let's create my user for the singleton that's passed through to the app
+    if (userCount === 0) {
+
+        // Create my user
+        const nothile = new User({
+            name : "Nothile",
+            email : "nothile1@gmail.com"
+        });
+
+        // Save my user to the database
+        nothile.save();
+    }
+
+    // Query my current user
+    const nothile : UserInterface | null = await User.findById(new ObjectId("64e524fbad22f80117df640f"));
+
+    // UserId
+    const userDetails = new Object({
+        name : nothile?.name,
+        email : nothile?.email,
+        _id : nothile?._id
+    });
+
+    // Pass the singleton through to the app
+    request.User = userDetails;
 
     next();
 });
