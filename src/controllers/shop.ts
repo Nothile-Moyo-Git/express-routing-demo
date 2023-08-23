@@ -16,27 +16,18 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import User from "../models/user";
-import { Document } from 'mongodb';
 
-interface CartItem{
-    productId : ObjectId,
-    quantity : number,
-    price : number
-}
-interface Cart {
-    totalPrice : number,
-    items : CartItem[]
-}
-
+// Extend the request object in order to set variables in my request object
 interface UserInterface {
+    _id : ObjectId,
     name : string,
-    email : string,
-    cart : Cart,
-    addToCart : (product : WithId<Document>, userId : ObjectId) => {},
-    deleteFromCart : (id : string, userId : ObjectId) => {},
-    addOrder : (userId : ObjectId) => {}
+    email : string
+}
+
+interface RequestWithUser extends Request{
+    User : UserInterface
 }
 
 // Set up interface to include the user role which we pass through
@@ -52,10 +43,11 @@ const getIndex = ( request : Request, response : Response, next : NextFunction )
 };
 
 // Get products controller
-const getProducts = async (request : any, response : Response, next : NextFunction) => {
+const getProducts = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    const products = await Product.find();
+    // Find the product. If we need to find a collection, we can pass the conditionals through in an object
+    const products = await Product.find({userId : new ObjectId(request.User._id)});
 
     // Render the products view
     response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : products.length > 0 });
@@ -121,19 +113,12 @@ const postCartDelete = (request : RequestWithUser, response : Response, next : N
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
 
-    // Get user Id
-    const userId = request.UserId;
-
-    request.User.deleteFromCart(productId, userId);
-
     response.redirect('back');
 };
 
 // Create an order in the SQL backend
 const postOrderCreate = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
-    // Call the addOrder method from the User model
-    request.User.addOrder(request.UserId);
     
     // Move to the orders page
     response.redirect("orders");

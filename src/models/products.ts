@@ -31,7 +31,11 @@ const productSchema = new mongoose.Schema<Product>({
     price : { type : Number, required : true },
     description : { type : String, required : true },
     image : { type : String, required : true },
-    userId : { type : mongoose.Schema.Types.ObjectId, required : true }
+    userId : { 
+        type : mongoose.Schema.Types.ObjectId, 
+        required : true,
+        ref : "User"
+    }
 });
 
 // Create our model for exporting
