@@ -35,7 +35,8 @@ const postAddProduct = async(request : RequestWithUser, response : Response, nex
         title : title,
         image : image,
         description : description,
-        price : price,    
+        price : price,
+        userId : request.User._id   
     });
 
     // Save our new product to the database
@@ -49,11 +50,7 @@ const postAddProduct = async(request : RequestWithUser, response : Response, nex
 const getProducts = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    const products = await Product.find();
-
-    console.clear();
-    console.log("Request with user details");
-    console.log(request.User);
+    const products = await Product.find({userId : new ObjectId(request.User._id)});
 
     // Render the view of the page
     response.render("admin/products", { prods : products , pageTitle : "Admin Products" , hasProducts : products.length > 0 } );

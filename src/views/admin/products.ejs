@@ -4,9 +4,10 @@
         <%- include('../includes/navigation'); %>
 
         <main class="content">
-            <h1>My Products</h1>
 
             <% if (hasProducts) {%>
+
+                <h1>My Products</h1>
 
                 <ul class="card-list">
 
@@ -33,6 +34,9 @@
 
                 </ul>
 
+            <% }else{ %>
+                <h1>No products found! Consider adding a new product</h1>
+                <a class="button button--yellow" href="/admin/add-product">Add New Product</a>
             <% } %>
         </main>
 

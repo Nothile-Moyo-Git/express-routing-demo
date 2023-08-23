@@ -14,13 +14,15 @@
 
 // Imports
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 // Create an interface representing a document in MongoDB
 interface Product {
     title : string,
     price : number,
     description : string,
-    image : string
+    image : string,
+    userId : ObjectId
 }
 
 // Define our Mongoose product schema
@@ -28,7 +30,8 @@ const productSchema = new mongoose.Schema<Product>({
     title : { type : String, required : true },
     price : { type : Number, required : true },
     description : { type : String, required : true },
-    image : { type : String, required : true }
+    image : { type : String, required : true },
+    userId : { type : mongoose.Schema.Types.ObjectId, required : true }
 });
 
 // Create our model for exporting

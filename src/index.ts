@@ -69,7 +69,11 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
         // Create my user
         const nothile = new User({
             name : "Nothile",
-            email : "nothile1@gmail.com"
+            email : "nothile1@gmail.com",
+            cart : {
+                items : [],
+                totalPrice : 0
+            }
         });
 
         // Save my user to the database

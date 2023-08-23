@@ -16,17 +16,31 @@
 
 // Imports
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 // Create an interface representing a document in MongoDB
+
+interface CartItem{
+    productId : ObjectId,
+    quantity : number
+}
 interface User {
     name : string,
     email : string
+    cart : {
+        totalPrice : number,
+        items : CartItem[]
+    }
 }
 
 // Define our mongoose User schema
 const userSchema = new mongoose.Schema<User>({
     name : { type : String, required : true },
-    email : { type : String, required : true }
+    email : { type : String, required : true },
+    cart : {
+        items : [{ productId : mongoose.Schema.Types.ObjectId }, ],
+        totalPrice : { type : String, required : true }
+    }
 });
 
 // Create our model for exporting

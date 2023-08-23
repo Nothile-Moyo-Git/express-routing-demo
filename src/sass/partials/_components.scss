@@ -1,0 +1,15 @@
+.button{
+
+    overflow : hidden;
+    position : relative;
+    z-index : 1;
+    padding : 0.25rem 0.75rem;
+    border-radius: 4px;
+    box-shadow: $box_shadow_yellow;
+
+    &--yellow{
+        @include backgroundGradientEffect(){
+            background : $gradient_color_one;
+        }
+    }
+}
