@@ -46,8 +46,9 @@ const getIndex = ( request : Request, response : Response, next : NextFunction )
 const getProducts = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    const products = await Product.find({userId : new ObjectId(request.User._id)});
+    const products = await Product.find({userId : new ObjectId(request.User._id)})
+    .select("title price _id description image")
+    .populate("userId", "name");
 
     // Render the products view
     response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : products.length > 0 });
@@ -102,9 +103,62 @@ const getCart = async (request : any, response : Response, next : NextFunction) 
 // Acts as an add product handler
 const postCart = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
-    
+    // Get product information based on the product Id
+    const productId = request.body.productId;
+
+    // Get product details
+    const product = await Product.findOne({_id : productId})
+    .select("title price _id");
+
+    // Create a new instance of our user to gain access to mongoose static methods
+    const userInstance = new User(request.User);
+
+    // Set the product details into a new object
+    const productDetails = {title : product.title, price : product.price, _id : product._id};
+
+    // This is our new cart
+    const result = userInstance.addToCart(productDetails);
+
+    console.clear();
+    console.log("Result");
+    console.log(result);
+    console.log("User details");
+    console.log(request.User);
+
+    const updatedUser = {
+        _id : request.User._id,
+        name : request.User.name,
+        email : request.User.email,
+        cart : {
+            items : result,
+            totalPrice : Number(0)
+        }
+    };
+
+    console.log("New user");
+    console.log(updatedUser);
+    console.log("Cart");
+    console.log(updatedUser.cart.items);
+    console.log("Old user instance");
+    console.log(request.User);
+
+    const deployedUser = new User({
+        name : request.User.name,
+        _id : request.User._id,
+        email : request.User.email,
+        cart : {
+            items : result,
+            totalPrice : Number(0)
+        }
+    });
+
+    console.log("Deployed User");
+    console.log(deployedUser);
+    console.log("Deployed User cart");
+    console.log(deployedUser.cart);
+
     // Redirect to the cart page
-    response.redirect("/cart");
+    response.redirect("back");
 }
 
 // Delete an item from the cart using cart item
