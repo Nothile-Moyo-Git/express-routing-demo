@@ -72,7 +72,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
             email : "nothile1@gmail.com",
             cart : {
                 items : [],
-                totalPrice : Number(0)
+                totalPrice : 0
             }
         });
 
@@ -81,7 +81,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     }
 
     // Query my current user
-    const nothile : UserInterface | null = await User.findById(new ObjectId("64e66c380590b734eb8459ed"));
+    const nothile : UserInterface | null = await User.findOne({ name : "Nothile" });
 
     // Pass the singleton through to the app
     request.User = nothile;

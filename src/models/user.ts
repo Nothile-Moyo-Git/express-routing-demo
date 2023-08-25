@@ -31,8 +31,9 @@ interface Product {
 // Create an interface representing a document in MongoDB
 interface CartItem{
     productId : ObjectId,
-    name : string,
-    quantity : number
+    title : string,
+    quantity : number, 
+    price : number
 }
 interface User {
     name : string,
@@ -45,60 +46,60 @@ interface User {
 
 // Adding the typing system for our methods in mongoose
 interface UserMethods {
-    addToCart : (product : Product) => CartItem[]
+    addToCart : (product : Product) => void
 }
 
 // Setting the user type so we can define methods
 type UserModel = Model<User, {}, UserMethods>;
 
 // Define our mongoose User schema
+// Mongoose automatically adds in _id to every table when working with schemas, so you must set it to false
 const userSchema = new mongoose.Schema<User>({
     name : { type : String, required : true },
     email : { type : String, required : true },
     cart : {
-        items : [{ productId : mongoose.Schema.Types.ObjectId }, ],
-        totalPrice : { type : String, required : true }
+        items : [{ 
+            productId : mongoose.Schema.Types.ObjectId,
+            title : String,
+            quantity : Number,
+            price : Number,
+            _id : false
+        }],
+        totalPrice : { type : Number, required : true }
     }
 });
 
 // Create the add to cart method for our user in Mongoose
 userSchema.method('addToCart', function addToCart (product : Product) {
 
-    // We do this because we need an array we can mutate
-    const cartItems = this.cart.items.map((item: any) => ({ ...item }));
-
     // Get the index of the product in our cart items
     const cartProductIndex : number = this.cart.items.findIndex((childProduct : CartItem) => {
-        return childProduct.productId === product._id
+        return childProduct.productId === product._id;
     });
 
     // If we already have the cart item, update the quantity, otherwise, add it in
     // Note: We use a new object with a spread operator since we can't mutate the this.cart.items property from this model
     if (cartProductIndex >= 0) {
 
-        const incrementedQuantity = this.cart.items[cartProductIndex].quantity + 1;
-        cartItems[cartProductIndex].quantity = incrementedQuantity;
+        // Increase the quantity
+        const incrementedQuantity = this.cart.items[cartProductIndex].quantity++;
+        this.cart.items[cartProductIndex].quantity = incrementedQuantity;
+
+        // Update the totalPrice
+        this.cart.totalPrice += this.cart.items[cartProductIndex].price;
 
     }else{
 
-        cartItems.push({
+        // Add a new cart item
+        this.cart.items.push({
             title : product.title,
             productId : product._id,
             price : product.price
-        })
+        });
+
+        // Update the totalPrice
+        this.cart.totalPrice += product.price;
     }
-
-    // Deep copy the cart object and set the new cartItems array
-    const updatedCart = {
-        ...this.cart,
-        items : cartItems
-    };
-
-    // Set the cart to the same as the cartItems array we defined and mutated previously
-    this.cart = updatedCart;
-
-    return updatedCart;
-
 });
 
 // Create our model for exporting

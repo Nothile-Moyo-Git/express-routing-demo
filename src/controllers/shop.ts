@@ -117,45 +117,10 @@ const postCart = async (request : RequestWithUser, response : Response, next : N
     const productDetails = {title : product.title, price : product.price, _id : product._id};
 
     // This is our new cart
-    const result = userInstance.addToCart(productDetails);
+    userInstance.addToCart(productDetails);
 
-    console.clear();
-    console.log("Result");
-    console.log(result);
-    console.log("User details");
-    console.log(request.User);
-
-    const updatedUser = {
-        _id : request.User._id,
-        name : request.User.name,
-        email : request.User.email,
-        cart : {
-            items : result,
-            totalPrice : Number(0)
-        }
-    };
-
-    console.log("New user");
-    console.log(updatedUser);
-    console.log("Cart");
-    console.log(updatedUser.cart.items);
-    console.log("Old user instance");
-    console.log(request.User);
-
-    const deployedUser = new User({
-        name : request.User.name,
-        _id : request.User._id,
-        email : request.User.email,
-        cart : {
-            items : result,
-            totalPrice : Number(0)
-        }
-    });
-
-    console.log("Deployed User");
-    console.log(deployedUser);
-    console.log("Deployed User cart");
-    console.log(deployedUser.cart);
+    // Update the cart with the new item
+    // await userInstance.save();
 
     // Redirect to the cart page
     response.redirect("back");
