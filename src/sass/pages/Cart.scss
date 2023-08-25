@@ -85,7 +85,7 @@
         width: calc(100% / 4);
 
         @include breakpoint(mobile){
-            width: calc(100% / 3.75);
+            width: calc(100% / 4);
         }
 
         @include state(){
