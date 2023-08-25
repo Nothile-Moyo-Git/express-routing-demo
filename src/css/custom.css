@@ -165,15 +165,9 @@
   .cart__checkout {
     margin: auto;
     display: flex;
-    padding-left: 2rem;
-    padding-right: 2rem;
     margin-top: 1rem;
     flex-direction: row;
     justify-content: space-between; }
-    @media (max-width: 768px) {
-      .cart__checkout {
-        padding-left: 1rem;
-        padding-right: 1rem; } }
   .cart__checkout-button {
     font-size: 1rem;
     box-shadow: 0px 0px 7px 0px #dbc441;
@@ -184,12 +178,22 @@
     cursor: pointer;
     transition: all 0.3s linear;
     filter: contrast(95%);
-    margin-right: 0.25rem; }
+    margin-right: 0.25rem;
+    width: calc(100% / 4); }
     @media (max-width: 768px) {
       .cart__checkout-button {
         margin-right: 0.5rem; } }
+    @media (max-width: 480px) {
+      .cart__checkout-button {
+        width: calc(100% / 2.5); } }
     .cart__checkout-button:hover, .cart__checkout-button:focus {
       filter: contrast(120%); }
+  .cart__checkout-text {
+    width: calc(100% / 4);
+    text-align: center; }
+    @media (max-width: 480px) {
+      .cart__checkout-text {
+        width: calc(100% / 2); } }
 
 .add-product {
   display: flex;
@@ -790,15 +794,9 @@ div .dot {
   .cart__checkout {
     margin: auto;
     display: flex;
-    padding-left: 2rem;
-    padding-right: 2rem;
     margin-top: 1rem;
     flex-direction: row;
     justify-content: space-between; }
-    @media (max-width: 768px) {
-      .cart__checkout {
-        padding-left: 1rem;
-        padding-right: 1rem; } }
   .cart__checkout-button {
     font-size: 1rem;
     box-shadow: 0px 0px 7px 0px #dbc441;
@@ -809,12 +807,22 @@ div .dot {
     cursor: pointer;
     transition: all 0.3s linear;
     filter: contrast(95%);
-    margin-right: 0.25rem; }
+    margin-right: 0.25rem;
+    width: calc(100% / 4); }
     @media (max-width: 768px) {
       .cart__checkout-button {
         margin-right: 0.5rem; } }
+    @media (max-width: 480px) {
+      .cart__checkout-button {
+        width: calc(100% / 2.5); } }
     .cart__checkout-button:hover, .cart__checkout-button:focus {
       filter: contrast(120%); }
+  .cart__checkout-text {
+    width: calc(100% / 4);
+    text-align: center; }
+    @media (max-width: 480px) {
+      .cart__checkout-text {
+        width: calc(100% / 2); } }
 
 .checkout {
   width: 100%;

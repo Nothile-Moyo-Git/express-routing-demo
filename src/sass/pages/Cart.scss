@@ -66,17 +66,9 @@
     &__checkout{
         margin: auto;
         display: flex;
-        padding-left: 2rem;
-        padding-right: 2rem;
         margin-top: 1rem;
-   
         flex-direction: row;
         justify-content: space-between;
-
-        @include breakpoint(tablet){
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
     } 
 
     &__checkout-button{
@@ -90,13 +82,27 @@
         transition: all 0.3s linear;
         filter: contrast(95%);
         margin-right: 0.25rem;
+        width: calc(100% / 4);
 
         @include breakpoint(tablet){
             margin-right: 0.5rem;
         }
 
+        @include breakpoint(mobile){
+            width: calc(100% / 2.5);
+        }
+
         @include state(){
             filter: contrast(120%);
+        }
+    }
+
+    &__checkout-text{
+        width: calc(100% / 4);
+        text-align: center;
+
+        @include breakpoint(mobile){
+            width: calc(100% / 2);
         }
     }
 }
