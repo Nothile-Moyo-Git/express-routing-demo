@@ -89,11 +89,17 @@ const getProductDetails = async ( request : Request, response : Response, next :
 
 // Get the cart and all the products inside of it
 const getCart = async (request : any, response : Response, next : NextFunction) => {
+
+    // Instantiate the User that we have
+    const userInstance = new User(request.User);
+
+    // Check if we have products that we can render on the tempalate
+    const hasProducts = userInstance.cart.items.length > 0;
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
-        hasProducts : false, 
-        products : [], 
+        hasProducts : hasProducts, 
+        products : userInstance.cart.items, 
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice
     });
@@ -120,7 +126,7 @@ const postCart = async (request : RequestWithUser, response : Response, next : N
     userInstance.addToCart(productDetails);
 
     // Update the cart with the new item
-    // await userInstance.save();
+    await userInstance.save();
 
     // Redirect to the cart page
     response.redirect("back");

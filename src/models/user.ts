@@ -74,7 +74,7 @@ userSchema.method('addToCart', function addToCart (product : Product) {
 
     // Get the index of the product in our cart items
     const cartProductIndex : number = this.cart.items.findIndex((childProduct : CartItem) => {
-        return childProduct.productId === product._id;
+        return childProduct.productId.toString() === product._id.toString();
     });
 
     // If we already have the cart item, update the quantity, otherwise, add it in
@@ -82,7 +82,7 @@ userSchema.method('addToCart', function addToCart (product : Product) {
     if (cartProductIndex >= 0) {
 
         // Increase the quantity
-        const incrementedQuantity = this.cart.items[cartProductIndex].quantity++;
+        const incrementedQuantity = this.cart.items[cartProductIndex].quantity + 1;
         this.cart.items[cartProductIndex].quantity = incrementedQuantity;
 
         // Update the totalPrice
@@ -92,14 +92,16 @@ userSchema.method('addToCart', function addToCart (product : Product) {
 
         // Add a new cart item
         this.cart.items.push({
-            title : product.title,
+            title : product.title, 
             productId : product._id,
-            price : product.price
+            price : product.price,
+            quantity : 1
         });
 
         // Update the totalPrice
         this.cart.totalPrice += product.price;
     }
+
 });
 
 // Create our model for exporting
