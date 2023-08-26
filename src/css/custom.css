@@ -178,13 +178,13 @@
     cursor: pointer;
     transition: all 0.3s linear;
     filter: contrast(95%);
-    margin-right: 0.25rem;
     width: calc(100% / 4); }
     @media (max-width: 480px) {
       .cart__checkout-button {
         width: calc(100% / 4); } }
     .cart__checkout-button:hover, .cart__checkout-button:focus {
-      filter: contrast(120%); }
+      filter: contrast(150%);
+      color: #6200ff; }
   .cart__checkout-text {
     width: calc(100% / 4);
     text-align: center; }
@@ -584,13 +584,13 @@ h1 {
     cursor: pointer;
     transition: all 0.3s linear;
     filter: contrast(95%);
-    margin-right: 0.25rem;
     width: calc(100% / 4); }
     @media (max-width: 480px) {
       .cart__checkout-button {
         width: calc(100% / 4); } }
     .cart__checkout-button:hover, .cart__checkout-button:focus {
-      filter: contrast(120%); }
+      filter: contrast(150%);
+      color: #6200ff; }
   .cart__checkout-text {
     width: calc(100% / 4);
     text-align: center; }

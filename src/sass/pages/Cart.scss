@@ -81,7 +81,6 @@
         cursor: pointer;
         transition: all 0.3s linear;
         filter: contrast(95%);
-        margin-right: 0.25rem;
         width: calc(100% / 4);
 
         @include breakpoint(mobile){
@@ -89,7 +88,8 @@
         }
 
         @include state(){
-            filter: contrast(120%);
+            filter: contrast(150%);
+            color : $brand_color_two;
         }
     }
 

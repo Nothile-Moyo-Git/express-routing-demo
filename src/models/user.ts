@@ -47,6 +47,7 @@ interface User {
 // Adding the typing system for our methods in mongoose
 interface UserMethods {
     addToCart : (product : Product) => void
+    deleteFromCart : (productId : string) => void
 }
 
 // Setting the user type so we can define methods
@@ -102,6 +103,27 @@ userSchema.method('addToCart', function addToCart (product : Product) {
         this.cart.totalPrice += product.price;
     }
 
+});
+
+// Create the delete from cart method for our user in Mongoose
+userSchema.method('deleteFromCart', function (productId : string) {
+
+    // Filter out the cart and reduce the total price
+    const filteredCartItems = this.cart.items.filter((item : CartItem) => {
+
+        // If the id's match, reduce the total price
+        if (productId === item.productId.toString()) {
+
+            // Reduce the totalPrice based on the price and number of items
+            this.cart.totalPrice -= (item.price * item.quantity);
+        }
+
+        // Only return array values which aren't indexed with the ID we passed through as a parameter
+        return productId !== item.productId.toString();
+    });
+
+    // Mutate the cart object with the new one we've created
+    this.cart.items = filteredCartItems;  
 });
 
 // Create our model for exporting

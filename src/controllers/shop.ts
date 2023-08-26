@@ -30,11 +30,6 @@ interface RequestWithUser extends Request{
     User : UserInterface
 }
 
-// Set up interface to include the user role which we pass through
-interface RequestWithUser extends Request{
-    User : UserInterface,
-    UserId : ObjectId
-}
 
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
@@ -129,14 +124,23 @@ const postCart = async (request : RequestWithUser, response : Response, next : N
     await userInstance.save();
 
     // Redirect to the cart page
-    response.redirect("back");
+    response.redirect("cart");
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = (request : RequestWithUser, response : Response, next : NextFunction) => {
+const postCartDelete = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
+
+    // Create a new user instance so we can access the appropriate methods
+    const userInstance = new User(request.User);
+
+    // Delete the item from the cart
+    userInstance.deleteFromCart(productId);
+
+    // Update the cart with the removed item and updated price
+    await userInstance.save();
 
     response.redirect('back');
 };
