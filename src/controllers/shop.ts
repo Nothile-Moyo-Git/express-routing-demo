@@ -166,9 +166,20 @@ const postOrderCreate = async (request : RequestWithUser, response : Response, n
 
     // Store the order in the database
     await orderInstance.save();
+
+    // We now need to empty our cart
+    // We will create a User instance and we will delete the cart from the instance
+    // Then we'll execute the save method to update the database user
+    const userInstance = new User(request.User);
+
+    // Empty the cart now that we've saved it as an order
+    userInstance.emptyCart();
+
+    // Update the user details in MongoDB
+    await userInstance.save();
     
     // Move to the orders page
-    response.redirect("back");
+    response.redirect("/orders");
 };
 
 export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };

@@ -34,7 +34,7 @@ interface Order {
 
 // Define our interfaces for our methods which we use to extend our mongoose model
 interface OrderMethods {
-    addToOrders : () => void
+
 }
 
 // Setting the order type so we can define methods
@@ -53,12 +53,6 @@ const orderSchema = new mongoose.Schema<Order>({
     }],
     userId : { type : mongoose.Schema.Types.ObjectId, required : [true, "Please reload the app to ensure that a root user is configured"] }
 }, { timestamps : true });
-
-// Add the add to order method, this creates a new entry in the collection based on the schema. Each order item will not have a unique ObjectId
-orderSchema.method('addToOrders', function addToCart () {
-
-
-});
 
 // Create Mongoose model for our ODM
 const Order = mongoose.model<Order, OrderModel>("Order", orderSchema);

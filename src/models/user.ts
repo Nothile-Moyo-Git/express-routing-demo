@@ -46,8 +46,9 @@ interface User {
 
 // Adding the typing system for our methods in mongoose
 interface UserMethods {
-    addToCart : (product : Product) => void
-    deleteFromCart : (productId : string) => void
+    addToCart : (product : Product) => void,
+    deleteFromCart : (productId : string) => void,
+    emptyCart : () => void
 }
 
 // Setting the user type so we can define methods
@@ -128,6 +129,19 @@ userSchema.method('deleteFromCart', function (productId : string) {
 
     // Update our current user in MongoDB
     this.save();
+});
+
+// Create the empty cart method for ouyr user in Mongoose
+userSchema.method('emptyCart', function () {
+
+    // Create an empty cart
+    const emptyCart = {
+        items : [],
+        totalPrice : 0
+    };
+
+    // Update the cart on the user instance
+    this.cart = emptyCart;
 });
 
 // Create our model for exporting
