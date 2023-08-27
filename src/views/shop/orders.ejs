@@ -5,7 +5,7 @@
 
         <main class="orders">
 
-            <% if (hasProducts === true) { %>
+            <% if (hasOrders === true) { %>
                 <h1 class="orders__header">Orders</h1>
 
                 <ul class="orders__details">
@@ -15,7 +15,7 @@
 
                             <p class="orders__row-item orders__row-item--title">Products</p>
 
-                            <% order.items.forEach((item) => { %>
+                            <% order.orderItems.forEach((item) => { %>
                                 <ul class="orders__row-item orders__row-item--products">
 
                                     <li class="orders__product-details">
@@ -28,7 +28,7 @@
 
                             <span class="orders__row-item orders__row-item--date">
                                 <p>Purchased : </p>
-                                <p><%= order.datePurchased %></p>
+                                <p><%= order.createdAt.toLocaleString() %></p>
                             </span>
 
                             <span class="orders__row-item orders__row-item--name">

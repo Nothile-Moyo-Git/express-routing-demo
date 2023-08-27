@@ -29,7 +29,10 @@ interface Order {
     orderItems : OrderItem[],
     createdAt : Date,
     updatedAt : Date,
-    userId : ObjectId
+    user : {
+        _id : ObjectId,
+        name : string
+    }
 }
 
 // Define our interfaces for our methods which we use to extend our mongoose model
@@ -51,7 +54,10 @@ const orderSchema = new mongoose.Schema<Order>({
        quantity : { type : Number },
        _id : false
     }],
-    userId : { type : mongoose.Schema.Types.ObjectId, required : [true, "Please reload the app to ensure that a root user is configured"] }
+    user : { 
+        _id : { type : mongoose.Schema.Types.ObjectId, ref : 'User', required : [true, "Please reload the app to ensure that a root user is configured"]},
+        name : { type : String }
+    }
 }, { timestamps : true });
 
 // Create Mongoose model for our ODM

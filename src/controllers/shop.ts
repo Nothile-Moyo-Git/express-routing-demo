@@ -66,8 +66,12 @@ const getProducts = async (request : RequestWithUser, response : Response, next 
 // Get the orders
 const getOrders = async ( request : RequestWithUser, response : Response, next : NextFunction ) => {
 
+    // Query the orders in the backend
+    const orders = await Order.find({"user._id" : request.User._id})
+    .select("totalPrice orderItems createdAt user");
+
     // Render the view page
-    response.render("shop/orders", { pageTitle : "Orders", orders : [], hasProducts : false });
+    response.render("shop/orders", { pageTitle : "Orders", orders : orders, hasOrders : orders.length > 0 });
 };
 
 // Get the checkout page from the cart
@@ -161,7 +165,10 @@ const postOrderCreate = async (request : RequestWithUser, response : Response, n
     const orderInstance = new Order({
         totalPrice : request.User.cart.totalPrice,
         orderItems : request.User.cart.items,
-        userId : request.User._id
+        user : {
+            _id : request.User._id,
+            name : request.User.name
+        }
     });
 
     // Store the order in the database
