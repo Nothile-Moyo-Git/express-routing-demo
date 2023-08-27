@@ -56,8 +56,8 @@ type UserModel = Model<User, {}, UserMethods>;
 // Define our mongoose User schema
 // Mongoose automatically adds in _id to every table when working with schemas, so you must set it to false
 const userSchema = new mongoose.Schema<User>({
-    name : { type : String, required : true },
-    email : { type : String, required : true },
+    name : { type : String, required : [true, "Please enter a name"] },
+    email : { type : String, required : [true, "Please enter an email address"] },
     cart : {
         items : [{ 
             productId : mongoose.Schema.Types.ObjectId,
@@ -83,8 +83,7 @@ userSchema.method('addToCart', function addToCart (product : Product) {
     if (cartProductIndex >= 0) {
 
         // Increase the quantity
-        const incrementedQuantity = this.cart.items[cartProductIndex].quantity + 1;
-        this.cart.items[cartProductIndex].quantity = incrementedQuantity;
+        this.cart.items[cartProductIndex].quantity += 1;
 
         // Update the totalPrice
         this.cart.totalPrice += this.cart.items[cartProductIndex].price;
@@ -103,6 +102,8 @@ userSchema.method('addToCart', function addToCart (product : Product) {
         this.cart.totalPrice += product.price;
     }
 
+    // Update the current user in MongoDB
+    this.save();
 });
 
 // Create the delete from cart method for our user in Mongoose
@@ -124,6 +125,9 @@ userSchema.method('deleteFromCart', function (productId : string) {
 
     // Mutate the cart object with the new one we've created
     this.cart.items = filteredCartItems;  
+
+    // Update our current user in MongoDB
+    this.save();
 });
 
 // Create our model for exporting

@@ -3,6 +3,7 @@
  * Shop controller.
  * This controller handles the routing for the cart and shop functionality.
  * It also hooks up the "shop" model which can be used to manage our data
+ * This controller also handles the "order" model which is used during cart submissons
  * 
  * @method getIndex : ( request : Request, response : Response, next : NextFunction ) => void
  * @method getShop : ( request : Request, response : Response, next : NextFunction ) => void
@@ -18,12 +19,25 @@ import { Request, Response, NextFunction } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
+import Order from "../models/order";
+
+// Cart items interface
+interface CartItem {
+    productId : ObjectId,
+    title : string,
+    quantity : number,
+    price : number
+}
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
     _id : ObjectId,
     name : string,
     email : string
+    cart : {
+        totalPrice : number,
+        items : CartItem[]
+    }
 }
 
 interface RequestWithUser extends Request{
@@ -120,15 +134,12 @@ const postCart = async (request : RequestWithUser, response : Response, next : N
     // This is our new cart
     userInstance.addToCart(productDetails);
 
-    // Update the cart with the new item
-    await userInstance.save();
-
     // Redirect to the cart page
     response.redirect("cart");
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const postCartDelete = (request : RequestWithUser, response : Response, next : NextFunction) => {
 
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
@@ -139,18 +150,25 @@ const postCartDelete = async (request : RequestWithUser, response : Response, ne
     // Delete the item from the cart
     userInstance.deleteFromCart(productId);
 
-    // Update the cart with the removed item and updated price
-    await userInstance.save();
-
+    // Reload the cart page so we can query the updated cart
     response.redirect('back');
 };
 
 // Create an order in the SQL backend
 const postOrderCreate = async (request : RequestWithUser, response : Response, next : NextFunction) => {
 
+    // Create our order from the cart we pass through from the User singleton found in index.ts
+    const orderInstance = new Order({
+        totalPrice : request.User.cart.totalPrice,
+        orderItems : request.User.cart.items,
+        userId : request.User._id
+    });
+
+    // Store the order in the database
+    await orderInstance.save();
     
     // Move to the orders page
-    response.redirect("orders");
+    response.redirect("back");
 };
 
 export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
