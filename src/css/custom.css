@@ -1,72 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
-@keyframes fade-in {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 0%; }
-  50% {
-    background-position: 100% 100%; }
-  100% {
-    background-position: 0% 0%; } }
-
-@keyframes efficient-gradient {
-  0% {
-    transform: translateX(0%);
-    -webkit-transform: translateX(0%); }
-  25% {
-    transform: translate(-37.5%);
-    -webkit-transform: translateX(-37.5%); }
-  50% {
-    transform: translateX(-75%);
-    -webkit-transform: translateX(-75%); }
-  75% {
-    transform: translateX(-37.5%);
-    -webkit-transform: translateX(-37.5%); }
-  100% {
-    transform: translateX(0%);
-    -webkit-transform: translateX(0%); } }
-
-/*
-    Slide in animation for the burger menu on the right hand side
-*/
-@keyframes burger-menu-slide-in {
-  0% {
-    left: 100%; }
-  100% {
-    left: calc(100% - 300px); } }
-
-@keyframes pulse {
-  0% {
-    transform: scale(1); }
-  50% {
-    transform: scale(1.2); }
-  100% {
-    transform: scale(1); } }
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg); }
-  100% {
-    transform: rotate(360deg); } }
-
-@keyframes shake {
-  0% {
-    transform: rotate(0deg); }
-  25% {
-    transform: rotate(4deg); }
-  50% {
-    transform: rotate(0deg); }
-  75% {
-    transform: rotate(-4deg); }
-  100% {
-    transform: rotate(0deg); } }
-
 /* 
     Background gradient effect
     This hover effect creates an efficient and smooth gradient animation
@@ -77,698 +9,126 @@
     If you want to delay this animation, pass it to the parent using an inline style
     This can be great if you're rendering a list of cards and want to delay each animation
 */
-/* Responsive */
 .button {
   overflow: hidden;
   position: relative;
   z-index: 1;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
-  box-shadow: 0px 0px 10px 0px #dbc441; }
-  .button--yellow:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 400%;
-    z-index: -1;
-    will-change: transform;
-    animation-name: efficient-gradient;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-delay: inherit;
-    -webkit-animation-name: efficient-gradient;
-    -webkit-animation-duration: 5s;
-    -webkit-animation-delay: inherit;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
+  box-shadow: 0px 0px 10px 0px #dbc441;
+}
+.button--yellow:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400%;
+  z-index: -1;
+  will-change: transform;
+  animation-name: efficient-gradient;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-delay: inherit;
+  -webkit-animation-name: efficient-gradient;
+  -webkit-animation-duration: 5s;
+  -webkit-animation-delay: inherit;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067);
+}
 
-.shop {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center; }
-
-.cart {
-  width: calc(100% - 3rem);
-  display: flex;
-  color: white;
-  max-width: 40rem;
-  padding: 2rem 1rem;
-  position: relative;
-  border: 1px solid #dbc441;
-  border-radius: 5px;
-  flex-direction: column;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
-  justify-content: center;
-  margin: 1rem auto; }
-  @media (max-width: 768px) {
-    .cart {
-      padding: 2rem 0.5rem; } }
-  .cart__header {
-    text-align: center;
-    margin: 0.25rem auto; }
-  .cart__modal-row {
-    display: flex;
-    flex-direction: row; }
-  .cart__modal-rows {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    grid-row-gap: 0.5rem; }
-  .cart__modal-column {
-    width: calc(100% / 4);
-    text-align: center; }
-  .cart__modal-button {
-    font-size: 1rem;
-    box-shadow: 0px 0px 7px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.1rem 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%); }
-    .cart__modal-button:hover, .cart__modal-button:focus {
-      filter: contrast(120%); }
-  .cart__modal-header {
-    display: flex;
-    flex-direction: row; }
-  .cart__empty-items {
-    text-align: center; }
-  .cart__checkout {
-    margin: auto;
-    display: flex;
-    margin-top: 1rem;
-    flex-direction: row;
-    justify-content: space-between; }
-  .cart__checkout-button {
-    font-size: 1rem;
-    box-shadow: 0px 0px 7px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.3rem 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%);
-    width: calc(100% / 4); }
-    @media (max-width: 480px) {
-      .cart__checkout-button {
-        width: calc(100% / 4); } }
-    .cart__checkout-button:hover, .cart__checkout-button:focus {
-      filter: contrast(150%);
-      color: #6200ff; }
-  .cart__checkout-text {
-    width: calc(100% / 4);
-    text-align: center; }
-    @media (max-width: 480px) {
-      .cart__checkout-text {
-        text-align: left;
-        margin-left: 0.15rem;
-        width: calc(100% / 2); } }
-
-.add-product {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  animation: fade-in 0.3s linear; }
-  .add-product__page-title {
-    text-align: center; }
-  .add-product__form {
-    max-width: 350px;
-    width: 100%;
-    padding: 1rem;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    grid-gap: 1rem; }
-  .add-product__label {
-    color: white;
-    font-size: 1.1rem; }
-  .add-product__field {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px;
-    grid-gap: 0.25rem; }
-  .add-product__input {
-    border-radius: 4px;
-    padding: 0.4rem 0.1rem;
-    font-size: 1.1rem;
-    border: none; }
-  .add-product__button {
-    margin: 0.5rem auto auto auto;
-    font-size: 1rem;
-    box-shadow: 0px 0px 5px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.3rem 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%); }
-    .add-product__button:hover, .add-product__button:focus {
-      filter: contrast(120%); }
-
-.orders {
-  width: calc(100% - 2rem);
-  margin-left: 1rem;
-  margin-right: 1rem; }
-  .orders__header {
-    text-align: center;
-    width: 100%; }
-  .orders__details {
-    color: white;
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: auto;
-    grid-row-gap: 1rem; }
-  .orders__row {
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    grid-column-gap: 2rem;
-    justify-content: space-between;
-    overflow: hidden;
-    position: relative;
-    border-radius: 2px;
-    transition: all 0.15s linear; }
-    .orders__row:hover, .orders__row:focus {
-      transform: scale(1.025); }
-    .orders__row:nth-child(odd) {
-      color: black;
-      box-shadow: 0px 0px 10px 0px #dbc441; }
-      .orders__row:nth-child(odd):after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 400%;
-        z-index: -1;
-        will-change: transform;
-        animation-name: efficient-gradient;
-        animation-duration: 5s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        animation-delay: inherit;
-        -webkit-animation-name: efficient-gradient;
-        -webkit-animation-duration: 5s;
-        -webkit-animation-delay: inherit;
-        -webkit-animation-iteration-count: infinite;
-        -webkit-animation-timing-function: linear;
-        background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
-  .orders__product-details {
-    display: flex;
-    justify-content: space-between; }
-  .orders__row-item {
-    width: 100%; }
-    .orders__row-item--title {
-      font-size: 1.1rem; }
-    .orders__row-item--total {
-      text-align: right; }
-    .orders__row-item--name {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between; }
-    .orders__row-item--date {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between; }
-  .orders__empty {
-    text-align: center;
-    margin-top: 2rem; }
-
-.product-detail {
-  max-width: 350px;
-  color: white;
-  display: flex;
-  margin: auto;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column; }
-  @media (max-width: 768px) {
-    .product-detail {
-      max-width: 100%;
-      width: calc(100% - 2rem);
-      padding: 0 1rem; } }
-  .product-detail__back-wrapper {
-    margin-right: auto;
-    color: white;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    grid-gap: 0.5rem; }
-    .product-detail__back-wrapper img {
-      width: 1.25rem;
-      height: 1.25rem; }
-  .product-detail__title {
-    text-align: center; }
-  .product-detail__description {
-    text-align: center; }
-  .product-detail__price {
-    text-align: center; }
-  .product-detail__back-text {
-    color: white; }
-  .product-detail__image {
-    width: 100%; }
-  .product-detail__article {
-    width: 100%; }
-
+/* Responsive */
 @keyframes fade-in {
   0% {
-    opacity: 0; }
+    opacity: 0;
+  }
   100% {
-    opacity: 1; } }
-
-html {
-  height: 100%;
-  background: rgba(30, 32, 42, 0.97); }
-
-body {
-  margin: 0px;
-  margin-top: 82px;
-  animation: fade-in 0.2s linear;
-  font-family: "Open Sans"; }
-  @media (max-width: 768px) {
-    body {
-      margin-top: 201px; } }
-
-nav {
-  width: 100%; }
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0; }
-
-a {
-  text-decoration: none;
-  color: rgba(0, 0, 0, 0.9);
-  transition: all 0.3s linear;
-  font-size: 1.25rem; }
-  a:hover, a:focus {
-    color: #6200ff; }
-
-p {
-  margin: 0; }
-
-h1 {
-  margin-bottom: 1rem;
-  color: white; }
-
-.page-title {
-  margin: 0; }
-
-.header {
-  position: fixed;
-  top: 0;
-  height: 50px;
-  width: 100%;
-  box-shadow: 0px 0px 15px 0px #dbc441;
-  display: flex;
-  align-items: center;
-  background: #dbc441;
-  z-index: 2; }
-  @media (max-width: 768px) {
-    .header {
-      height: 169px; } }
-
-.menu {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  width: 100%;
-  margin: auto;
-  padding: 0; }
-  @media (max-width: 768px) {
-    .menu {
-      flex-direction: column; } }
-  .menu__item {
-    width: 20%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center; }
-    @media (max-width: 768px) {
-      .menu__item {
-        width: 100%;
-        border-bottom: 1px solid black; } }
-
-.content {
-  padding: 0rem;
-  color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center; }
-  .content__label {
-    font-size: 1.5rem; }
-  .content__form {
-    display: flex;
-    flex-direction: column;
-    grid-gap: 1rem;
-    margin-top: 1rem; }
-  .content__input {
-    box-shadow: 0px 0px 5px 0px #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.25rem; }
-  .content__button {
-    box-shadow: 0px 0px 5px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.3rem 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%); }
-    .content__button:hover, .content__button:focus {
-      filter: contrast(120%); }
-
-/* Scroll bar */
-/* width */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px; }
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: rgba(30, 32, 42, 0.97); }
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #6200ff; }
-
-/* Corner */
-::-webkit-scrollbar-corner {
-  background: rgba(30, 32, 42, 0.97); }
-
-.add-product {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  animation: fade-in 0.3s linear; }
-  .add-product__page-title {
-    text-align: center; }
-  .add-product__form {
-    max-width: 350px;
-    width: 100%;
-    padding: 1rem;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    grid-gap: 1rem; }
-  .add-product__label {
-    color: white;
-    font-size: 1.1rem; }
-  .add-product__field {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px;
-    grid-gap: 0.25rem; }
-  .add-product__input {
-    border-radius: 4px;
-    padding: 0.4rem 0.1rem;
-    font-size: 1.1rem;
-    border: none; }
-  .add-product__button {
-    margin: 0.5rem auto auto auto;
-    font-size: 1rem;
-    box-shadow: 0px 0px 5px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.3rem 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%); }
-    .add-product__button:hover, .add-product__button:focus {
-      filter: contrast(120%); }
-
-.cart {
-  width: calc(100% - 3rem);
-  display: flex;
-  color: white;
-  max-width: 40rem;
-  padding: 2rem 1rem;
-  position: relative;
-  border: 1px solid #dbc441;
-  border-radius: 5px;
-  flex-direction: column;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
-  justify-content: center;
-  margin: 1rem auto; }
-  @media (max-width: 768px) {
-    .cart {
-      padding: 2rem 0.5rem; } }
-  .cart__header {
-    text-align: center;
-    margin: 0.25rem auto; }
-  .cart__modal-row {
-    display: flex;
-    flex-direction: row; }
-  .cart__modal-rows {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    grid-row-gap: 0.5rem; }
-  .cart__modal-column {
-    width: calc(100% / 4);
-    text-align: center; }
-  .cart__modal-button {
-    font-size: 1rem;
-    box-shadow: 0px 0px 7px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.1rem 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%); }
-    .cart__modal-button:hover, .cart__modal-button:focus {
-      filter: contrast(120%); }
-  .cart__modal-header {
-    display: flex;
-    flex-direction: row; }
-  .cart__empty-items {
-    text-align: center; }
-  .cart__checkout {
-    margin: auto;
-    display: flex;
-    margin-top: 1rem;
-    flex-direction: row;
-    justify-content: space-between; }
-  .cart__checkout-button {
-    font-size: 1rem;
-    box-shadow: 0px 0px 7px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.3rem 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%);
-    width: calc(100% / 4); }
-    @media (max-width: 480px) {
-      .cart__checkout-button {
-        width: calc(100% / 4); } }
-    .cart__checkout-button:hover, .cart__checkout-button:focus {
-      filter: contrast(150%);
-      color: #6200ff; }
-  .cart__checkout-text {
-    width: calc(100% / 4);
-    text-align: center; }
-    @media (max-width: 480px) {
-      .cart__checkout-text {
-        text-align: left;
-        margin-left: 0.15rem;
-        width: calc(100% / 2); } }
-
-.checkout {
-  width: 100%;
-  padding-top: 1rem;
-  display: flex;
-  justify-content: center;
-  height: 100%; }
-
-.edit-product {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-  height: 100%; }
-  .edit-product__form {
-    max-width: 350px;
-    width: calc(100% - 2rem);
-    margin: auto;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    grid-row-gap: 0.5rem; }
-    @media (max-width: 480px) {
-      .edit-product__form {
-        max-width: 100%; } }
-  .edit-product__label {
-    color: white;
-    font-size: 1.2rem;
-    margin-bottom: 0.1rem; }
-  .edit-product__input {
-    font-size: 1.1rem;
-    border-radius: 4px;
-    padding: 0.4rem 0.25rem; }
-  .edit-product__field {
-    display: flex;
-    flex-direction: column;
-    width: 100%; }
-  .edit-product__button {
-    margin: 0.5rem auto auto auto;
-    font-size: 1rem;
-    box-shadow: 0px 0px 5px 0px #dbc441;
-    background: #dbc441;
-    border: 1px solid #dbc441;
-    border-radius: 3px;
-    padding: 0.3rem 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s linear;
-    filter: contrast(95%); }
-    .edit-product__button:hover, .edit-product__button:focus {
-      filter: contrast(120%); }
-
-.orders {
-  width: calc(100% - 2rem);
-  margin-left: 1rem;
-  margin-right: 1rem; }
-  .orders__header {
-    text-align: center;
-    width: 100%; }
-  .orders__details {
-    color: white;
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: auto;
-    grid-row-gap: 1rem; }
-  .orders__row {
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    grid-column-gap: 2rem;
-    justify-content: space-between;
-    overflow: hidden;
-    position: relative;
-    border-radius: 2px;
-    transition: all 0.15s linear; }
-    .orders__row:hover, .orders__row:focus {
-      transform: scale(1.025); }
-    .orders__row:nth-child(odd) {
-      color: black;
-      box-shadow: 0px 0px 10px 0px #dbc441; }
-      .orders__row:nth-child(odd):after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 400%;
-        z-index: -1;
-        will-change: transform;
-        animation-name: efficient-gradient;
-        animation-duration: 5s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        animation-delay: inherit;
-        -webkit-animation-name: efficient-gradient;
-        -webkit-animation-duration: 5s;
-        -webkit-animation-delay: inherit;
-        -webkit-animation-iteration-count: infinite;
-        -webkit-animation-timing-function: linear;
-        background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
-  .orders__product-details {
-    display: flex;
-    justify-content: space-between; }
-  .orders__row-item {
-    width: 100%; }
-    .orders__row-item--title {
-      font-size: 1.1rem; }
-    .orders__row-item--total {
-      text-align: right; }
-    .orders__row-item--name {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between; }
-    .orders__row-item--date {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between; }
-  .orders__empty {
-    text-align: center;
-    margin-top: 2rem; }
-
-.product-detail {
-  max-width: 350px;
-  color: white;
-  display: flex;
-  margin: auto;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column; }
-  @media (max-width: 768px) {
-    .product-detail {
-      max-width: 100%;
-      width: calc(100% - 2rem);
-      padding: 0 1rem; } }
-  .product-detail__back-wrapper {
-    margin-right: auto;
-    color: white;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    grid-gap: 0.5rem; }
-    .product-detail__back-wrapper img {
-      width: 1.25rem;
-      height: 1.25rem; }
-  .product-detail__title {
-    text-align: center; }
-  .product-detail__description {
-    text-align: center; }
-  .product-detail__price {
-    text-align: center; }
-  .product-detail__back-text {
-    color: white; }
-  .product-detail__image {
-    width: 100%; }
-  .product-detail__article {
-    width: 100%; }
-
-.shop {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center; }
-
+    opacity: 1;
+  }
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+@keyframes efficient-gradient {
+  0% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%);
+  }
+  25% {
+    transform: translate(-37.5%);
+    -webkit-transform: translateX(-37.5%);
+  }
+  50% {
+    transform: translateX(-75%);
+    -webkit-transform: translateX(-75%);
+  }
+  75% {
+    transform: translateX(-37.5%);
+    -webkit-transform: translateX(-37.5%);
+  }
+  100% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%);
+  }
+}
+/*
+    Slide in animation for the burger menu on the right hand side
+*/
+@keyframes burger-menu-slide-in {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: calc(100% - 300px);
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(4deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-4deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
 .card-list {
   display: flex;
   flex-direction: row;
@@ -778,7 +138,8 @@ h1 {
   justify-content: center;
   margin: auto;
   padding: 1rem;
-  width: 100%; }
+  width: 100%;
+}
 
 .card {
   display: flex;
@@ -789,322 +150,350 @@ h1 {
   border-radius: 4px;
   position: relative;
   z-index: 1;
-  overflow: hidden; }
-  @media (max-width: 768px) {
-    .card {
-      width: 100%; } }
-  .card__img {
-    object-fit: cover;
-    height: 150px; }
-  .card:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 400%;
-    z-index: -1;
-    will-change: transform;
-    animation-name: efficient-gradient;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-delay: inherit;
-    -webkit-animation-name: efficient-gradient;
-    -webkit-animation-duration: 5s;
-    -webkit-animation-delay: inherit;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
-  .card__title {
-    text-align: center;
-    font-size: 1.5rem; }
-  .card__desc {
-    padding: 0.5rem 1rem;
-    margin-bottom: 0.25rem;
-    text-align: center; }
-  .card__price {
-    text-align: center;
-    font-size: 1.5rem;
-    padding-top: 0.5rem; }
-  .card__forms {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    margin: auto auto 1rem auto;
-    justify-content: space-evenly;
-    width: 100%; }
-  .card__form {
-    height: 100%;
-    display: flex; }
-  .card__buttons {
-    display: flex;
-    margin-top: auto;
-    margin-bottom: 1rem;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .card {
     width: 100%;
-    margin-top: auto;
-    justify-content: space-evenly;
-    align-items: center; }
-  .card__button {
-    width: max-content;
-    cursor: pointer;
-    transition: all 0.15s linear;
-    border: none;
-    border-radius: 4px;
-    padding: 0.4rem 1rem;
-    box-shadow: 0px 0px 10px 0px #6200ff;
-    font-size: 1rem;
-    filter: contrast(95%);
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    color: white;
-    margin: 0; }
-    .card__button:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 400%;
-      z-index: -1;
-      will-change: transform;
-      animation-name: efficient-gradient;
-      animation-duration: 5s;
-      animation-iteration-count: infinite;
-      animation-timing-function: linear;
-      animation-delay: inherit;
-      -webkit-animation-name: efficient-gradient;
-      -webkit-animation-duration: 5s;
-      -webkit-animation-delay: inherit;
-      -webkit-animation-iteration-count: infinite;
-      -webkit-animation-timing-function: linear;
-      background: linear-gradient(60deg, #6200ff, #5800e6, #721aff, #4e00cc); }
-    .card__button:hover, .card__button:focus {
-      filter: contrast(120%);
-      color: white; }
+  }
+}
+.card__img {
+  object-fit: cover;
+  height: 150px;
+}
+.card:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400%;
+  z-index: -1;
+  will-change: transform;
+  animation-name: efficient-gradient;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-delay: inherit;
+  -webkit-animation-name: efficient-gradient;
+  -webkit-animation-duration: 5s;
+  -webkit-animation-delay: inherit;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067);
+}
+.card__title {
+  text-align: center;
+  font-size: 1.5rem;
+}
+.card__desc {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
+.card__price {
+  text-align: center;
+  font-size: 1.5rem;
+  padding-top: 0.5rem;
+}
+.card__forms {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin: auto auto 1rem auto;
+  justify-content: space-evenly;
+  width: 100%;
+}
+.card__form {
+  height: 100%;
+  display: flex;
+}
+.card__buttons {
+  display: flex;
+  margin-top: auto;
+  margin-bottom: 1rem;
+  width: 100%;
+  margin-top: auto;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.card__button {
+  width: max-content;
+  cursor: pointer;
+  transition: all 0.15s linear;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  box-shadow: 0px 0px 10px 0px #6200ff;
+  font-size: 1rem;
+  filter: contrast(95%);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  color: white;
+  margin: 0;
+}
+.card__button:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400%;
+  z-index: -1;
+  will-change: transform;
+  animation-name: efficient-gradient;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-delay: inherit;
+  -webkit-animation-name: efficient-gradient;
+  -webkit-animation-duration: 5s;
+  -webkit-animation-delay: inherit;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  background: linear-gradient(60deg, #6200ff, #5800e6, #721aff, #4e00cc);
+}
+.card__button:hover, .card__button:focus {
+  filter: contrast(120%);
+  color: white;
+}
 
 @keyframes fade-in {
   0% {
-    opacity: 0; }
+    opacity: 0;
+  }
   100% {
-    opacity: 1; } }
+    opacity: 1;
+  }
+}
+html {
+  height: 100%;
+  background: rgba(30, 32, 42, 0.97);
+}
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 0%; }
-  50% {
-    background-position: 100% 100%; }
-  100% {
-    background-position: 0% 0%; } }
+body {
+  margin: 0px;
+  margin-top: 82px;
+  animation: fade-in 0.2s linear;
+  font-family: "Open Sans";
+}
+@media (max-width: 768px) {
+  body {
+    margin-top: 201px;
+  }
+}
 
-@keyframes efficient-gradient {
-  0% {
-    transform: translateX(0%);
-    -webkit-transform: translateX(0%); }
-  25% {
-    transform: translate(-37.5%);
-    -webkit-transform: translateX(-37.5%); }
-  50% {
-    transform: translateX(-75%);
-    -webkit-transform: translateX(-75%); }
-  75% {
-    transform: translateX(-37.5%);
-    -webkit-transform: translateX(-37.5%); }
-  100% {
-    transform: translateX(0%);
-    -webkit-transform: translateX(0%); } }
+nav {
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.9);
+  transition: all 0.3s linear;
+  font-size: 1.25rem;
+}
+a:hover, a:focus {
+  color: #6200ff;
+}
+
+p {
+  margin: 0;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.page-title {
+  margin: 0;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  height: 50px;
+  width: 100%;
+  box-shadow: 0px 0px 15px 0px #dbc441;
+  display: flex;
+  align-items: center;
+  background: #dbc441;
+  z-index: 2;
+}
+@media (max-width: 768px) {
+  .header {
+    height: 169px;
+  }
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  margin: auto;
+  padding: 0;
+}
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column;
+  }
+}
+.menu__item {
+  width: 20%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .menu__item {
+    width: 100%;
+    border-bottom: 1px solid black;
+  }
+}
+
+.content {
+  padding: 0rem;
+  color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.content__label {
+  font-size: 1.5rem;
+}
+.content__form {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 1rem;
+  margin-top: 1rem;
+}
+.content__input {
+  box-shadow: 0px 0px 5px 0px #dbc441;
+  border: 1px solid #dbc441;
+  border-radius: 3px;
+  padding: 0.25rem;
+}
+.content__button {
+  box-shadow: 0px 0px 5px 0px #dbc441;
+  background: #dbc441;
+  border: 1px solid #dbc441;
+  border-radius: 3px;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s linear;
+  filter: contrast(95%);
+}
+.content__button:hover, .content__button:focus {
+  filter: contrast(120%);
+}
+
+/* Scroll bar */
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(30, 32, 42, 0.97);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #6200ff;
+}
+
+/* Corner */
+::-webkit-scrollbar-corner {
+  background: rgba(30, 32, 42, 0.97);
+}
 
 /*
-    Slide in animation for the burger menu on the right hand side
+@import "../sass/partials/animations";
+@import "../sass/partials/branding";
+@import "../sass/partials/fonts";
+@import "../sass/partials/mixins";
+@import "../sass/partials/responsive"; */
+/*
+// Pages
+@import "../sass/pages/Shop.scss"; 
+@import "../sass/pages/Cart.scss";
+@import "../sass/pages/AddProduct.scss";
+@import "../sass/pages/Orders.scss";
+@import "../sass/pages/ProductDetail.scss"; 
 */
-@keyframes burger-menu-slide-in {
-  0% {
-    left: 100%; }
-  100% {
-    left: calc(100% - 300px); } }
+.shop {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
 
-@keyframes pulse {
-  0% {
-    transform: scale(1); }
-  50% {
-    transform: scale(1.2); }
-  100% {
-    transform: scale(1); } }
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg); }
-  100% {
-    transform: rotate(360deg); } }
-
-@keyframes shake {
-  0% {
-    transform: rotate(0deg); }
-  25% {
-    transform: rotate(4deg); }
-  50% {
-    transform: rotate(0deg); }
-  75% {
-    transform: rotate(-4deg); }
-  100% {
-    transform: rotate(0deg); } }
-
-.wrapper {
+.add-product {
+  display: flex;
   height: 100%;
   width: 100%;
-  position: absolute; }
-  .wrapper h1 {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    font-family: sans-serif;
-    letter-spacing: 1px;
-    word-spacing: 2px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: 888;
-    text-transform: uppercase; }
-  .wrapper div {
-    height: 60px;
-    width: 60px;
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    border-radius: 50px;
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    animation: 4s linear infinite; }
-
-div .dot {
-  height: 10px;
-  width: 10px;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.5);
-  position: absolute;
-  top: 20%;
-  right: 20%; }
-
-.wrapper div:nth-child(1) {
-  top: 20%;
-  left: 20%;
-  animation: animate 8s linear infinite; }
-
-.wrapper div:nth-child(2) {
-  top: 60%;
-  left: 80%;
-  animation: animate 10s linear infinite; }
-
-.wrapper div:nth-child(3) {
-  top: 40%;
-  left: 40%;
-  animation: animate 3s linear infinite; }
-
-.wrapper div:nth-child(4) {
-  top: 66%;
-  left: 30%;
-  animation: animate 7s linear infinite; }
-
-.wrapper div:nth-child(5) {
-  top: 90%;
-  left: 10%;
-  animation: animate 9s linear infinite; }
-
-.wrapper div:nth-child(6) {
-  top: 30%;
-  left: 60%;
-  animation: animate 5s linear infinite; }
-
-.wrapper div:nth-child(7) {
-  top: 70%;
-  left: 20%;
-  animation: animate 8s linear infinite; }
-
-.wrapper div:nth-child(8) {
-  top: 75%;
-  left: 60%;
-  animation: animate 10s linear infinite; }
-
-.wrapper div:nth-child(9) {
-  top: 50%;
-  left: 50%;
-  animation: animate 6s linear infinite; }
-
-.wrapper div:nth-child(10) {
-  top: 45%;
-  left: 20%;
-  animation: animate 10s linear infinite; }
-
-.wrapper div:nth-child(11) {
-  top: 10%;
-  left: 90%;
-  animation: animate 9s linear infinite; }
-
-.wrapper div:nth-child(12) {
-  top: 20%;
-  left: 70%;
-  animation: animate 7s linear infinite; }
-
-.wrapper div:nth-child(13) {
-  top: 20%;
-  left: 20%;
-  animation: animate 8s linear infinite; }
-
-.wrapper div:nth-child(14) {
-  top: 60%;
-  left: 5%;
-  animation: animate 6s linear infinite; }
-
-.wrapper div:nth-child(15) {
-  top: 90%;
-  left: 80%;
-  animation: animate 9s linear infinite; }
-
-@keyframes animate {
-  0% {
-    transform: scale(0) translateY(0) rotate(70deg); }
-  100% {
-    transform: scale(1.3) translateY(-100px) rotate(360deg); } }
-
-.button {
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-  padding: 0.25rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  animation: fade-in 0.3s linear;
+}
+.add-product__page-title {
+  text-align: center;
+}
+.add-product__form {
+  max-width: 350px;
+  width: 100%;
+  padding: 1rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 1rem;
+}
+.add-product__label {
+  color: white;
+  font-size: 1.1rem;
+}
+.add-product__field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  grid-gap: 0.25rem;
+}
+.add-product__input {
   border-radius: 4px;
-  box-shadow: 0px 0px 10px 0px #dbc441; }
-  .button--yellow:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 400%;
-    z-index: -1;
-    will-change: transform;
-    animation-name: efficient-gradient;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-delay: inherit;
-    -webkit-animation-name: efficient-gradient;
-    -webkit-animation-duration: 5s;
-    -webkit-animation-delay: inherit;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    background: linear-gradient(60deg, #dbc441, #c5b03b, #dfca54, #e2d067); }
-
-/* 
-    Background gradient effect
-    This hover effect creates an efficient and smooth gradient animation
-    It is currently optimized for modern browsers by avoiding repainting
-    It also takes advantage of the GPU as much as possible
-    To use this, pass through your linear gradient and set the z-index of the parent to at least 1
-    You will also need to pass through {overflow:hidden} and {position:relative} so the gradient doesn't cover the screen
-    If you want to delay this animation, pass it to the parent using an inline style
-    This can be great if you're rendering a list of cards and want to delay each animation
-*/
-/* Responsive */
+  padding: 0.4rem 0.1rem;
+  font-size: 1.1rem;
+  border: none;
+}
+.add-product__button {
+  margin: 0.5rem auto auto auto;
+  font-size: 1rem;
+  box-shadow: 0px 0px 5px 0px #dbc441;
+  background: #dbc441;
+  border: 1px solid #dbc441;
+  border-radius: 3px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s linear;
+  filter: contrast(95%);
+}
+.add-product__button:hover, .add-product__button:focus {
+  filter: contrast(120%);
+}

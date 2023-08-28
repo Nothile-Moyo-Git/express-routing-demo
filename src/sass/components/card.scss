@@ -1,3 +1,8 @@
+@use "../sass/partials/branding" as branding;
+@use "../sass/partials/mixins" as mixins;
+@use "../sass/partials/responsive" as responsive;
+@use "../sass/partials/animations" as animations;
+
 .card-list{
     display: flex;
     flex-direction: row;
@@ -15,13 +20,13 @@
     flex-direction: column;
     max-width: 300px;
     width: 33%;
-    box-shadow: $box_shadow_yellow;
+    box-shadow: branding.$box_shadow_yellow;
     border-radius: 4px;
     position: relative;
     z-index: 1;
     overflow: hidden;
 
-    @include breakpoint(tablet){
+    @include responsive.breakpoint(tablet){
         width: 100%;
     }
 
@@ -30,8 +35,8 @@
         height: 150px;
     }
 
-    @include backgroundGradientEffect(){
-        background: $gradient_color_one;
+    @include mixins.backgroundGradientEffect(){
+        background: branding.$gradient_color_one;
     }
 
     &__title{
@@ -78,11 +83,11 @@
     &__button{
         width: max-content;
         cursor: pointer;
-        transition: $standard_transition;
+        transition: animations.$standard_transition;
         border: none;
         border-radius: 4px;
         padding: 0.4rem 1rem;
-        box-shadow: $box_shadow_purple;
+        box-shadow: branding.$box_shadow_purple;
         font-size: 1rem;
         filter: contrast(95%);
         position: relative;
@@ -91,11 +96,11 @@
         color: white;
         margin: 0;
 
-        @include backgroundGradientEffect(){
-            background: $gradient_color_two;
+        @include mixins.backgroundGradientEffect(){
+            background: branding.$gradient_color_two;
         }
 
-        @include state(){
+        @include mixins.state(){
             filter: contrast(120%);
             color: white;
         }

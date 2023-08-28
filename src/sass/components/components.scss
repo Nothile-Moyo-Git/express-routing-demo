@@ -1,0 +1,17 @@
+@use "../sass/partials/branding" as branding;
+@use "../sass/partials/mixins" as mixins;
+
+.button{
+    overflow : hidden;
+    position : relative;
+    z-index : 1;
+    padding : 0.25rem 0.75rem;
+    border-radius: 4px;
+    box-shadow: branding.$box_shadow_yellow;
+
+    &--yellow{
+        @include mixins.backgroundGradientEffect(){
+            background : branding.$gradient_color_one;
+        }
+    }
+}

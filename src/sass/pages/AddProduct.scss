@@ -1,3 +1,6 @@
+@use "../sass/partials/branding" as branding;
+@use "../sass/partials/mixins" as mixins;
+
 .add-product{
     display: flex;
     height: 100%;
@@ -43,16 +46,16 @@
     &__button{
         margin: 0.5rem auto auto auto;
         font-size: 1rem;
-        box-shadow: 0px 0px 5px 0px $brand_color_one;
-        background: $brand_color_one;
-        border: 1px solid $brand_color_one;
+        box-shadow: 0px 0px 5px 0px branding.$brand_color_one;
+        background: branding.$brand_color_one;
+        border: 1px solid branding.$brand_color_one;
         border-radius: 3px;
         padding: 0.3rem 0.75rem;
         cursor: pointer;
         transition: all 0.3s linear;
         filter: contrast(95%);
 
-        @include state(){
+        @include mixins.state(){
             filter: contrast(120%);
         }
     }

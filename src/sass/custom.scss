@@ -1,178 +1,38 @@
-// Import the google font
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+// Import our components, we're now using @use instead of import
+// Lib sass and node-sass have been deprecated. So the library sass must be used for this
+// In order to install it, run npm install sass --save-dev
+// You must also make sure that you're not running the gulp-concat package as that will spoil your imports
+// Without gulp-concat, you can use @use on multiple files
+// I will be importing the scss files below
+
+// Reusable components
+@use "../sass/components/components";
+@use "../sass/components/card";
+
+// Globals
+@use "../sass/globals/globals.scss";
 
 // Import the scss files
+/*
 @import "../sass/partials/animations";
 @import "../sass/partials/branding";
 @import "../sass/partials/fonts";
 @import "../sass/partials/mixins";
-@import "../sass/partials/responsive";
-@import "../sass/partials/components";
+@import "../sass/partials/responsive"; */
 
+/*
 // Pages
 @import "../sass/pages/Shop.scss"; 
 @import "../sass/pages/Cart.scss";
 @import "../sass/pages/AddProduct.scss";
 @import "../sass/pages/Orders.scss";
-@import "../sass/pages/ProductDetail.scss";
+@import "../sass/pages/ProductDetail.scss"; 
+*/
 
-@keyframes fade-in{ 
-    0%{ opacity: 0; } 
-    100%{ opacity: 1; } 
-}
+@use "../sass/pages/Shop.scss";
+@use "../sass/pages/AddProduct.scss";
 
-html{
-    height: 100%;
-    background: $backdrop_color_one;
-}
-
-body{ 
-    margin: 0px;
-    margin-top: 82px;
-    animation: fade-in 0.2s linear;
-    font-family: "Open Sans";
-
-    @include breakpoint(tablet){
-        margin-top: 201px;
-    }
-}
-
-nav{    
-    width: 100%;    
-}
-
-ul{ 
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}  
-
-a{ 
-    text-decoration: none;
-    color:rgba(0, 0, 0, 0.9); 
-    transition: all 0.3s linear;
-    font-size: 1.25rem;
-
-    @include state(){
-        color: $brand_color_two;  
-    }
-}
-
-p{
-    margin: 0;
-}
-
-h1{
-    margin-bottom: 1rem;
-    color: white;
-}
-
-.page-title{ 
-    margin: 0;
-}
-
-.header{
-    position: fixed;
-    top: 0;
-    height: 50px;
-    width: 100%;
-    box-shadow: 0px 0px 15px 0px $brand_color_one;
-    display: flex;
-    align-items: center;
-    background: $brand_color_one;
-    z-index: 2;
-
-    @include breakpoint(tablet){
-        height: 169px;
-    }
-}
-
-.menu{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    width: 100%;
-    margin: auto;
-    padding: 0;
-
-    @include breakpoint(tablet){
-        flex-direction: column;
-    }
-
-    &__item{
-        width: 20%;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        @include breakpoint(tablet){
-            width: 100%;
-            border-bottom: 1px solid black;
-        }
-    }
-}
-
-.content{
-    padding: 0rem;
-    color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+// Import the google font
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'); 
 
 
-    &__label{
-        font-size: 1.5rem;
-    }
-
-    &__form{
-        display: flex;
-        flex-direction: column;
-        grid-gap: 1rem;
-        margin-top: 1rem;
-    }
-
-    &__input{
-        box-shadow: 0px 0px 5px 0px $brand_color_one;
-        border: 1px solid $brand_color_one;
-        border-radius: 3px;
-        padding: 0.25rem; 
-    }
-
-    &__button{
-        box-shadow: 0px 0px 5px 0px $brand_color_one;
-        background: $brand_color_one;
-        border: 1px solid $brand_color_one;
-        border-radius: 3px;
-        padding: 0.3rem 0.5rem;
-        cursor: pointer;
-        transition: all 0.3s linear;
-        filter: contrast(95%);
-
-        @include state(){
-            filter: contrast(120%);
-        }
-    }
-}
-
-/* Scroll bar */
-/* width */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: $backdrop_color_one;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: $brand_color_two;
-  }
-  /* Corner */
-  ::-webkit-scrollbar-corner{
-    background: $backdrop_color_one;
-  }
