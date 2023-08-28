@@ -48,7 +48,7 @@ interface RequestWithUser extends Request{
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
 
-    response.render("shop/index", { pageTitle : "Shop" });
+    response.render("index", { pageTitle : "Shop" });
 };
 
 // Get products controller
