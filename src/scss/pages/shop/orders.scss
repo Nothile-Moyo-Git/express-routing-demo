@@ -1,3 +1,6 @@
+@use "../../../scss/partials/branding" as branding;
+@use "../../../scss/partials/mixins" as mixins;
+
 .orders{
     width: calc(100% - 2rem);
     margin-left: 1rem;
@@ -28,16 +31,16 @@
         border-radius: 2px;
         transition: all 0.15s linear;
 
-        @include state(){
+        @include mixins.state(){
             transform: scale(1.025);
         }
 
         &:nth-child(odd){
             color: black;
-            box-shadow: $box_shadow_yellow;
+            box-shadow: branding.$box_shadow_yellow;
 
-            @include backgroundGradientEffect{
-                background: $gradient_color_one;
+            @include mixins.backgroundGradientEffect{
+                background: branding.$gradient_color_one;
             }
         }
     }

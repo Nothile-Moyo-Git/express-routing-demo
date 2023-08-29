@@ -1,7 +1,7 @@
-@use "../sass/partials/branding" as branding;
-@use "../sass/partials/mixins" as mixins;
-@use "../sass/partials/responsive" as responsive;
-@use "../sass/partials/animations" as animations;
+@use "../scss/partials/branding" as branding;
+@use "../scss/partials/mixins" as mixins;
+@use "../scss/partials/responsive" as responsive;
+@use "../scss/partials/animations" as animations;
 
 .card-list{
     display: flex;

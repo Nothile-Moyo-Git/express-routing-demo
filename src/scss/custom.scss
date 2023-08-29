@@ -1,0 +1,29 @@
+// Import our components, we're now using @use instead of import
+// Lib sass and node-sass have been deprecated. So the library sass must be used for this
+// In order to install it, run npm install sass --save-dev
+// You must also make sure that you're not running the gulp-concat package as that will spoil your imports
+// Without gulp-concat, you can use @use on multiple files
+// I will be importing the scss files below
+
+// Reusable components
+@use "../scss/components/button";
+@use "../scss/components/card";
+
+// Globals
+@use "../scss/globals/globals.scss";
+
+// Forms
+@use "../scss/forms/products/add-product";
+@use "../scss/forms/products/edit-product"; 
+
+// Pages
+@use "../scss/pages/products/product-detail";
+@use "../scss/pages/shop/cart";
+@use "../scss/pages/shop/checkout";
+@use "../scss/pages/shop/orders";
+@use "../scss/pages/shop/shop";
+
+// Import the google font
+@use "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"; 
+
+

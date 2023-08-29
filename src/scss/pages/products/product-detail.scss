@@ -1,3 +1,5 @@
+@use "../../../scss/partials/responsive" as responsive;
+
 .product-detail{
 
     max-width: 350px;
@@ -9,7 +11,7 @@
     justify-content: center;
     flex-direction : column;
 
-    @include breakpoint(tablet){
+    @include responsive.breakpoint(tablet){
         max-width: 100%;
         width: calc(100% - 2rem);
         padding: 0 1rem;

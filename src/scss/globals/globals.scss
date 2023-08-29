@@ -1,6 +1,6 @@
-@use "../sass/partials/branding" as branding;
-@use "../sass/partials/mixins" as mixins;
-@use "../sass/partials/responsive" as responsive;
+@use "../scss/partials/branding" as branding;
+@use "../scss/partials/mixins" as mixins;
+@use "../scss/partials/responsive" as responsive;
 
 @keyframes fade-in{ 
     0%{ opacity: 0; } 
