@@ -1,0 +1,22 @@
+@use "../scss/partials/branding" as branding;
+
+/* Scroll bar */
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: branding.$backdrop_color_one;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: branding.$brand_color_two;
+  }
+  /* Corner */
+  ::-webkit-scrollbar-corner{
+    background: branding.$backdrop_color_one;
+  }

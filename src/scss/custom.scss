@@ -10,7 +10,10 @@
 @use "../scss/components/card";
 
 // Globals
-@use "../scss/globals/globals.scss";
+@use "../scss/globals/globals";
+@use "../scss/globals/menu";
+@use "../scss/globals/page-layout";
+@use "../scss/globals/scrollbars";
 
 // Forms
 @use "../scss/forms/products/add-product";
@@ -22,8 +25,5 @@
 @use "../scss/pages/shop/checkout";
 @use "../scss/pages/shop/orders";
 @use "../scss/pages/shop/shop";
-
-// Import the google font
-@use "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"; 
 
 
