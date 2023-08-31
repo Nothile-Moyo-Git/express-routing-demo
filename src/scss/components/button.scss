@@ -7,7 +7,10 @@
     z-index : 1;
     padding : 0.25rem 0.75rem;
     border-radius: 4px;
+    border: 0;
     box-shadow: branding.$box_shadow_yellow;
+    width: max-content;
+    margin: auto;
 
     &--yellow{
         @include mixins.backgroundGradientEffect(){

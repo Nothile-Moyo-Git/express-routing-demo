@@ -16,9 +16,6 @@ interface RequestWithUser extends Request{
 // Get login page controller
 const getLoginPageController = (request : RequestWithUser, response : Response, next : NextFunction) => {
     
-    console.clear();
-    console.log("Test");
-
     // Render the login page here
     // Note: Don't use a forward slash when defining URL's here
     response.render("auth/login", { pageTitle : "Login" });
