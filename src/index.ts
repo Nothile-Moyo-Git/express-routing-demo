@@ -15,6 +15,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
+import authRoutes from "./routes/auth";
 import User from "./models/user";
 import errorRoutes from "./routes/error";
 import { createMongooseConnection } from "./data/connection";
@@ -50,8 +51,6 @@ app.use( express.static( path.join( __dirname, "/images" ) ));
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
 // Register a templating engine even case it's not default, we do this with handlebars
-// By using engine here, it allows express-handlebars to use its default layout which must be named "main.handlebars"
-// app.engine('handlebars', engine());
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 
@@ -95,7 +94,11 @@ app.use( '/admin', adminRoutes );
 // Use our shop router which handles the output for the home page
 app.use( shopRoutes );
 
+// Use the auth router which handles the login page
+app.use( authRoutes );
+
 // Use the error page router
+// Place the error router last as it will override all of your other routes after it
 app.use( errorRoutes );
 
 // Start our server async

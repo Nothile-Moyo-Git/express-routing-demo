@@ -2,7 +2,7 @@
 // This file is for the product routes
 import express from "express";
 import { getAdminEditProduct } from "../controllers/products";
-import { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct, getLoginPageController } from "../controllers/admin";
+import { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct } from "../controllers/admin";
 
 // Create our express router
 const adminRoutes = express.Router();
@@ -24,8 +24,5 @@ adminRoutes.post("/update-product/:id", updateProduct);
 
 // Delete the item from the products json array based on the id
 adminRoutes.post("/delete-product/:id", deleteProduct);
-
-// Load the login page
-adminRoutes.get("/login", getLoginPageController);
 
 export default adminRoutes;

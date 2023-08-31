@@ -102,12 +102,4 @@ const deleteProduct = async (request : Request, response : Response, next : Next
     response.redirect("/admin/products");
 };
 
-// Render the login page
-const getLoginPageController = async (request : RequestWithUser, response : Response, next : NextFunction) => {
-
-
-
-    response.render("admin/login");
-};
-
-export { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct, getLoginPageController }; 
+export { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct }; 
