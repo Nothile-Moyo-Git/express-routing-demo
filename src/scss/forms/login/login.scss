@@ -21,7 +21,6 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        font-size: 1.1rem;
     }
 
     &__label{
@@ -34,8 +33,9 @@
         border: 0;
         background-color: white;
         box-shadow: branding.$button_shadow;
-        font-size: 1.1rem;
+//         font-size: 1.1rem;
         transition: animations.$standard_transition;
+        font-weight: bold;
 
         &:-webkit-autofill, &:-webkit-autofill::first-letter{
             font-size: 1rem;
