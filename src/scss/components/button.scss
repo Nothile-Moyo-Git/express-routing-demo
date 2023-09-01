@@ -1,20 +1,30 @@
 @use "../scss/partials/branding" as branding;
 @use "../scss/partials/mixins" as mixins;
+@use "../scss/partials/animations" as animations;
 
 .button{
     overflow : hidden;
     position : relative;
     z-index : 1;
-    padding : 0.25rem 0.75rem;
+    padding : 0.35rem 1rem;
     border-radius: 4px;
     border: 0;
     box-shadow: branding.$box_shadow_yellow;
     width: max-content;
     margin: auto;
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    transition: animations.$standard_transition;
 
     &--yellow{
         @include mixins.backgroundGradientEffect(){
             background : branding.$gradient_color_one;
         }
+    }
+
+    @include mixins.state(){
+        color: branding.$brand_color_two;
+        cursor: pointer;
+        filter: contrast(150%);
     }
 }

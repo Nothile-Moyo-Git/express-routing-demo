@@ -6,11 +6,15 @@
 import express from "express";
 
 // Get the controller so we can handle all of our requests
-import { getLoginPageController } from "../controllers/auth";
+import { getLoginPageController, postLoginAttemptController } from "../controllers/auth";
 
 // Define the object for our router which we pass through to the index file
 const authRoutes = express.Router();
 
+// Render the login page form
 authRoutes.get("/login", getLoginPageController);
+
+// Submit the login page
+authRoutes.post("/login", postLoginAttemptController);
 
 export default authRoutes;

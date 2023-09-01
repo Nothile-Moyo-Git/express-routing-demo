@@ -60,7 +60,13 @@ const getProducts = async (request : RequestWithUser, response : Response, next 
     .populate("userId", "name");
 
     // Render the products view
-    response.render("shop/product-list", { prods : products, pageTitle: "My Products", path: "/", hasProducts : products.length > 0 });
+    response.render("shop/product-list", { 
+        prods : products, 
+        pageTitle: "My Products", 
+        path: "/", 
+        hasProducts : products.length > 0,
+        isAuthenticated : true
+    });
 };
 
 // Get the orders
