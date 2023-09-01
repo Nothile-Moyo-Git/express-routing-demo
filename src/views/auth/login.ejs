@@ -4,9 +4,10 @@
         <%- include('../includes/menu'); %>
 
         <main class="login">
+
             <h1><%= pageTitle %></h1>
 
-            <form class="login__form" method="POST" action="/login" autocomplete="off">
+            <form class="login__form" method="POST" action="/login">
 
                 <div class="login__field">
                     <label for="emailInput" id="emailLabel" class="login__label">Email Address*</label>
@@ -16,7 +17,8 @@
                         name="emailInput"
                         class="login__input"
                         aria-labelledby="emailLabel"
-                        placeholder=""
+                        placeholder="Please enter your email address"
+                        autocomplete="on"
                         required
                     />
                 </div>
@@ -29,7 +31,8 @@
                         name="passwordInput"
                         class="login__input"
                         aria-labelledby="passwordLabel"
-                        placeholder=""
+                        placeholder="Please enter your password"
+                        autocomplete="on"
                         required
                     />
                 </div>
@@ -38,15 +41,6 @@
 
             </form>
 
-            <script>
-
-                // Execute this code after the page loads in order to set the font size for the inputs
-                // This is an issue exclusive to Google Chrome, initial font size on autocomplete is not executed
-                const emailAddressInput = document.getElementById("emailLabel");
-                
-                console.clear();
-                console.log(emailAddressInput);
-            </script>
         </main>
 
     </body>

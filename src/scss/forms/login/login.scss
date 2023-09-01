@@ -33,16 +33,7 @@
         border: 0;
         background-color: white;
         box-shadow: branding.$button_shadow;
-//         font-size: 1.1rem;
         transition: animations.$standard_transition;
-        font-weight: bold;
-
-        &:-webkit-autofill, &:-webkit-autofill::first-letter{
-            font-size: 1rem;
-        }
-
-        &:-webkit-autofill:hover, &:-webkit-autofill:focus{
-            font-size: 1rem;
-        }
+        font-size: 1rem;
     }
 }
