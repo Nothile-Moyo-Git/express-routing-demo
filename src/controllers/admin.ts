@@ -10,19 +10,32 @@ interface UserInterface {
     email : string
 }
 
-interface RequestWithUser extends Request{
-    User : UserInterface
+interface ExtendedRequest extends Request{
+    User : UserInterface,
+    body : {
+        title : string,
+        image : string,
+        price : number,
+        description : string
+    }
+    isAuthenticated : boolean
 }
 
 // Add product controller
-const getAddProduct = (request : RequestWithUser, response : Response, next : NextFunction) => {
+const getAddProduct = (request : Request, response : Response, next : NextFunction) => {
+
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
 
     // Send our HTML file to the browser
-    response.render("admin/add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
+    response.render("admin/add-product", { pageTitle: "Add Product", path: "/admin/add-product", isAuthenticated : isAuthenticated });
 };
 
 // Post add product controller
-const postAddProduct = async(request : RequestWithUser, response : Response, next : NextFunction) => {
+const postAddProduct = async(request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Fields
     const title = request.body.title;
@@ -47,7 +60,13 @@ const postAddProduct = async(request : RequestWithUser, response : Response, nex
 };
 
 // Get admin products controller
-const getProducts = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find({userId : new ObjectId(request.User._id)})
@@ -55,11 +74,16 @@ const getProducts = async (request : RequestWithUser, response : Response, next 
     .populate("userId", "name");
 
     // Render the view of the page
-    response.render("admin/products", { prods : products , pageTitle : "Admin Products" , hasProducts : products.length > 0 } );
+    response.render("admin/products", { 
+        prods : products, 
+        pageTitle : "Admin Products", 
+        hasProducts : products.length > 0,
+        isAuthenticated : isAuthenticated
+    });
 };
 
 // Update product controller
-const updateProduct = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const updateProduct = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Get the fields in order to update our product
     const title = request.body.title;

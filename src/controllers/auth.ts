@@ -21,9 +21,6 @@ interface ExtendedRequest extends Request{
 // Get login page controller
 const getLoginPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
     
-    // Get the isAuthenticated cookie if it's already set
-    console.clear();
-
     // Remove the equals sign from the isAuthenticated cookie
     const cookie = request.get("Cookie").trim().split("=")[1];
 

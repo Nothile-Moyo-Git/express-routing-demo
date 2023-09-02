@@ -11,9 +11,14 @@ import { Request, Response, NextFunction } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 
-
 // Get admin edit product controller
 const getAdminEditProduct = async (request : Request, response : Response, next : NextFunction) => {
+
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -35,7 +40,8 @@ const getAdminEditProduct = async (request : Request, response : Response, next 
             pageTitle : "Edit Products", 
             id : productId, 
             productInformation : singleProduct,
-            hasProducts : hasProduct
+            hasProducts : hasProduct,
+            isAuthenticated : isAuthenticated
         }
     );
 };

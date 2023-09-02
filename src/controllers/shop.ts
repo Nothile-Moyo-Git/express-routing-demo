@@ -40,19 +40,37 @@ interface UserInterface {
     }
 }
 
-interface RequestWithUser extends Request{
-    User : UserInterface
+interface ExtendedRequest extends Request{
+    User : UserInterface,
+    body : {
+        productId : ObjectId
+    }
+    isAuthenticated : boolean;
 }
-
 
 // Get the shop index page
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
 
-    response.render("index", { pageTitle : "Shop" });
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
+
+    response.render("index", { 
+        pageTitle : "Shop",
+        isAuthenticated : isAuthenticated 
+    });
 };
 
 // Get products controller
-const getProducts = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find({userId : new ObjectId(request.User._id)})
@@ -65,29 +83,55 @@ const getProducts = async (request : RequestWithUser, response : Response, next 
         pageTitle: "My Products", 
         path: "/", 
         hasProducts : products.length > 0,
-        isAuthenticated : true
+        isAuthenticated : isAuthenticated
     });
 };
 
 // Get the orders
-const getOrders = async ( request : RequestWithUser, response : Response, next : NextFunction ) => {
+const getOrders = async ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
+    
     // Query the orders in the backend
     const orders = await Order.find({"user._id" : request.User._id})
     .select("totalPrice orderItems createdAt user");
 
     // Render the view page
-    response.render("shop/orders", { pageTitle : "Orders", orders : orders, hasOrders : orders.length > 0 });
+    response.render("shop/orders", { 
+        pageTitle : "Orders", 
+        orders : orders, 
+        hasOrders : orders.length > 0,
+        isAuthenticated : isAuthenticated
+    });
 };
 
 // Get the checkout page from the cart
-const getCheckout = ( request : Request, response : Response, next : NextFunction ) => {
+const getCheckout = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    response.render("shop/checkout", { pageTitle : "Checkout" });
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
+
+    response.render("shop/checkout", { 
+        pageTitle : "Checkout",
+        isAuthenticated : isAuthenticated
+    });
 };
 
 // Get product detail controller
 const getProductDetails = async ( request : Request, response : Response, next : NextFunction ) => {
+
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -103,11 +147,22 @@ const getProductDetails = async ( request : Request, response : Response, next :
     const hasProduct = singleProduct !== null;
 
     // Render the admin products ejs template, make sure it's for the first object we get since Mongoose returns an array of BSON objects
-    response.render("shop/product-detail", { hasProduct : hasProduct, productDetails : singleProduct, pageTitle : "Product details" });
+    response.render("shop/product-detail", { 
+        hasProduct : hasProduct, 
+        productDetails : singleProduct,
+        pageTitle : "Product details",
+        isAuthenticated : isAuthenticated
+    });
 };
 
 // Get the cart and all the products inside of it
 const getCart = async (request : any, response : Response, next : NextFunction) => {
+
+    // Remove the equals sign from the isAuthenticated cookie
+    const cookie = request.get("Cookie").trim().split("=")[1];
+
+    // Convert the string to a boolean
+    const isAuthenticated = (cookie === "true");
 
     // Instantiate the User that we have
     const userInstance = new User(request.User);
@@ -120,13 +175,14 @@ const getCart = async (request : any, response : Response, next : NextFunction) 
         hasProducts : hasProducts, 
         products : userInstance.cart.items, 
         pageTitle : "Your Cart",
-        totalPrice : request.User.cart.totalPrice
+        totalPrice : request.User.cart.totalPrice,
+        isAuthenticated : isAuthenticated
     });
 };
 
 // Add a new product to the cart using a post request
 // Acts as an add product handler
-const postCart = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const postCart = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Get product information based on the product Id
     const productId = request.body.productId;
@@ -149,7 +205,7 @@ const postCart = async (request : RequestWithUser, response : Response, next : N
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = (request : RequestWithUser, response : Response, next : NextFunction) => {
+const postCartDelete = (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
@@ -165,7 +221,7 @@ const postCartDelete = (request : RequestWithUser, response : Response, next : N
 };
 
 // Create an order in the SQL backend
-const postOrderCreate = async (request : RequestWithUser, response : Response, next : NextFunction) => {
+const postOrderCreate = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Create our order from the cart we pass through from the User singleton found in index.ts
     const orderInstance = new Order({
