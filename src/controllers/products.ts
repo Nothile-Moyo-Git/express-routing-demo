@@ -15,7 +15,7 @@ import { ObjectId } from 'mongodb';
 const getAdminEditProduct = async (request : Request, response : Response, next : NextFunction) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");

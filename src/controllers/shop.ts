@@ -52,7 +52,7 @@ interface ExtendedRequest extends Request{
 const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
@@ -67,7 +67,7 @@ const getIndex = ( request : Request, response : Response, next : NextFunction )
 const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
@@ -91,7 +91,7 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
 const getOrders = async ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
@@ -113,7 +113,7 @@ const getOrders = async ( request : ExtendedRequest, response : Response, next :
 const getCheckout = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
@@ -128,7 +128,7 @@ const getCheckout = ( request : ExtendedRequest, response : Response, next : Nex
 const getProductDetails = async ( request : Request, response : Response, next : NextFunction ) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
@@ -159,7 +159,7 @@ const getProductDetails = async ( request : Request, response : Response, next :
 const getCart = async (request : any, response : Response, next : NextFunction) => {
 
     // Remove the equals sign from the isAuthenticated cookie
-    const cookie = request.get("Cookie").trim().split("=")[1];
+    const cookie = String(request.get("Cookie")).trim().split("=")[1];
 
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
