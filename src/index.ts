@@ -21,6 +21,7 @@ import errorRoutes from "./routes/error";
 import { createMongooseConnection } from "./data/connection";
 import { Response, NextFunction } from 'express';
 import { ObjectId } from "mongodb";
+import session from "express-session";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -47,6 +48,18 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 
 // Serve our image files statically
 app.use( express.static( path.join( __dirname, "/images" ) ));
+
+// Create our session using express-mongoose
+app.use(
+    session({
+        secret : "Adeptus",
+        resave : false,
+        saveUninitialized : false,
+        cookie : {
+            maxAge : 604800000
+        }
+    })
+);
 
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
