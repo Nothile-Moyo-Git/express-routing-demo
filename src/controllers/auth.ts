@@ -1,6 +1,12 @@
 // import our express types for TypeScript use
 import { Request, Response, NextFunction } from 'express';
+import { Session, SessionData } from 'express-session';
 import { ObjectId } from 'mongodb';
+
+// Extending session data as opposed to declaration merging
+interface ExtendedSessionData extends SessionData {
+    test : boolean
+}
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -8,14 +14,15 @@ interface UserInterface {
     name : string,
     email : string
 }
-
 interface ExtendedRequest extends Request{
     User : UserInterface,
     body : {
         emailInput : string,
         passwordInput : string
-    }
-    isAuthenticated : boolean;
+
+    },
+    isAuthenticated : boolean,
+    session : Session & Partial<ExtendedSessionData>
 }
 
 // Get login page controller
@@ -27,6 +34,10 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
 
+    console.clear();
+    console.log("Request session");
+    console.log(request.session.test);
+
     // Render the login page here
     // Note: Don't use a forward slash when defining URL's here
     response.render("auth/login", { pageTitle : "Login", isAuthenticated : isAuthenticated });
@@ -36,17 +47,20 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
 const postLoginAttemptController = (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Get email address and password
-    const email = request.body.emailInput;
-    const password = request.body.passwordInput;
+    // const email = request.body.emailInput;
+    // const password = request.body.passwordInput;
 
     // Once the user is validated, we set isAuthenticated to true and pass it though
     // By extending our request, we can add it to every query
     request.isAuthenticated = true;
 
+    // Use express session page
+    request.session.test = true;
+
     // Set the cookie in our response as opposed to request
     response.setHeader("Set-Cookie", `isAuthenticated = ${request.isAuthenticated}`);
 
-    response.redirect("back");
+    response.redirect("products");
 };
 
 // Export the controllers
