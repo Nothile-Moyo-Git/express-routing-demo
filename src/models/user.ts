@@ -17,6 +17,7 @@
 // Imports
 import mongoose, { Model } from "mongoose";
 import { ObjectId } from "mongodb";
+import bcrypt from "bcrypt";
 
 // Product interface for the product we pass through to the add to cart method
 interface Product {
@@ -37,7 +38,8 @@ interface CartItem{
 }
 interface User {
     name : string,
-    email : string
+    email : string,
+    password : string,
     cart : {
         totalPrice : number,
         items : CartItem[]
@@ -48,7 +50,9 @@ interface User {
 interface UserMethods {
     addToCart : (product : Product) => void,
     deleteFromCart : (productId : string) => void,
-    emptyCart : () => void
+    emptyCart : () => void,
+    generateHash : (password : string) => string,
+    validatePassword : (password : string) => boolean
 }
 
 // Setting the user type so we can define methods
@@ -59,6 +63,7 @@ type UserModel = Model<User, {}, UserMethods>;
 const userSchema = new mongoose.Schema<User>({
     name : { type : String, required : [true, "Please enter a name"] },
     email : { type : String, required : [true, "Please enter an email address"] },
+    password : { type : String, required : [true, "Please enter a password"] },
     cart : {
         items : [{ 
             productId : mongoose.Schema.Types.ObjectId,
@@ -142,6 +147,21 @@ userSchema.method('emptyCart', function () {
 
     // Update the cart on the user instance
     this.cart = emptyCart;
+});
+
+// Create a hash sync for a new user
+userSchema.method('generateHash', function(password : string) {
+
+    // Return a hash string
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+});
+
+// Compare the passwords
+userSchema.method('validatePassword', function(password : string) {
+
+    // Return password validation check as a boolean
+    // As compare the hashes here based on updating the password to ensure security
+    return bcrypt.compareSync(password, this.password);
 });
 
 // Create our model for exporting

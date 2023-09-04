@@ -18,10 +18,13 @@ import shopRoutes from "./routes/shop";
 import authRoutes from "./routes/auth";
 import User from "./models/user";
 import errorRoutes from "./routes/error";
-import { createMongooseConnection } from "./data/connection";
+import { createMongooseConnection, sessionUrl } from "./data/connection";
 import { Response, NextFunction } from 'express';
 import { ObjectId } from "mongodb";
 import session from "express-session";
+import MongoStore from "connect-mongo";
+import { password } from "./data/connection";
+import bcrypt from "bcrypt";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -49,21 +52,32 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 // Serve our image files statically
 app.use( express.static( path.join( __dirname, "/images" ) ));
 
-// Create our session using express-mongoose
+// Here we create a session, but unlike before, we store it on the server side.
+// We instead store a secret key that's passed through to the backend
+// It cannot be guessed, but our session data is also usable whenever we run our applications since we don't store it in memory
+// The options also end sessions after 2 weeks, and check this and run the end innately in MongoDB
 app.use(
+
     session({
+        // Set our secret which is turned into a hashkey
         secret : "Adeptus",
         resave : false,
         saveUninitialized : false,
-        cookie : {
-            maxAge : 604800000
-        }
+        // Store on the server instead of memory
+        store : MongoStore.create({
+            mongoUrl : sessionUrl,
+            dbName : "shop",
+            // Note : set a collection name you're not already using, in this case, we use "sessions"
+            collectionName : "sessions",
+            autoRemove : "native",
+            autoRemoveInterval : 10
+        })     
     })
-);
+); 
 
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
-// Register a templating engine even case it's not default, we do this with handlebars
+// Register a templating engine even it's not the default, we do this with ejs
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 
@@ -78,6 +92,9 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     // If we have no users, let's create my user for the singleton that's passed through to the app
     if (userCount === 0) {
 
+        // Hash our password
+        const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+
         // Create my user
         const nothile = new User({
             name : "Nothile",
@@ -85,7 +102,8 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
             cart : {
                 items : [],
                 totalPrice : 0
-            }
+            },
+            password : hashedPassword
         });
 
         // Save my user to the database
@@ -101,10 +119,10 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
     next();
 });
 
-// Use our admin router which handles the product form and page
+// Use our admin router which handles the admin pages, which allow us to create, delete, or edit products
 app.use( '/admin', adminRoutes );
 
-// Use our shop router which handles the output for the home page
+// Use our shop router which handles the output for the home and product pages
 app.use( shopRoutes );
 
 // Use the auth router which handles the login page
