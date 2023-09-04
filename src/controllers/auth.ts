@@ -34,10 +34,6 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     // Convert the string to a boolean
     const isAuthenticated = (cookie === "true");
 
-    console.clear();
-    console.log("Request session");
-    console.log(request.session.test);
-
     // Render the login page here
     // Note: Don't use a forward slash when defining URL's here
     response.render("auth/login", { pageTitle : "Login", isAuthenticated : isAuthenticated });
@@ -54,11 +50,8 @@ const postLoginAttemptController = (request : ExtendedRequest, response : Respon
     // By extending our request, we can add it to every query
     request.isAuthenticated = true;
 
-    // Use express session page
-    request.session.test = true;
-
     // Set the cookie in our response as opposed to request
-    response.setHeader("Set-Cookie", `isAuthenticated = ${request.isAuthenticated}`);
+    response.setHeader("Set-Cookie", `isAuthenticated=${request.isAuthenticated}`);
 
     response.redirect("products");
 };
