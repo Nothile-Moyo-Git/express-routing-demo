@@ -5,11 +5,6 @@ import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import bcrypt from "bcrypt";
 
-// Extending session data as opposed to declaration merging
-interface ExtendedSessionData extends SessionData {
-    test : boolean
-}
-
 // Cart items interface
 interface CartItem {
     productId : ObjectId,
@@ -28,6 +23,20 @@ interface UserInterface {
         totalPrice : number,
         items : CartItem[]
     }
+}
+
+// Session user
+interface SessionUser {
+    _id : Object,
+    name : string,
+    email : string
+}
+
+// Extending session data as opposed to declaration merging
+interface ExtendedSessionData extends SessionData {
+    test : boolean,
+    isLoggedIn : boolean,
+    user : SessionUser
 }
 interface ExtendedRequest extends Request{
     User : UserInterface,
@@ -58,24 +67,44 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     const email = request.body.emailInput;
     const password = request.body.passwordInput;
 
+    // Get a list of users
     const users = await User.find({_id : new ObjectId(request.User._id)});
 
     // We define these variables here as we need to scope them correctly as we validate the user
-    let isPasswordValid : boolean, isEmailValid : boolean = false;
+    let isPasswordValid : boolean = false;
+    let isEmailValid : boolean = false; 
+    let currentUser : SessionUser | undefined = undefined;
 
     users.forEach((user : UserInterface) => {
 
         // Compare the submitted password to the hashed password
-        isPasswordValid = bcrypt.compareSync(password, user.password);
+        if (bcrypt.compareSync(password, user.password)) {
+            isPasswordValid = true;
+        }
 
         // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
-        isEmailValid = email.localeCompare(request.User.email, undefined, { sensitivity: 'base' }) === 0;
+        if (email.localeCompare(request.User.email, undefined, { sensitivity: 'base' }) === 0) {
+            isEmailValid = true;
+        }
+
+        if (isPasswordValid === true && isEmailValid === true) {
+            currentUser = {
+                _id : user._id,
+                name : user.name,
+                email : user.email
+            }
+        }
     });
 
-    // Use express session page
-    request.session.test = true;
+    // Set is logged in to true and pass the user id through as well to the session
+    if (isPasswordValid && isEmailValid) {
 
-    response.redirect('back');
+        request.session.user = currentUser;
+        request.session.isLoggedIn = true;
+        response.redirect("products");
+    } else {
+        response.redirect('back');
+    }
 };
 
 // Export the controllers
