@@ -2,12 +2,38 @@
 import { Request, Response, NextFunction } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
+import { Session, SessionData } from "express-session";
+
+// Cart items interface
+interface CartItem {
+    productId : ObjectId,
+    title : string,
+    quantity : number,
+    price : number
+}
+
+// Session user
+interface SessionUser {
+    _id : Object,
+    name : string,
+    email : string
+}
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
     _id : ObjectId,
     name : string,
     email : string
+    cart : {
+        totalPrice : number,
+        items : CartItem[]
+    }
+}
+
+// Extending session data as opposed to declaration merging
+interface ExtendedSessionData extends SessionData {
+    isLoggedIn : boolean,
+    user : SessionUser
 }
 
 interface ExtendedRequest extends Request{
@@ -18,20 +44,22 @@ interface ExtendedRequest extends Request{
         price : number,
         description : string
     }
-    isAuthenticated : boolean
+    isAuthenticated : boolean,
+    session : Session & Partial<ExtendedSessionData>
 }
 
 // Add product controller
-const getAddProduct = (request : Request, response : Response, next : NextFunction) => {
+const getAddProduct = (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
-
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     // Send our HTML file to the browser
-    response.render("admin/add-product", { pageTitle: "Add Product", path: "/admin/add-product", isAuthenticated : isAuthenticated });
+    response.render("admin/add-product", { 
+        pageTitle: "Add Product", 
+        path: "/admin/add-product", 
+        isAuthenticated : isLoggedIn === undefined ? false : true
+    });
 };
 
 // Post add product controller
@@ -62,11 +90,8 @@ const postAddProduct = async(request : ExtendedRequest, response : Response, nex
 // Get admin products controller
 const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
-
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find({userId : new ObjectId(request.User._id)})
@@ -78,7 +103,7 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
         prods : products, 
         pageTitle : "Admin Products", 
         hasProducts : products.length > 0,
-        isAuthenticated : isAuthenticated
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 

@@ -20,6 +20,7 @@ import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
+import { SessionData, Session } from 'express-session';
 
 // Cart items interface
 interface CartItem {
@@ -27,6 +28,13 @@ interface CartItem {
     title : string,
     quantity : number,
     price : number
+}
+
+// Session user
+interface SessionUser {
+    _id : Object,
+    name : string,
+    email : string
 }
 
 // Extend the request object in order to set variables in my request object
@@ -40,37 +48,39 @@ interface UserInterface {
     }
 }
 
+// Extending session data as opposed to declaration merging
+interface ExtendedSessionData extends SessionData {
+    isLoggedIn : boolean,
+    user : SessionUser
+}
+
 interface ExtendedRequest extends Request{
     User : UserInterface,
     body : {
         productId : ObjectId
     }
-    isAuthenticated : boolean;
+    isAuthenticated : boolean,
+    session : Session & Partial<ExtendedSessionData>
 }
 
 // Get the shop index page
-const getIndex = ( request : Request, response : Response, next : NextFunction ) => {
+const getIndex = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
-
+    // Render the index page, currently it shows nothing but the validation check is still relevant
     response.render("index", { 
         pageTitle : "Shop",
-        isAuthenticated : isAuthenticated 
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 
 // Get products controller
 const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
-
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find({userId : new ObjectId(request.User._id)})
@@ -83,19 +93,16 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
         pageTitle: "My Products", 
         path: "/", 
         hasProducts : products.length > 0,
-        isAuthenticated : isAuthenticated
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 
 // Get the orders
 const getOrders = async ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
-    
     // Query the orders in the backend
     const orders = await Order.find({"user._id" : request.User._id})
     .select("totalPrice orderItems createdAt user");
@@ -105,33 +112,27 @@ const getOrders = async ( request : ExtendedRequest, response : Response, next :
         pageTitle : "Orders", 
         orders : orders, 
         hasOrders : orders.length > 0,
-        isAuthenticated : isAuthenticated
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 
 // Get the checkout page from the cart
 const getCheckout = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
-
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     response.render("shop/checkout", { 
         pageTitle : "Checkout",
-        isAuthenticated : isAuthenticated
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 
 // Get product detail controller
-const getProductDetails = async ( request : Request, response : Response, next : NextFunction ) => {
+const getProductDetails = async ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
-
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -151,18 +152,15 @@ const getProductDetails = async ( request : Request, response : Response, next :
         hasProduct : hasProduct, 
         productDetails : singleProduct,
         pageTitle : "Product details",
-        isAuthenticated : isAuthenticated
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 
 // Get the cart and all the products inside of it
-const getCart = async (request : any, response : Response, next : NextFunction) => {
+const getCart = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Remove the equals sign from the isAuthenticated cookie
-    const cookie = String(request.get("Cookie")).trim().split("=")[1];
-
-    // Convert the string to a boolean
-    const isAuthenticated = (cookie === "true");
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     // Instantiate the User that we have
     const userInstance = new User(request.User);
@@ -176,7 +174,7 @@ const getCart = async (request : any, response : Response, next : NextFunction) 
         products : userInstance.cart.items, 
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice,
-        isAuthenticated : isAuthenticated
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 

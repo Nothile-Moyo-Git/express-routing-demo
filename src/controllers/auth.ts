@@ -34,7 +34,6 @@ interface SessionUser {
 
 // Extending session data as opposed to declaration merging
 interface ExtendedSessionData extends SessionData {
-    test : boolean,
     isLoggedIn : boolean,
     user : SessionUser
 }
@@ -51,9 +50,6 @@ interface ExtendedRequest extends Request{
 
 // Get login page controller
 const getLoginPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
-    
-    console.log("Request session");
-    console.log(request.session.test); 
 
     // Render the login page here
     // Note: Don't use a forward slash when defining URL's here
