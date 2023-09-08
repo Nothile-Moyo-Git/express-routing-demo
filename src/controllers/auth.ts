@@ -51,9 +51,20 @@ interface ExtendedRequest extends Request{
 // Get login page controller
 const getLoginPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Render the login page here
-    // Note: Don't use a forward slash when defining URL's here
-    response.render("auth/login", { pageTitle : "Login", isAuthenticated : true });
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
+
+    // Decide whether we render the login page or whether we redirect to the shop 
+    if (isLoggedIn === undefined) {
+        
+        // Render the login page here
+        // Note: Don't use a forward slash when defining URL's here
+        response.render("auth/login", { pageTitle : "Login", isAuthenticated : false });
+    }else{
+
+        // If we're already logged in, redirect to the products page
+        response.redirect("products");
+    }
 };
 
 // Post login page controller
