@@ -29,3 +29,21 @@
         height: 169px;
     }
 }
+
+.fallback{
+
+    display: flex;
+    flex-direction: column;
+
+    &__title{
+        text-align: center;
+    }
+
+    &__link{
+        text-align: center;
+        color: white;
+        text-decoration: underline;
+        width: max-content;
+        margin: auto;
+    }
+}

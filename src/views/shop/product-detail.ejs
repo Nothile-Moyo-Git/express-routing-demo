@@ -5,37 +5,49 @@
 
         <main class="product-detail">
 
-            <a href="/products" class="product-detail__back-wrapper">
-                <img
-                    src="../left-arrow.svg"
-                    alt="Go back arrow"
-                    class="product-detail__back-arrow"
-                />
-                <p class="product-detail__back-text">Go back</p>
-            </a>
+            <% if ( isAuthenticated === true ) { %>
 
-            <% if (hasProduct === true) { %>
-
-                <article class="product-detail__article">
-                    <h1 class="product-detail__title"><%= productDetails.title %></h1>
-                    <img 
-                        src="<%= productDetails.image %>"
-                        alt="Product image"
-                        class="product-detail__image"
+                <a href="/products" class="product-detail__back-wrapper">
+                    <img
+                        src="../left-arrow.svg"
+                        alt="Go back arrow"
+                        class="product-detail__back-arrow"
                     />
-                    <p class="product-detail__description">
-                        <%= productDetails.description %>
-                    </p>
-                    <p class="product-detail__price">
-                        £<%= productDetails.price %>
-                    </p>
-                </article>
+                    <p class="product-detail__back-text">Go back</p>
+                </a>
+
+                <% if (hasProduct === true) { %>
+
+                    <article class="product-detail__article">
+                        <h1 class="product-detail__title"><%= productDetails.title %></h1>
+                        <img 
+                            src="<%= productDetails.image %>"
+                            alt="Product image"
+                            class="product-detail__image"
+                        />
+                        <p class="product-detail__description">
+                            <%= productDetails.description %>
+                        </p>
+                        <p class="product-detail__price">
+                            £<%= productDetails.price %>
+                        </p>
+                    </article>
+
+                <% }else{ %>
+
+                    <h1>No product information found</h1>
+
+                <% }%>
 
             <% }else{ %>
 
-                <h1>No product information found</h1>
+                <div class="fallback">
+                    <h1 class="fallback__title">You need to be logged in to view this page</h1>
+                    <a href="/login" class="fallback__link">Go to login page</a>
+                </div>
 
-            <% }%>
+            <% } %>
+
         </main>
 
     </body>
