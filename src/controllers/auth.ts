@@ -29,7 +29,11 @@ interface UserInterface {
 interface SessionUser {
     _id : Object,
     name : string,
-    email : string
+    email : string,
+    cart : {
+        totalPrice : number,
+        items : CartItem[]
+    }
 }
 
 // Extending session data as opposed to declaration merging
@@ -98,7 +102,8 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
             currentUser = {
                 _id : user._id,
                 name : user.name,
-                email : user.email
+                email : user.email,
+                cart : user.cart
             }
         }
     });

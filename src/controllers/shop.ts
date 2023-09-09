@@ -30,13 +30,6 @@ interface CartItem {
     price : number
 }
 
-// Session user
-interface SessionUser {
-    _id : ObjectId,
-    name : string,
-    email : string
-}
-
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
     _id : ObjectId,
@@ -51,7 +44,7 @@ interface UserInterface {
 // Extending session data as opposed to declaration merging
 interface ExtendedSessionData extends SessionData {
     isLoggedIn : boolean,
-    user : SessionUser
+    user : UserInterface
 }
 
 interface ExtendedRequest extends Request{
@@ -169,15 +162,15 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
     const isLoggedIn = request.session.isLoggedIn;
 
     // Instantiate the User that we have
-    const userInstance = new User(request.User);
+    const user = request.session.user;
 
     // Check if we have products that we can render on the tempalate
-    const hasProducts = userInstance.cart.items.length > 0;
+    const hasProducts = user.cart.items.length > 0;
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
         hasProducts : hasProducts, 
-        products : userInstance.cart.items, 
+        products : user.cart.items, 
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice,
         isAuthenticated : isLoggedIn === undefined ? false : true
