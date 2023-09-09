@@ -165,12 +165,15 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
     const user = request.session.user;
 
     // Check if we have products that we can render on the tempalate
-    const hasProducts = user.cart.items.length > 0;
+    const hasProducts = user !== undefined ? user.cart.items.length > 0 : false;
+
+    // Check if we have any users that work with the session
+    const hasUser = user !== undefined;
  
     // Render the admin products ejs template
     response.render("shop/cart", { 
         hasProducts : hasProducts, 
-        products : user.cart.items, 
+        products : hasUser === true ? user.cart.items : [], 
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice,
         isAuthenticated : isLoggedIn === undefined ? false : true
@@ -197,6 +200,9 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
     // This is our new cart
     userInstance.addToCart(productDetails);
 
+    // Update the user in the session
+    request.session.user = userInstance;
+
     // Redirect to the cart page
     response.redirect("cart");
 }
@@ -212,6 +218,9 @@ const postCartDelete = (request : ExtendedRequest, response : Response, next : N
 
     // Delete the item from the cart
     userInstance.deleteFromCart(productId);
+
+    // Update the user in our session
+    request.session.user = userInstance;
 
     // Reload the cart page so we can query the updated cart
     response.redirect('back');

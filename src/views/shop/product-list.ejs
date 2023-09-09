@@ -5,9 +5,9 @@
 
         <main class="content">
 
-            <h1><%= pageTitle %></h1>
-
             <% if (isAuthenticated === true) { %>
+
+            <h1><%= pageTitle %></h1>
 
                 <% if (hasProducts) {%>
 
@@ -24,12 +24,14 @@
                                 <p class="card__price">£<%= product.price %></p>
                                 <p class="card__desc"><%= product.description %></p>
                                 <div class="card__forms">
+
                                     <a class="card__button" href="<%= `/product-detail/${product._id.toString()}` %>">Details</a>
                                     
                                     <form action="/cart" method="POST" class="card__form">
                                         <button class="card__button">Add To Cart</button>
                                         <input type="hidden" name="productId" value="<%= product._id.toString() %>"/>
                                     </form>
+
                                 </div>
                             </li>
                         <% }) %>
@@ -40,10 +42,7 @@
 
             <% } else { %>
 
-                <div class="fallback">
-                    <h1 class="fallback__title">You need to be logged in to view this page</h1>
-                    <a href="/login" class="fallback__link">Go to login page</a>
-                </div>
+                <%- include('../components/fallback'); %>
 
             <% } %>
 

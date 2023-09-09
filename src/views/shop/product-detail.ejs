@@ -1,4 +1,5 @@
 <%- include('../includes/header'); %>
+
     <body>
 
         <%- include('../includes/menu'); %>
@@ -37,18 +38,16 @@
 
                     <h1>No product information found</h1>
 
-                <% }%>
+                <% } %>
 
             <% }else{ %>
 
-                <div class="fallback">
-                    <h1 class="fallback__title">You need to be logged in to view this page</h1>
-                    <a href="/login" class="fallback__link">Go to login page</a>
-                </div>
+                <%- include('../components/fallback'); %>
 
             <% } %>
 
         </main>
 
     </body>
+
 <%- include('../includes/footer'); %>

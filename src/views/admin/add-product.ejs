@@ -4,60 +4,71 @@
         <%- include('../includes/menu'); %>
 
         <main class="add-product">
-            <form action="/admin/add-product" method="POST" class="add-product__form">
 
-                <h1 class="add-product__page-title">Add Product</h1>
+            <% if (isAuthenticated === true) { %>
 
-                <div class="add-product__field">
-                    <label for="product-title" id="title-label" class="add-product__label">Product Title</label>
-                    <input 
-                        type="text" 
-                        name="title" 
-                        class="add-product__input" 
-                        id="product-title" 
-                        aria-labelledby="title-label"
-                        required
-                    />
-                </div>
+                <form action="/admin/add-product" method="POST" class="add-product__form">
 
-                <div class="add-product__field">
-                    <label for="product-image" id="image-label" class="add-product__label">Image url</label>
-                    <input
-                        type="text"
-                        name="image"
-                        class="add-product__input"
-                        id="product-image"
-                        aria-labelledby="image-label"
-                        required
-                    />
-                </div>
+                    <h1 class="add-product__page-title">Add Product</h1>
 
-                <div class="add-product__field">
-                    <label for="product-description" id="description-label" class="add-product__label">Product Description</label>
-                    <input
-                        type="text"
-                        name="description"
-                        class="add-product__input"
-                        id="product-description"
-                        aria-labelledby="image-description"
-                        required
-                    />
-                </div>
+                    <div class="add-product__field">
+                        <label for="product-title" id="title-label" class="add-product__label">Product Title</label>
+                        <input 
+                            type="text" 
+                            name="title" 
+                            class="add-product__input" 
+                            id="product-title" 
+                            aria-labelledby="title-label"
+                            required
+                        />
+                    </div>
 
-                <div class="add-product__field">
-                    <label for="product-price" id="price-label" class="add-product__label">Price</label>
-                    <input
-                        type="number"
-                        name="price"
-                        class="add-product__input"
-                        id="product-price"
-                        aria-labelledby="price-label"
-                        required
-                    />
-                </div>
+                    <div class="add-product__field">
+                        <label for="product-image" id="image-label" class="add-product__label">Image url</label>
+                        <input
+                            type="text"
+                            name="image"
+                            class="add-product__input"
+                            id="product-image"
+                            aria-labelledby="image-label"
+                            required
+                        />
+                    </div>
 
-                <button type="submit" class="button button--yellow">Add Product</button>
-            </form>
+                    <div class="add-product__field">
+                        <label for="product-description" id="description-label" class="add-product__label">Product Description</label>
+                        <input
+                            type="text"
+                            name="description"
+                            class="add-product__input"
+                            id="product-description"
+                            aria-labelledby="image-description"
+                            required
+                        />
+                    </div>
+
+                    <div class="add-product__field">
+                        <label for="product-price" id="price-label" class="add-product__label">Price</label>
+                        <input
+                            type="number"
+                            name="price"
+                            class="add-product__input"
+                            id="product-price"
+                            aria-labelledby="price-label"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" class="button button--yellow">Add Product</button>
+
+                </form>
+            
+            <% } else { %>
+
+                <%- include('../components/fallback'); %>
+
+            <% } %>
+
         </main>
 
     </body>

@@ -2,68 +2,69 @@
 
     <body>
 
-        <%- include('../includes/menu'); %>
+        <main>
 
-        <% if (isAuthenticated === true) { %>
+            <%- include('../includes/menu'); %>
 
-            <section class="cart">
+            <% if (isAuthenticated === true) { %>
 
-                <h1 class="cart__header"><%= pageTitle %></h1> 
+                <section class="cart">
 
-                <% if (hasProducts === true) { %>
+                    <h1 class="cart__header"><%= pageTitle %></h1> 
 
-                    <div class="cart__modal-wrapper">
+                    <% if (hasProducts === true) { %>
 
-                        <ul class="cart__modal-rows">
-                            <li class="cart__modal-header">
-                                <p class="cart__modal-column">Name</p>
-                                <p class="cart__modal-column">Quantity</p>
-                                <p class="cart__modal-column">Total Cost</p>
-                            </li>
-                            <%  products.forEach((product) => {    %>
-                            <% 
-                                const id = product.productId.toString();
-                                const title = product.title;
-                                const quantity = product.quantity;
-                                const price = product.price;  
-                            %>
+                        <div class="cart__modal-wrapper">
 
-                                <li class="cart__modal-row">
-                                    <p class="cart__modal-column"><%= title %></p>
-                                    <p class="cart__modal-column"><%= quantity %></p>
-                                    <p class="cart__modal-column">£<%= price * quantity %></p>
-                                    <form class="cart__modal-column" action="/cart-delete-item" method="POST">
-                                        <button class="cart__modal-button" type="submit">X</button>
-                                        <input type="hidden" name="productId" value=<%= `${id}` %>/>
-                                    </form>
+                            <ul class="cart__modal-rows">
+                                <li class="cart__modal-header">
+                                    <p class="cart__modal-column">Name</p>
+                                    <p class="cart__modal-column">Quantity</p>
+                                    <p class="cart__modal-column">Total Cost</p>
                                 </li>
-                            <%  }); %>
-                        </ul>
+                                <%  products.forEach((product) => {    %>
+                                <% 
+                                    const id = product.productId.toString();
+                                    const title = product.title;
+                                    const quantity = product.quantity;
+                                    const price = product.price;  
+                                %>
 
-                        <form  class="cart__checkout" method="POST" action="/cart-order-create">
-                            <p class="cart__checkout-text">Total : £<%= totalPrice %></p>
-                            <input type="hidden" name="totalPrice" value=<%= totalPrice %>/>
-                            <button class="cart__checkout-button">Buy</button>
-                        </form> 
-                        
-                    </div>
+                                    <li class="cart__modal-row">
+                                        <p class="cart__modal-column"><%= title %></p>
+                                        <p class="cart__modal-column"><%= quantity %></p>
+                                        <p class="cart__modal-column">£<%= price * quantity %></p>
+                                        <form class="cart__modal-column" action="/cart-delete-item" method="POST">
+                                            <button class="cart__modal-button" type="submit">X</button>
+                                            <input type="hidden" name="productId" value=<%= `${id}` %>/>
+                                        </form>
+                                    </li>
+                                <%  }); %>
+                            </ul>
 
-                <% } else { %>
+                            <form  class="cart__checkout" method="POST" action="/cart-order-create">
+                                <p class="cart__checkout-text">Total : £<%= totalPrice %></p>
+                                <input type="hidden" name="totalPrice" value=<%= totalPrice %>/>
+                                <button class="cart__checkout-button">Buy</button>
+                            </form> 
+                            
+                        </div>
 
-                    <h2 class="cart__empty-items">Your cart is empty</h2>
+                    <% } else { %>
 
-                <% } %>
-            
-            </section>
+                        <h2 class="cart__empty-items">Your cart is empty</h2>
 
-        <% } else { %>
+                    <% } %>
+                
+                </section>
 
-            <section class="fallback">
-                <h1 class="fallback__title">You must be logged in to view this page</h1>
-                <a href="/login" class="fallback__link">Go to login page</a>
-            </section>
+            <% } else { %>
 
-        <% } %>
+                <%- include('../components/fallback'); %>
+
+            <% } %>
+
+        </main>
 
     </body>
 

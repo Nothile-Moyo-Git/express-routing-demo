@@ -1,55 +1,66 @@
 <%- include('../includes/header'); %>
+
     <body class="orders-page">
 
         <%- include('../includes/menu'); %>
 
         <main class="orders">
 
-            <% if (hasOrders === true) { %>
-                <h1 class="orders__header">Orders</h1>
+            <% if (isAuthenticated === true) { %>
 
-                <ul class="orders__details">
-                    <% orders.forEach((order) => { %>
+                <% if (hasOrders === true) { %>
+                    
+                    <h1 class="orders__header">Orders</h1>
 
-                        <li class="orders__row">
+                    <ul class="orders__details">
+                        <% orders.forEach((order) => { %>
 
-                            <p class="orders__row-item orders__row-item--title">Products</p>
+                            <li class="orders__row">
 
-                            <% order.orderItems.forEach((item) => { %>
-                                <ul class="orders__row-item orders__row-item--products">
+                                <p class="orders__row-item orders__row-item--title">Products</p>
 
-                                    <li class="orders__product-details">
-                                        <p><%= item.title %> x <%= item.quantity %></p> 
-                                        <p>£<%= item.price %></p>
-                                    </li>
+                                <% order.orderItems.forEach((item) => { %>
+                                    <ul class="orders__row-item orders__row-item--products">
 
-                                </ul>
-                            <% }) %>
+                                        <li class="orders__product-details">
+                                            <p><%= item.title %> x <%= item.quantity %></p> 
+                                            <p>£<%= item.price %></p>
+                                        </li>
 
-                            <span class="orders__row-item orders__row-item--date">
-                                <p>Purchased : </p>
-                                <p><%= order.createdAt.toLocaleString() %></p>
-                            </span>
+                                    </ul>
+                                <% }) %>
 
-                            <span class="orders__row-item orders__row-item--name">
-                                <p>Purchased by : </p>
-                                <p><%= order.user.name %></p>
-                            </span>
+                                <span class="orders__row-item orders__row-item--date">
+                                    <p>Purchased : </p>
+                                    <p><%= order.createdAt.toLocaleString() %></p>
+                                </span>
 
-                            <p class="orders__row-item orders__row-item--total">Total : £<%= order.totalPrice %></p>
+                                <span class="orders__row-item orders__row-item--name">
+                                    <p>Purchased by : </p>
+                                    <p><%= order.user.name %></p>
+                                </span>
 
-                        </li>
+                                <p class="orders__row-item orders__row-item--total">Total : £<%= order.totalPrice %></p>
 
-                    <% }) %>
-                </ul>
-                
+                            </li>
+
+                        <% }) %>
+                    </ul>
+                    
+                <% } else { %>
+
+                    <h1 class="orders__empty">No orders found</h1>
+
+                <% } %>
+
             <% } else { %>
 
-                <h1 class="orders__empty">No orders found</h1>
+                <%- include('../components/fallback'); %>
 
             <% } %>
 
         </main>
 
     </body>
+
 <%- include('../includes/footer'); %>

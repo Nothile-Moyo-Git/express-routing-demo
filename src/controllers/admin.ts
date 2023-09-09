@@ -14,7 +14,7 @@ interface CartItem {
 
 // Session user
 interface SessionUser {
-    _id : Object,
+    _id : ObjectId,
     name : string,
     email : string
 }
@@ -53,6 +53,9 @@ const getAddProduct = (request : ExtendedRequest, response : Response, next : Ne
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
+
+    console.clear();
+    console.log("Yo");
 
     // Send our HTML file to the browser
     response.render("admin/add-product", { 
@@ -93,8 +96,14 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Instantiate the User that we have
+    const user = request.session.user;
+
+    // Check if we have any users that work with the session
+    const hasUser = user !== undefined;
+
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    const products = await Product.find({userId : new ObjectId(request.User._id)})
+    const products = await Product.find({userId : new ObjectId(hasUser === true ? user._id : null)})
     .select("title price _id description image")
     .populate("userId", "name");
 
