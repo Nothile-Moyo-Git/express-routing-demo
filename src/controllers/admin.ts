@@ -83,7 +83,7 @@ const postAddProduct = async(request : ExtendedRequest, response : Response, nex
         image : image,
         description : description,
         price : price,
-        userId : request.session.user._id  
+        userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
     });
 
     // Save our new product to the database

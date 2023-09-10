@@ -79,7 +79,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     const password = request.body.passwordInput;
 
     // Get a list of users
-    const users = await User.find({_id : new ObjectId(request.User._id)});
+    const users = await User.find({email : email.toLowerCase()});
 
     // We define these variables here as we need to scope them correctly as we validate the user
     let isPasswordValid : boolean = false;
@@ -94,7 +94,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
         }
 
         // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
-        if (email.localeCompare(request.User.email, undefined, { sensitivity: 'base' }) === 0) {
+        if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
             isEmailValid = true;
         }
 
