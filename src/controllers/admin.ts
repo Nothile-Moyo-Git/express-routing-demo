@@ -54,9 +54,6 @@ const getAddProduct = (request : ExtendedRequest, response : Response, next : Ne
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
-    console.clear();
-    console.log("Yo");
-
     // Send our HTML file to the browser
     response.render("admin/add-product", { 
         pageTitle: "Add Product", 
@@ -74,18 +71,27 @@ const postAddProduct = async(request : ExtendedRequest, response : Response, nex
     const price = Number(request.body.price);
     const description = request.body.description;
 
+    // Instantiate the User that we have
+    const user = request.session.user;
+
+    // Check if we have a user
+    const hasUser = user !== undefined;
+
     // Instantiate our product
     const product = new Product({
         title : title,
         image : image,
         description : description,
         price : price,
-        userId : request.User._id   
+        userId : request.session.user._id  
     });
 
     // Save our new product to the database
     // Note : This method is inherited from the Mongoose model
-    product.save();
+    // Only save the product if we're logged in
+    if (hasUser === true) {
+        product.save();
+    }
 
     response.redirect("/products");
 };
@@ -145,16 +151,24 @@ const updateProduct = async (request : ExtendedRequest, response : Response, nex
 };
 
 // Delete product controller
-const deleteProduct = async (request : Request, response : Response, next : NextFunction) => {
+const deleteProduct = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
 
+    // Instantiate the User that we have
+    const user = request.session.user;
+
+    // Check if we have any users that work with the session
+    const hasUser = user !== undefined;
+
     // Create a new product Id and guard it
     const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
-    await Product.deleteOne( {_id : productId} );
+    if (hasUser === true) {
+        await Product.deleteOne( {_id : productId} );
+    }
 
     // Redirect to the admin products page since we executed admin functionality
     response.redirect("/admin/products");
