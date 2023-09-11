@@ -127,14 +127,22 @@ const getLogoutAttemptController = async (request : ExtendedRequest, response : 
     try {
 
         // Destroy the session in the database
-        request.session.destroy(() => {
+        request.session.destroy((error : unknown) => {
 
-            // We use the promise chain to also clear the content from our browser
-            response.clearCookie("Adeptus");
+            if (!error) {
 
-            response.redirect("login");
+                // Clear the cookie in our browser as well
+                response.clearCookie("Adeptus");
+
+                response.redirect("login");
+            }
+
         });
+        
     }catch(error : unknown){
+
+        console.clear();
+        console.error("Error : Logout functionality failed, please contact the development team");
 
         // Go back to the page we were previously on
         response.redirect("back");

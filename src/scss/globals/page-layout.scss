@@ -25,8 +25,18 @@
     background: branding.$brand_color_one;
     z-index: 2;
 
-    @include responsive.breakpoint(tablet){
-        height: 173px;
+    &__logged-in{
+
+        @include responsive.breakpoint(tablet){
+            height: 173px;
+        }
+    }
+
+    &__logged-out{
+
+        @include responsive.breakpoint(tablet){
+            height: 125px;
+        }
     }
 }
 
