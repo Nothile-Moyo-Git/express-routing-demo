@@ -63,6 +63,7 @@ app.use(
         secret : "Adeptus",
         resave : false,
         saveUninitialized : false,
+        name : "Adeptus",
         
         // Store on the server instead of memory
         store : MongoStore.create({

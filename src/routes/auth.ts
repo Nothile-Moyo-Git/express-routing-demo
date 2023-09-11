@@ -6,7 +6,7 @@
 import express from "express";
 
 // Get the controller so we can handle all of our requests
-import { getLoginPageController, postLoginAttemptController } from "../controllers/auth";
+import { getLoginPageController, postLoginAttemptController, getLogoutAttemptController } from "../controllers/auth";
 
 // Define the object for our router which we pass through to the index file
 const authRoutes = express.Router();
@@ -16,5 +16,8 @@ authRoutes.get("/login", getLoginPageController);
 
 // Submit the login page
 authRoutes.post("/login", postLoginAttemptController);
+
+// Logout the current user
+authRoutes.get("/logout", getLogoutAttemptController);
 
 export default authRoutes;

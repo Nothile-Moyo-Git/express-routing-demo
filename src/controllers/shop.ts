@@ -59,14 +59,8 @@ interface ExtendedRequest extends Request{
 // Get the shop index page
 const getIndex = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    // Get our request session from our Mongoose database and check if we're logged in
-    const isLoggedIn = request.session.isLoggedIn;
-
-    // Render the index page, currently it shows nothing but the validation check is still relevant
-    response.render("index", { 
-        pageTitle : "Shop",
-        isAuthenticated : isLoggedIn === undefined ? false : true
-    });
+    // For now, redirect to the products page
+    response.redirect("/products");
 };
 
 // Get products controller

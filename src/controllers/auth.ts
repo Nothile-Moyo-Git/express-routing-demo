@@ -119,5 +119,28 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     }
 };
 
+// Logout page controller
+const getLogoutAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    
+    // Wrap this functionality in a try catch block just to be safe with the added guarding
+    try {
+
+        // Destroy the session in the database
+        request.session.destroy(() => {
+
+            // We use the promise chain to also clear the content from our browser
+            response.clearCookie("Adeptus");
+
+            response.redirect("login");
+        });
+    }catch(error : unknown){
+
+        // Go back to the page we were previously on
+        response.redirect("back");
+    }
+
+};
+
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController };
+export { getLoginPageController, postLoginAttemptController, getLogoutAttemptController };

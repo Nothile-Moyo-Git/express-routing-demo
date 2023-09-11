@@ -29,7 +29,7 @@ a{
     text-decoration: none;
     color:rgba(0, 0, 0, 0.9); 
     transition: all 0.3s linear;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
 
     @include mixins.state(){
         color: branding.$brand_color_two;  

@@ -19,12 +19,17 @@
             </li>
 
             <% if (isAuthenticated) { %>
+
                 <li class="menu__item">
                     <a href="/admin/add-product">Add Product</a>
                 </li>
 
                 <li class="menu__item">
                     <a href="/admin/products">Admin Products</a>
+                </li>
+
+                <li class="menu__item">
+                    <a href="/logout">Logout</a>
                 </li>
                 
             <% } else { %>
