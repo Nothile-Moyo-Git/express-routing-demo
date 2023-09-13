@@ -108,10 +108,6 @@ userSchema.method('addToCart', function addToCart (product : Product) {
         this.cart.totalPrice += product.price;
     }
 
-    
-
-    // Update the current user in MongoDB
-    // this.save();
 });
 
 // Create the delete from cart method for our user in Mongoose

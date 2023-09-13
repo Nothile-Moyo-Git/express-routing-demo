@@ -184,12 +184,6 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
     // Get product information based on the product Id
     const productId = request.body.productId;
 
-    console.clear();
-    console.log("Request User");
-    console.log(request.User);
-    console.log("Request session user");
-    console.log(user);
-
     // Get product details
     const product = await Product.findOne({_id : productId})
     .select("title price _id");
@@ -200,13 +194,13 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
         const userInstance = new User(user);
     
         // Set the product details into a new object
-        const productDetails = {title : product.title, price : product.price, _id : product._id};
+        const productDetails = { title : product.title, price : product.price, _id : product._id };
 
         // This is our new cart
         userInstance.addToCart(productDetails);
 
         // Update the document in Mongoose as the save method when we instantiate it isn't flexible enough
-        await User.updateOne({_id : new ObjectId(user._id)},{ cart : user.cart });
+        await User.updateOne({_id : new ObjectId(user._id)},{ cart : userInstance.cart });
 
         // Update the user in the session
         request.session.user = userInstance;
@@ -261,6 +255,9 @@ const postOrderCreate = async (request : ExtendedRequest, response : Response, n
 
     // Update the user details in MongoDB
     await userInstance.save();
+
+    // Update the user in the session and empty their cart too
+    request.session.user = userInstance;
     
     // Move to the orders page
     response.redirect("/orders");
