@@ -82,8 +82,8 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     const users = await User.find({email : email.toLowerCase()});
 
     // We define these variables here as we need to scope them correctly as we validate the user
-    let isPasswordValid : boolean = false;
-    let isEmailValid : boolean = false; 
+    let isPasswordValid : boolean;
+    let isEmailValid : boolean; 
     let currentUser : SessionUser | undefined = undefined;
 
     users.forEach((user : UserInterface) => {
@@ -109,7 +109,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     });
 
     // Set is logged in to true and pass the user id through as well to the session
-    if (isPasswordValid && isEmailValid) {
+    if (isPasswordValid === true && isEmailValid === true) {
 
         request.session.user = currentUser;
         request.session.isLoggedIn = true;
@@ -122,7 +122,6 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
 // Logout page controller
 const getLogoutAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    
     // Wrap this functionality in a try catch block just to be safe with the added guarding
     try {
 
@@ -136,7 +135,6 @@ const getLogoutAttemptController = async (request : ExtendedRequest, response : 
 
                 response.redirect("login");
             }
-
         });
         
     }catch(error : unknown){
@@ -147,7 +145,6 @@ const getLogoutAttemptController = async (request : ExtendedRequest, response : 
         // Go back to the page we were previously on
         response.redirect("back");
     }
-
 };
 
 // Export the controllers

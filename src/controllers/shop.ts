@@ -167,7 +167,7 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
     // Render the admin products ejs template
     response.render("shop/cart", { 
         hasProducts : hasProducts, 
-        products : hasUser === true ? user.cart.items : [], 
+        products : hasUser === true ? user.cart.items : [],
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice,
         isAuthenticated : isLoggedIn === undefined ? false : true
@@ -178,6 +178,9 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
 // Acts as an add product handler
 const postCart = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
+    // Instantiate the user that we have
+    const user = request.session.user;
+
     // Get product information based on the product Id
     const productId = request.body.productId;
 
@@ -185,17 +188,20 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
     const product = await Product.findOne({_id : productId})
     .select("title price _id");
 
-    // Create a new instance of our user to gain access to mongoose static methods
-    const userInstance = new User(request.User);
+    if (user !== undefined) {
 
-    // Set the product details into a new object
-    const productDetails = {title : product.title, price : product.price, _id : product._id};
+        // Create a new instance of our user to gain access to mongoose static methods
+        const userInstance = new User(request.session.user);
+    
+        // Set the product details into a new object
+        const productDetails = {title : product.title, price : product.price, _id : product._id};
 
-    // This is our new cart
-    userInstance.addToCart(productDetails);
+        // This is our new cart
+        userInstance.addToCart(productDetails);
 
-    // Update the user in the session
-    request.session.user = userInstance;
+        // Update the user in the session
+        request.session.user = userInstance;
+    }
 
     // Redirect to the cart page
     response.redirect("cart");

@@ -61,9 +61,9 @@ type UserModel = Model<User, {}, UserMethods>;
 // Define our mongoose User schema
 // Mongoose automatically adds in _id to every table when working with schemas, so you must set it to false
 const userSchema = new mongoose.Schema<User>({
-    name : { type : String, required : [true, "Please enter a name"] },
-    email : { type : String, required : [true, "Please enter an email address"] },
-    password : { type : String, required : [true, "Please enter a password"] },
+    name : { type : String, required : [true, "Add a name to the User object you're sending to MongoDB"] },
+    email : { type : String, required : [true, "Add an email address to the User object you're sending to MongoDB"] },
+    password : { type : String, required : false },
     cart : {
         items : [{ 
             productId : mongoose.Schema.Types.ObjectId,
