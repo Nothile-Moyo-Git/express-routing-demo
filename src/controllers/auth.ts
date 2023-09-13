@@ -100,7 +100,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
 
         if (isPasswordValid === true && isEmailValid === true) {
             currentUser = {
-                _id : user._id,
+                _id : new ObjectId(user._id),
                 name : user.name,
                 email : user.email,
                 cart : user.cart
