@@ -18,7 +18,8 @@
 // Forms
 @use "../scss/forms/products/add-product";
 @use "../scss/forms/products/edit-product";
-@use "../scss/forms/login/login";
+@use "../scss/forms/auth/login";
+@use "../scss/forms/auth/signup";
 
 // Pages
 @use "../scss/pages/products/product-detail";
