@@ -5,44 +5,38 @@
 
         <main class="content">
 
-            <% if (isAuthenticated === true) { %>
-
             <h1><%= pageTitle %></h1>
 
-                <% if (hasProducts) {%>
+            <% if (hasProducts) {%>
 
-                    <ul class="card-list">
+                <ul class="card-list">
 
-                        <% prods.forEach((product) => { %>
-                            <li class="card">
-                                <h3 class="card__title"><%= product.title %></h3>
-                                <img 
-                                    src=<%= product.image%>
-                                    alt="Shop Item Logo Image"
-                                    class="card__img"
-                                />
-                                <p class="card__price">£<%= product.price %></p>
-                                <p class="card__desc"><%= product.description %></p>
-                                <div class="card__forms">
+                    <% prods.forEach((product) => { %>
+                        <li class="card">
+                            <h3 class="card__title"><%= product.title %></h3>
+                            <img 
+                                src=<%= product.image%>
+                                alt="Shop Item Logo Image"
+                                class="card__img"
+                            />
+                            <p class="card__price">£<%= product.price %></p>
+                            <p class="card__desc"><%= product.description %></p>
+                            <div class="card__forms">
 
-                                    <a class="card__button" href="<%= `/product-detail/${product._id.toString()}` %>">Details</a>
-                                    
+                                <a class="card__button" href="<%= `/product-detail/${product._id.toString()}` %>">Details</a>
+                                
+                                <% if (isAuthenticated === true) { %>
                                     <form action="/cart" method="POST" class="card__form">
                                         <button class="card__button">Add To Cart</button>
                                         <input type="hidden" name="productId" value="<%= product._id.toString() %>"/>
                                     </form>
+                                <% } %>
 
-                                </div>
-                            </li>
-                        <% }) %>
+                            </div>
+                        </li>
+                    <% }) %>
 
-                    </ul>
-
-                <% } %>
-
-            <% } else { %>
-
-                <%- include('../components/fallback'); %>
+                </ul>
 
             <% } %>
 
