@@ -4,6 +4,7 @@ import { Session, SessionData } from 'express-session';
 import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import bcrypt from "bcrypt";
+import { validate } from 'email-validator';
 
 // Cart items interface
 interface CartItem {
@@ -45,11 +46,13 @@ interface ExtendedRequest extends Request{
     User : UserInterface,
     body : {
         emailInput : string,
-        passwordInput : string
-
+        passwordInput : string,
+        secondPasswordInput : string
     },
     isAuthenticated : boolean,
-    session : Session & Partial<ExtendedSessionData>
+    session : Session & Partial<ExtendedSessionData>,
+    emailAddressValid : boolean,
+    passwordsMatch : boolean
 }
 
 // Get login page controller
@@ -82,12 +85,19 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/signup", { pageTitle : "Login", isAuthenticated : false });
+        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false });
     }else{
 
         // If we're already logged in, redirect to the products page
         response.redirect("products");
     }
+};
+
+// Post signup page controller, handles the signup form submission
+const postSignupPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+
+    response.redirect("back");
 };
 
 // Post login page controller
@@ -167,4 +177,4 @@ const getLogoutAttemptController = async (request : ExtendedRequest, response : 
 };
 
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController, getLogoutAttemptController, getSignupPageController };
+export { getLoginPageController, postLoginAttemptController, getLogoutAttemptController, getSignupPageController, postSignupPageController };
