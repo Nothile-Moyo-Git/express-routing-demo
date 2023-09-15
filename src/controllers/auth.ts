@@ -47,7 +47,8 @@ interface ExtendedRequest extends Request{
     body : {
         emailInput : string,
         passwordInput : string,
-        secondPasswordInput : string
+        secondPasswordInput : string,
+        nameInput : string
     },
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>,
@@ -96,8 +97,34 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
 // Post signup page controller, handles the signup form submission
 const postSignupPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
+    // Get the fields from the form submission
+    const isEmailValid = validate(request.body.emailInput);
+    const passwordsMatch = request.body.passwordInput === request.body.secondPasswordInput;
 
-    response.redirect("back");
+    // If our validation checks are valid, then we redirect to the login page since we've created a new user
+    if (isEmailValid === true && passwordsMatch === true) {
+
+        // Create a new user since our checks are valid
+        const newUser = new User({
+            name : request.body.nameInput,
+            email : request.body.emailInput,
+            password :  bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
+            cart : {
+                items : [],
+                totalPrice : 0
+            }
+        });
+
+        // Save the new user to the database
+        await newUser.save();
+        
+        // Go the login page since we now have a valid check
+        response.redirect("/login");
+    }else{
+    
+        // Assign session variables that we pass through if our check fails, since it's the same request chain it should be fine in this case
+        response.redirect("back");
+    }
 };
 
 // Post login page controller

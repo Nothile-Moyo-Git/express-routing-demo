@@ -11,6 +11,20 @@
             <form class="signup__form" method="POST" action="/signup">
 
                 <div class="signup__field">
+                    <label for="nameInput" id="nameLabel" class="signup__label">Name*</label>
+                    <input
+                        type="test"
+                        id="nameInput"
+                        name="nameInput"
+                        class="signup__input"
+                        aria-labelledby="nameLabel"
+                        placeholder="Please enter your email address"
+                        autocomplete="on"
+                        required
+                    />
+                </div>
+
+                <div class="signup__field">
                     <label for="emailInput" id="emailLabel" class="signup__label">Email Address*</label>
                     <input
                         type="email"
