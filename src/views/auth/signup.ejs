@@ -19,49 +19,45 @@
                         class="signup__input"
                         aria-labelledby="nameLabel"
                         placeholder="Please enter your email address"
-                        autocomplete="on"
                         required
                     />
                 </div>
 
                 <div class="signup__field">
-                    <label for="emailInput" id="emailLabel" class="signup__label">Email Address*</label>
+                    <label for="emailInput" id="emailLabel" class="<%= emailValid === true ? `signup__label` : `signup__label signup__label--error` %>"><%= emailValid === true ? "Email Address*" : emailErrorMessage %></label>
                     <input
                         type="email"
                         id="emailInput"
                         name="emailInput"
-                        class="signup__input"
+                        class="<%= emailValid === true ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
-                        autocomplete="on"
                         required
                     />
                 </div>
 
                 <div class="signup__field">
-                    <label for="passwordInput" id="passwordLabel" class="signup__label">Password*</label>
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordsMatch === true ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordsMatch === true ? "Password*" : "Error : Passwords aren't the same" %></label>
                     <input
                         type="password"
                         id="passwordInput"
                         name="passwordInput"
-                        class="signup__input"
+                        class="<%= passwordsMatch === true ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="passwordLabel"
                         placeholder="Please enter your password"
-                        autocomplete="on"
                         required
                     />
                 </div>
 
                 <div class="signup__field">
-                    <label for="secondPasswordInput" id="secondPasswordLabel" class="signup__label">Confirm Your Password*</label>
+                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordsMatch === true ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordsMatch === true ? "Confirm Your Password*" : "Error : Passwords aren't the same" %></label>
                     <input
                         type="password"
                         id="secondPasswordInput"
                         name="secondPasswordInput"
-                        class="signup__input"
+                        class="<%= passwordsMatch === true ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="secondPasswordLabel"
                         placeholder="Please enter your password"
-                        autocomplete="on"
                         required
                     />
                 </div>
