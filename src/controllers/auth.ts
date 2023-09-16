@@ -86,7 +86,7 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false });
+        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : true, passwordsMatch : true });
     }else{
 
         // If we're already logged in, redirect to the products page
@@ -122,8 +122,8 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
         response.redirect("/login");
     }else{
     
-        // Assign session variables that we pass through if our check fails, since it's the same request chain it should be fine in this case
-        response.redirect("back");
+        // Reload the login page with the correct values
+        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : isEmailValid, passwordsMatch : passwordsMatch });
     }
 };
 
