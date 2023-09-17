@@ -26,7 +26,8 @@
     "express-session": "^1.17.3",
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.3",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "vanilla-tilt": "^1.8.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
