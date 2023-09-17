@@ -10,15 +10,15 @@
                 <a href="/products">Products</a>
             </li>
 
-            <li class="menu__item">
-                <a href="/cart">Cart</a>
-            </li>
-
-            <li class="menu__item">
-                <a href="/orders">Orders</a>
-            </li>
-
             <% if (isAuthenticated) { %>
+
+                <li class="menu__item">
+                    <a href="/cart">Cart</a>
+                </li>
+
+                <li class="menu__item">
+                    <a href="/orders">Orders</a>
+                </li>
 
                 <li class="menu__item">
                     <a href="/admin/add-product">Add Product</a>

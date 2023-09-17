@@ -66,9 +66,6 @@ const getIndex = ( request : ExtendedRequest, response : Response, next : NextFu
 // Get products controller
 const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Get our request session from our Mongoose database and check if we're logged in
-    const isLoggedIn = request.session.isLoggedIn;
- 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find()
     .select("title price _id description image")
@@ -80,7 +77,7 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
         pageTitle: "My Products", 
         path: "/", 
         hasProducts : products.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : true
     });
 };
 
@@ -149,9 +146,6 @@ const getProductDetails = async ( request : ExtendedRequest, response : Response
 // Get the cart and all the products inside of it
 const getCart = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Get our request session from our Mongoose database and check if we're logged in
-    const isLoggedIn = request.session.isLoggedIn;
-
     // Instantiate the User that we have
     const user = request.session.user;
 
@@ -167,7 +161,7 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
         products : hasUser === true ? user.cart.items : [],
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice,
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : true
     });
 };
 
