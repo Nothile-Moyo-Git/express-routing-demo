@@ -66,6 +66,9 @@ const getIndex = ( request : ExtendedRequest, response : Response, next : NextFu
 // Get products controller
 const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
+    // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
+    const isLoggedIn = request.session.isLoggedIn;
+
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find()
     .select("title price _id description image")
@@ -77,7 +80,7 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
         pageTitle: "My Products", 
         path: "/", 
         hasProducts : products.length > 0,
-        isAuthenticated : true
+        isAuthenticated : isLoggedIn === undefined ? false : true
     });
 };
 
@@ -106,12 +109,9 @@ const getOrders = async ( request : ExtendedRequest, response : Response, next :
 // Get the checkout page from the cart
 const getCheckout = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
-    // Get our request session from our Mongoose database and check if we're logged in
-    const isLoggedIn = request.session.isLoggedIn;
-
     response.render("shop/checkout", { 
         pageTitle : "Checkout",
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : true
     });
 };
 
