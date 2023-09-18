@@ -25,6 +25,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import { password } from "./data/connection";
 import bcrypt from "bcrypt";
+import cookieParser from "cookie-parser";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -52,6 +53,9 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 // Serve our image files statically
 app.use( express.static( path.join( __dirname, "/images" ) ));
 
+// Enable cookie parsing middleware
+app.use(cookieParser());
+
 // Here we create a session, but unlike before, we store it on the server side.
 // We instead store a secret key that's passed through to the backend
 // It cannot be guessed, but our session data is also usable whenever we run our applications since we don't store it in memory
@@ -76,6 +80,8 @@ app.use(
         })     
     })
 ); 
+
+
 
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
