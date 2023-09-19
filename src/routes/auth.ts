@@ -6,7 +6,7 @@
 import express from "express";
 
 // Get the controller so we can handle all of our requests
-import { getLoginPageController, postLoginAttemptController, getLogoutAttemptController, getSignupPageController, postSignupPageController } from "../controllers/auth";
+import { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController } from "../controllers/auth";
 
 // Define the object for our router which we pass through to the index file
 const authRoutes = express.Router();
@@ -18,7 +18,7 @@ authRoutes.get("/login", getLoginPageController);
 authRoutes.post("/login", postLoginAttemptController);
 
 // Logout the current user
-authRoutes.get("/logout", getLogoutAttemptController);
+authRoutes.post("/logout", postLogoutAttemptController);
 
 // Render the signup page
 authRoutes.get("/signup", getSignupPageController)

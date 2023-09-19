@@ -138,6 +138,8 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     const email = request.body.emailInput;
     const password = request.body.passwordInput;
 
+    // 
+
     // Get a list of users
     const users = await User.find({email : email.toLowerCase()});
 
@@ -180,7 +182,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
 };
 
 // Logout page controller
-const getLogoutAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postLogoutAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
     // Wrap this functionality in a try catch block just to be safe with the added guarding
     try {
@@ -208,4 +210,4 @@ const getLogoutAttemptController = async (request : ExtendedRequest, response : 
 };
 
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController, getLogoutAttemptController, getSignupPageController, postSignupPageController };
+export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController };

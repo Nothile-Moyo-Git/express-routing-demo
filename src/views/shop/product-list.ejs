@@ -28,7 +28,8 @@
                                 <% if (isAuthenticated === true) { %>
                                     <form action="/cart" method="POST" class="card__form">
                                         <button class="card__button">Add To Cart</button>
-                                        <input type="hidden" name="productId" value="<%= product._id.toString() %>"/>
+                                        <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
+                                        <input type="hidden" name="productId" value=<%= product._id.toString() %>/>
                                     </form>
                                 <% } %>
 

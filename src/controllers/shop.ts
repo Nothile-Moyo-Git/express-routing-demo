@@ -44,13 +44,15 @@ interface UserInterface {
 // Extending session data as opposed to declaration merging
 interface ExtendedSessionData extends SessionData {
     isLoggedIn : boolean,
-    user : UserInterface
+    user : UserInterface,
+    csrfToken : string
 }
 
 interface ExtendedRequest extends Request{
     User : UserInterface,
     body : {
-        productId : ObjectId
+        productId : ObjectId,
+        csrfToken : string
     }
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>
@@ -69,6 +71,9 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find()
     .select("title price _id description image")
@@ -80,7 +85,8 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
         pageTitle: "My Products", 
         path: "/", 
         hasProducts : products.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : isLoggedIn === undefined ? false : true,
+        csrfToken : csrfToken
     });
 };
 
@@ -149,6 +155,9 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
     // Instantiate the User that we have
     const user = request.session.user;
 
+    // Get our CSRF token if we don't have one already
+    const csrfToken = request.session.csrfToken;
+
     // Check if we have products that we can render on the tempalate
     const hasProducts = user !== undefined ? user.cart.items.length > 0 : false;
 
@@ -161,7 +170,8 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
         products : hasUser === true ? user.cart.items : [],
         pageTitle : "Your Cart",
         totalPrice : request.User.cart.totalPrice,
-        isAuthenticated : true
+        isAuthenticated : true,
+        csrfToken : csrfToken
     });
 };
 
@@ -173,13 +183,26 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
     const user = request.session.user;
 
     // Get product information based on the product Id
-    const productId = request.body.productId;
+    const productId = new ObjectId(String(request.body.productId).replace(/\/$/, ""));
+
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
 
     // Get product details
     const product = await Product.findOne({_id : productId})
     .select("title price _id");
 
-    if (user !== undefined) {
+    console.clear();
+    console.log("Session CSRF Token");
+    console.log(sessionCSRFToken);
+    console.log("Request CSRF Token");
+    console.log(requestCSRFToken);
+
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
+    
+    if (user !== undefined && isCSRFValid === true) {
 
         // Create a new instance of our user to gain access to mongoose static methods
         const userInstance = new User(user);
@@ -197,8 +220,16 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
         request.session.user = userInstance;
     }
 
-    // Redirect to the cart page
-    response.redirect("cart");
+    // If our csrf check fails then output a separate response, otherwise, go to the cart page
+    if (isCSRFValid === true) {
+
+        // Redirect to the cart page
+        response.redirect("cart");
+
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
+    }
 }
 
 // Delete an item from the cart using cart item

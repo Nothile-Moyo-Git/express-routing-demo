@@ -6,7 +6,7 @@ import isAuthenticated from "../middleware/is-auth";
 // Import our router renderers
 import { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails} from "../controllers/shop";
 
-const shopRoutes = express.Router();
+const shopRoutes = express.Router({ strict : true});
 
 // Base middleware response, 
 shopRoutes.get("/", getIndex),
