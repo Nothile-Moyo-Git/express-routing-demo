@@ -6,6 +6,7 @@
  * This index file currently uses both MongoDB and Mongoose. We use Mongoose as our ODM (Object Document Mapper). An ODM works very similarly to an ORM
  * 
  * @method startServer : async () => void
+ * @method generateCSRFToken : () => number
  */
 
 // Imports, we're creating an express http server using development variables
@@ -43,6 +44,12 @@ const app = express();
 // Get our port number from our environment file
 const port = process.env.DEV_PORT;
 
+// Set the type of view engine we want to use
+// We can use pug or EJS since it's supported out of the box
+// Register a templating engine even it's not the default, we do this with ejs
+app.set('view engine', 'ejs');
+app.set('views', 'src/views');
+
 // Run the urlEncoded bodyParser to get the body of our objects
 // This allows us to get request.body
 app.use( bodyParser.urlencoded({ extended : true }) );
@@ -55,6 +62,11 @@ app.use( express.static( path.join( __dirname, "/images" ) ));
 
 // Enable cookie parsing middleware
 app.use(cookieParser());
+
+// Generate a random CSRF token without using a deprecated package
+const generateCSRFToken = () => {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
 
 // Here we create a session, but unlike before, we store it on the server side.
 // We instead store a secret key that's passed through to the backend
@@ -81,18 +93,15 @@ app.use(
     })
 ); 
 
-
-
-// Set the type of view engine we want to use
-// We can use pug or EJS since it's supported out of the box
-// Register a templating engine even it's not the default, we do this with ejs
-app.set('view engine', 'ejs');
-app.set('views', 'src/views');
-
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
 app.use( async( request : any, response : Response, next : NextFunction ) => {
+
+    // Create a new CSRF token and save it on the server session
+    if (!request.session.csrfToken) {
+        request.session.csrfToken = generateCSRFToken();
+    }
 
     // Check if we have any users
     const userCount = await User.countDocuments();
