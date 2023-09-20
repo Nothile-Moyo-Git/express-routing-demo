@@ -26,6 +26,7 @@
                                     <button class="card__button">Edit</button>
                                 </form>
                                 <form class="card__form" method="POST" action="<%= `/admin/delete-product/${product._id.toString()}` %>">
+                                    <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
                                     <button class="card__button">Delete</button>
                                 </form>
                             </div>

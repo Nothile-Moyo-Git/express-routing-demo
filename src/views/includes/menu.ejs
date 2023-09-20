@@ -30,7 +30,7 @@
 
                 <li class="menu__item">
                     <form action="/logout" method="POST">
-                        <input type="hidden" value="<%= csrfToken %>"/>
+                        <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
                         <input type="submit" value="Logout"/>
                     </form>
                 </li>

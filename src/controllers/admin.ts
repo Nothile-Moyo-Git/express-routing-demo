@@ -43,7 +43,8 @@ interface ExtendedRequest extends Request{
         title : string,
         image : string,
         price : number,
-        description : string
+        description : string,
+        csrfToken : string
     }
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>
@@ -76,29 +77,43 @@ const postAddProduct = async(request : ExtendedRequest, response : Response, nex
     const price = Number(request.body.price);
     const description = request.body.description;
 
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+    
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
+
     // Instantiate the User that we have
     const user = request.session.user;
 
-    // Check if we have a user
-    const hasUser = user !== undefined;
+    if (isCSRFValid === true) {
 
-    // Instantiate our product
-    const product = new Product({
-        title : title,
-        image : image,
-        description : description,
-        price : price,
-        userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
-    });
+        // Check if we have a user
+        const hasUser = user !== undefined;
 
-    // Save our new product to the database
-    // Note : This method is inherited from the Mongoose model
-    // Only save the product if we're logged in
-    if (hasUser === true) {
-        product.save();
+        // Instantiate our product
+        const product = new Product({
+            title : title,
+            image : image,
+            description : description,
+            price : price,
+            userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
+        });
+
+        // Save our new product to the database
+        // Note : This method is inherited from the Mongoose model
+        // Only save the product if we're logged in
+        if (hasUser === true) {
+            product.save();
+        }
+
+        response.redirect("/products");
+
+    }else{
+        
+        response.status(403).send("CSRF protection failed!");
     }
-
-    response.redirect("/products");
 };
 
 // Get admin products controller
@@ -147,16 +162,30 @@ const updateProduct = async (request : ExtendedRequest, response : Response, nex
     // Create a new product Id and guard it
     const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
-    // Update the product information using mongoose's updateOne method with the id provided previously
-    await Product.updateOne({ _id : productId },{ 
-        title : title,
-        price : price,
-        description : description,
-        image : image
-    });
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+    
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    // Render the view of the page
-    response.redirect("/admin/products");
+    if (isCSRFValid === true) {
+
+        // Update the product information using mongoose's updateOne method with the id provided previously
+        await Product.updateOne({ _id : productId },{ 
+            title : title,
+            price : price,
+            description : description,
+            image : image
+        });
+
+        // Render the view of the page
+        response.redirect("/admin/products");
+
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
+    }
 };
 
 // Delete product controller
@@ -172,15 +201,29 @@ const deleteProduct = async (request : ExtendedRequest, response : Response, nex
     // Check if we have any users that work with the session
     const hasUser = user !== undefined;
 
-    // Create a new product Id and guard it
-    const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+    
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    if (hasUser === true) {
-        await Product.deleteOne( {_id : productId} );
+    if (isCSRFValid === true) {
+
+        // Create a new product Id and guard it
+        const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
+
+        if (hasUser === true) {
+            await Product.deleteOne( {_id : productId} );
+        }
+
+        // Redirect to the admin products page since we executed admin functionality
+        response.redirect("/admin/products");
+
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
     }
-
-    // Redirect to the admin products page since we executed admin functionality
-    response.redirect("/admin/products");
 };
 
 export { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct }; 

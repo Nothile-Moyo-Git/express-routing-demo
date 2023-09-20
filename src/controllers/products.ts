@@ -34,7 +34,8 @@ interface UserInterface {
 // Extending session data as opposed to declaration merging
 interface ExtendedSessionData extends SessionData {
     isLoggedIn : boolean,
-    user : UserInterface
+    user : UserInterface,
+    csrfToken : string
 }
 
 interface ExtendedRequest extends Request{
@@ -51,6 +52,9 @@ const getAdminEditProduct = async (request : ExtendedRequest, response : Respons
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
+
+    // csrfToken from our session
+    const csrfToken = request.session.csrfToken;
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -73,7 +77,8 @@ const getAdminEditProduct = async (request : ExtendedRequest, response : Respons
             id : productId, 
             productInformation : singleProduct,
             hasProducts : hasProduct,
-            isAuthenticated : isLoggedIn === undefined ? false : true
+            isAuthenticated : isLoggedIn === undefined ? false : true,
+            csrfToken : csrfToken
         }
     );
 };

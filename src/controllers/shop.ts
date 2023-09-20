@@ -201,12 +201,12 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
     const sessionCSRFToken = request.session.csrfToken;
     const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
 
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
+
     // Get product details
     const product = await Product.findOne({_id : productId})
     .select("title price _id");
-
-    // Check if our csrf values are correct
-    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
     if (user !== undefined && isCSRFValid === true) {
 
@@ -244,51 +244,80 @@ const postCartDelete = (request : ExtendedRequest, response : Response, next : N
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
 
-    // Create a new user instance so we can access the appropriate methods
-    const userInstance = new User(request.User);
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
 
-    // Delete the item from the cart
-    userInstance.deleteFromCart(productId);
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    // Update the user in our session
-    request.session.user = userInstance;
+    if (isCSRFValid === true) {
 
-    // Reload the cart page so we can query the updated cart
-    response.redirect('back');
+        // Create a new user instance so we can access the appropriate methods
+        const userInstance = new User(request.User);
+
+        // Delete the item from the cart
+        userInstance.deleteFromCart(productId);
+
+        // Update the user in our session
+        request.session.user = userInstance;
+
+        // Reload the cart page so we can query the updated cart
+        response.redirect('back');
+        
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
+    }
 };
 
 // Create an order in the SQL backend
 const postOrderCreate = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Create our order from the cart we pass through from the User singleton found in index.ts
-    const orderInstance = new Order({
-        totalPrice : request.User.cart.totalPrice,
-        orderItems : request.User.cart.items,
-        user : {
-            _id : request.User._id,
-            name : request.User.name
-        }
-    });
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
 
-    // Store the order in the database
-    await orderInstance.save();
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    // We now need to empty our cart
-    // We will create a User instance and we will delete the cart from the instance
-    // Then we'll execute the save method to update the database user
-    const userInstance = new User(request.User);
+    if (isCSRFValid === true) {
 
-    // Empty the cart now that we've saved it as an order
-    userInstance.emptyCart();
+        // Create our order from the cart we pass through from the User singleton found in index.ts
+        const orderInstance = new Order({
+            totalPrice : request.User.cart.totalPrice,
+            orderItems : request.User.cart.items,
+            user : {
+                _id : request.User._id,
+                name : request.User.name
+            }
+        });
 
-    // Update the user details in MongoDB
-    await userInstance.save();
+        // Store the order in the database
+        await orderInstance.save();
 
-    // Update the user in the session and empty their cart too
-    request.session.user = userInstance;
-    
-    // Move to the orders page
-    response.redirect("/orders");
+        // We now need to empty our cart
+        // We will create a User instance and we will delete the cart from the instance
+        // Then we'll execute the save method to update the database user
+        const userInstance = new User(request.User);
+
+        // Empty the cart now that we've saved it as an order
+        userInstance.emptyCart();
+
+        // Update the user details in MongoDB
+        await userInstance.save();
+
+        // Update the user in the session and empty their cart too
+        request.session.user = userInstance;
+        
+        // Move to the orders page
+        response.redirect("/orders");
+
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
+    }
+
 };
 
 export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };

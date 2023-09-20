@@ -40,7 +40,8 @@ interface SessionUser {
 // Extending session data as opposed to declaration merging
 interface ExtendedSessionData extends SessionData {
     isLoggedIn : boolean,
-    user : SessionUser
+    user : SessionUser,
+    csrfToken : string
 }
 interface ExtendedRequest extends Request{
     User : UserInterface,
@@ -48,7 +49,8 @@ interface ExtendedRequest extends Request{
         emailInput : string,
         passwordInput : string,
         secondPasswordInput : string,
-        nameInput : string
+        nameInput : string,
+        csrfToken : string
     },
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>,
@@ -62,12 +64,15 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/login", { pageTitle : "Login", isAuthenticated : false });
+        response.render("auth/login", { pageTitle : "Login", isAuthenticated : false, csrfToken : csrfToken });
     }else{
 
         // If we're already logged in, redirect to the products page
@@ -81,12 +86,15 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : true, passwordsMatch : true });
+        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : true, passwordsMatch : true, csrfToken : csrfToken });
     }else{
 
         // If we're already logged in, redirect to the products page
@@ -102,32 +110,46 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
     const isEmailValid = (validate(request.body.emailInput) && tempUser === null); 
     const passwordsMatch = request.body.passwordInput === request.body.secondPasswordInput;
 
-    // If our validation checks are valid, then we redirect to the login page since we've created a new user
-    if (isEmailValid === true && passwordsMatch === true && tempUser === null) {
-
-        // Create a new user since our checks are valid
-        const newUser = new User({
-            name : request.body.nameInput,
-            email : request.body.emailInput,
-            password :  bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
-            cart : {
-                items : [],
-                totalPrice : 0
-            }
-        });
-
-        // Save the new user to the database
-        await newUser.save();
-        
-        // Go the login page since we now have a valid check
-        response.redirect("/login");
-    }else{
-
-        // Set the error message using a ternary operator based on if we already have a user with the same email or not
-        const emailErrorMessage = tempUser === null ? "Error : Email address isn't valid" : "Error : Email address is already in use";
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
     
-        // Reload the login page with the correct values
-        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : isEmailValid, emailErrorMessage : emailErrorMessage, passwordsMatch : passwordsMatch });
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
+
+    if (isCSRFValid === true) {
+
+        // If our validation checks are valid, then we redirect to the login page since we've created a new user
+        if (isEmailValid === true && passwordsMatch === true && tempUser === null) {
+
+            // Create a new user since our checks are valid
+            const newUser = new User({
+                name : request.body.nameInput,
+                email : request.body.emailInput,
+                password :  bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
+                cart : {
+                    items : [],
+                    totalPrice : 0
+                }
+            });
+
+            // Save the new user to the database
+            await newUser.save();
+            
+            // Go the login page since we now have a valid check
+            response.redirect("/login");
+        }else{
+
+            // Set the error message using a ternary operator based on if we already have a user with the same email or not
+            const emailErrorMessage = tempUser === null ? "Error : Email address isn't valid" : "Error : Email address is already in use";
+        
+            // Reload the login page with the correct values
+            response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : isEmailValid, emailErrorMessage : emailErrorMessage, passwordsMatch : passwordsMatch });
+        }
+
+    }else{
+        
+        response.status(403).send("CSRF protection failed!");
     }
 };
 
@@ -138,74 +160,99 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
     const email = request.body.emailInput;
     const password = request.body.passwordInput;
 
-    // 
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+    
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    // Get a list of users
-    const users = await User.find({email : email.toLowerCase()});
+    if (isCSRFValid === true) {
 
-    // We define these variables here as we need to scope them correctly as we validate the user
-    let isPasswordValid : boolean;
-    let isEmailValid : boolean; 
-    let currentUser : SessionUser | undefined = undefined;
+        // Get a list of users
+        const users = await User.find({email : email.toLowerCase()});
 
-    users.forEach((user : UserInterface) => {
+        // We define these variables here as we need to scope them correctly as we validate the user
+        let isPasswordValid : boolean;
+        let isEmailValid : boolean; 
+        let currentUser : SessionUser | undefined = undefined;
 
-        // Compare the submitted password to the hashed password
-        if (bcrypt.compareSync(password, user.password)) {
-            isPasswordValid = true;
-        }
+        users.forEach((user : UserInterface) => {
 
-        // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
-        if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
-            isEmailValid = true;
-        }
-
-        if (isPasswordValid === true && isEmailValid === true) {
-            currentUser = {
-                _id : new ObjectId(user._id),
-                name : user.name,
-                email : user.email,
-                cart : user.cart
+            // Compare the submitted password to the hashed password
+            if (bcrypt.compareSync(password, user.password)) {
+                isPasswordValid = true;
             }
+
+            // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
+            if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
+                isEmailValid = true;
+            }
+
+            if (isPasswordValid === true && isEmailValid === true) {
+                currentUser = {
+                    _id : new ObjectId(user._id),
+                    name : user.name,
+                    email : user.email,
+                    cart : user.cart
+                }
+            }
+        });
+
+        // Set is logged in to true and pass the user id through as well to the session
+        if (isPasswordValid === true && isEmailValid === true) {
+
+            request.session.user = currentUser;
+            request.session.isLoggedIn = true;
+            response.redirect("products");
+        } else {
+            response.redirect('back');
         }
-    });
-
-    // Set is logged in to true and pass the user id through as well to the session
-    if (isPasswordValid === true && isEmailValid === true) {
-
-        request.session.user = currentUser;
-        request.session.isLoggedIn = true;
-        response.redirect("products");
-    } else {
-        response.redirect('back');
+    }else{
+        
+        response.status(403).send("CSRF protection failed!");
     }
 };
 
 // Logout page controller
 const postLogoutAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Wrap this functionality in a try catch block just to be safe with the added guarding
-    try {
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+    
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-        // Destroy the session in the database
-        request.session.destroy((error : unknown) => {
+    if (isCSRFValid === true) {
 
-            if (!error) {
+        // Wrap this functionality in a try catch block just to be safe with the added guarding
+        try {
 
-                // Clear the cookie in our browser as well
-                response.clearCookie("Adeptus");
+            // Destroy the session in the database
+            request.session.destroy((error : unknown) => {
 
-                response.redirect("login");
-            }
-        });
+                if (!error) {
+
+                    // Clear the cookie in our browser as well
+                    response.clearCookie("Adeptus");
+
+                    response.redirect("login");
+                }
+            });
+            
+        }catch(error : unknown){
+
+            console.clear();
+            console.error("Error : Logout functionality failed, please contact the development team");
+
+            // Go back to the page we were previously on
+            response.redirect("back");
+        }
+
+    }else{
         
-    }catch(error : unknown){
-
-        console.clear();
-        console.error("Error : Logout functionality failed, please contact the development team");
-
-        // Go back to the page we were previously on
-        response.redirect("back");
+        response.status(403).send("CSRF protection failed!");
     }
 };
 
