@@ -37,6 +37,7 @@
                                         <form class="cart__modal-column" action="/cart-delete-item" method="POST">
                                             <button class="cart__modal-button" type="submit">X</button>
                                             <input type="hidden" name="productId" value=<%= `${id}` %>/>
+                                            <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
                                         </form>
                                     </li>
                                 <%  }); %>

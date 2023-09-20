@@ -33,7 +33,8 @@ interface UserInterface {
 // Extending session data as opposed to declaration merging
 interface ExtendedSessionData extends SessionData {
     isLoggedIn : boolean,
-    user : SessionUser
+    user : SessionUser,
+    csrfToken : string
 }
 
 interface ExtendedRequest extends Request{
@@ -54,11 +55,15 @@ const getAddProduct = (request : ExtendedRequest, response : Response, next : Ne
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
     // Send our HTML file to the browser
     response.render("admin/add-product", { 
         pageTitle: "Add Product", 
         path: "/admin/add-product", 
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : isLoggedIn === undefined ? false : true,
+        csrfToken : csrfToken
     });
 };
 
@@ -102,6 +107,9 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
     // Instantiate the User that we have
     const user = request.session.user;
 
@@ -118,7 +126,8 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
         prods : products, 
         pageTitle : "Admin Products", 
         hasProducts : products.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : isLoggedIn === undefined ? false : true,
+        csrfToken : csrfToken
     });
 };
 

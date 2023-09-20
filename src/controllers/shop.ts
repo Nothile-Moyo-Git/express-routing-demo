@@ -96,6 +96,9 @@ const getOrders = async ( request : ExtendedRequest, response : Response, next :
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
+    // Get our CSRF token if we don't have one already
+    const csrfToken = request.session.csrfToken;
+
     // Get the user from the request session
     const user = request.session.user;
 
@@ -108,16 +111,21 @@ const getOrders = async ( request : ExtendedRequest, response : Response, next :
         pageTitle : "Orders", 
         orders : orders, 
         hasOrders : orders.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : isLoggedIn === undefined ? false : true,
+        csrfToken : csrfToken
     });
 };
 
 // Get the checkout page from the cart
 const getCheckout = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
 
+    // Get our CSRF token if we don't have one already
+    const csrfToken = request.session.csrfToken;
+
     response.render("shop/checkout", { 
         pageTitle : "Checkout",
-        isAuthenticated : true
+        isAuthenticated : true,
+        csrfToken : csrfToken
     });
 };
 
@@ -126,6 +134,9 @@ const getProductDetails = async ( request : ExtendedRequest, response : Response
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
+
+    // Get our CSRF token if we don't have one already
+    const csrfToken = request.session.csrfToken;
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -145,7 +156,8 @@ const getProductDetails = async ( request : ExtendedRequest, response : Response
         hasProduct : hasProduct, 
         productDetails : singleProduct,
         pageTitle : "Product details",
-        isAuthenticated : isLoggedIn === undefined ? false : true
+        isAuthenticated : isLoggedIn === undefined ? false : true,
+        csrfToken : csrfToken
     });
 };
 
@@ -193,15 +205,9 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
     const product = await Product.findOne({_id : productId})
     .select("title price _id");
 
-    console.clear();
-    console.log("Session CSRF Token");
-    console.log(sessionCSRFToken);
-    console.log("Request CSRF Token");
-    console.log(requestCSRFToken);
-
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
-    
+
     if (user !== undefined && isCSRFValid === true) {
 
         // Create a new instance of our user to gain access to mongoose static methods
