@@ -25,6 +25,10 @@
 
     &__label{
         color: white;
+
+        &--error{
+            color: pink;
+        }
     }
 
     &__input{
@@ -35,5 +39,10 @@
         box-shadow: branding.$button_shadow;
         transition: animations.$standard_transition;
         font-size: 1rem;
+
+        &--error{
+            border-color: pink;
+            background-color: pink !important;
+        }
     }
 }

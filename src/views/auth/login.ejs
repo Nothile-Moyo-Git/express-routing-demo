@@ -11,7 +11,7 @@
             <form class="login__form" method="POST" action="/login">
 
                 <div class="login__field">
-                    <label for="emailInput" id="emailLabel" class="login__label">Email Address*</label>
+                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? `login__label` : `login__label login__label--error` %>"><%= emailError.length === 0 ? `Email Address*` : emailError %></label>
                     <input
                         type="email"
                         id="emailInput"

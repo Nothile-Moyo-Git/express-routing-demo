@@ -67,12 +67,23 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
+    // Convert values to a string, we do this because we otherwise get the flash data type which we can't get the length of
+    const emailError : string = request.flash("emailError").toString();
+    const passwordError : string = request.flash("passwordError").toString();
+
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/login", { pageTitle : "Login", isAuthenticated : false, csrfToken : csrfToken });
+        response.render("auth/login", { 
+            pageTitle : "Login", 
+            isAuthenticated : false, 
+            csrfToken : csrfToken, 
+            emailError : emailError,
+            passwordError : passwordError
+        });
+
     }else{
 
         // If we're already logged in, redirect to the products page
@@ -172,37 +183,58 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
         // Get our current User from the backend
         const user = await User.findOne({email : email.toLowerCase()});
 
-        // We define these variables here as we need to scope them correctly as we validate the user
-        let isPasswordValid : boolean;
-        let isEmailValid : boolean; 
-        let currentUser : SessionUser | undefined = undefined;
+        // Make sure that we have a user before we reference their properties
+        if (user !== null) {
 
-        // Compare the submitted password to the hashed password
-        if (bcrypt.compareSync(password, user.password)) {
-            isPasswordValid = true;
-        }
+            // We define these variables here as we need to scope them correctly as we validate the user
+            let isPasswordValid : boolean = false;
+            let isEmailValid : boolean = false;
+            let currentUser : SessionUser | undefined = undefined;
 
-        // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
-        if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
-            isEmailValid = true;
-        }
-
-        if (isPasswordValid === true && isEmailValid === true) {
-            currentUser = {
-                _id : new ObjectId(user._id),
-                name : user.name,
-                email : user.email,
-                cart : user.cart
+            // Compare the submitted password to the hashed password
+            if (bcrypt.compareSync(password, user.password)) {
+                isPasswordValid = true;
             }
-        }
 
-        // Set is logged in to true and pass the user id through as well to the session
-        if (isPasswordValid === true && isEmailValid === true) {
+            // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
+            if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
+                isEmailValid = true;
+            }
 
-            request.session.user = currentUser;
-            request.session.isLoggedIn = true;
-            response.redirect("products");
-        } else {
+            // If our password and emails are valid
+            if (isPasswordValid === true && isEmailValid === true) {
+                currentUser = {
+                    _id : new ObjectId(user._id),
+                    name : user.name,
+                    email : user.email,
+                    cart : user.cart
+                }
+            }
+
+            // Set is logged in to true and pass the user id through as well to the session
+            if (isPasswordValid === true && isEmailValid === true) {
+
+                // Set the user in the current session
+                request.session.user = currentUser;
+                request.session.isLoggedIn = true;
+                response.redirect("products");
+
+            } else {
+
+                // Set the email and password error messages if they're available
+                isEmailValid === false && request.flash("emailError", "Error : Email address isn't a valid format");
+                isPasswordValid === false && request.flash("passwordError", "Error : Password isn't valid");
+
+                // Reload the login page
+                response.redirect('back');
+            }
+
+        }else{
+
+            // Set the flash messages for our email address and password
+            request.flash("emailError", "Error : User doesn't exist in the database");
+
+            // Reload the login page
             response.redirect('back');
         }
 
