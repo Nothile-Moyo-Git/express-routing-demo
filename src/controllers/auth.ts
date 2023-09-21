@@ -55,7 +55,7 @@ interface ExtendedRequest extends Request{
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>,
     emailAddressValid : boolean,
-    passwordsMatch : boolean
+    passwordsMatch : boolean,
 }
 
 // Get login page controller
@@ -169,35 +169,32 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
 
     if (isCSRFValid === true) {
 
-        // Get a list of users
-        const users = await User.find({email : email.toLowerCase()});
+        // Get our current User from the backend
+        const user = await User.findOne({email : email.toLowerCase()});
 
         // We define these variables here as we need to scope them correctly as we validate the user
         let isPasswordValid : boolean;
         let isEmailValid : boolean; 
         let currentUser : SessionUser | undefined = undefined;
 
-        users.forEach((user : UserInterface) => {
+        // Compare the submitted password to the hashed password
+        if (bcrypt.compareSync(password, user.password)) {
+            isPasswordValid = true;
+        }
 
-            // Compare the submitted password to the hashed password
-            if (bcrypt.compareSync(password, user.password)) {
-                isPasswordValid = true;
-            }
+        // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
+        if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
+            isEmailValid = true;
+        }
 
-            // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
-            if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
-                isEmailValid = true;
+        if (isPasswordValid === true && isEmailValid === true) {
+            currentUser = {
+                _id : new ObjectId(user._id),
+                name : user.name,
+                email : user.email,
+                cart : user.cart
             }
-
-            if (isPasswordValid === true && isEmailValid === true) {
-                currentUser = {
-                    _id : new ObjectId(user._id),
-                    name : user.name,
-                    email : user.email,
-                    cart : user.cart
-                }
-            }
-        });
+        }
 
         // Set is logged in to true and pass the user id through as well to the session
         if (isPasswordValid === true && isEmailValid === true) {
@@ -208,6 +205,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
         } else {
             response.redirect('back');
         }
+
     }else{
         
         response.status(403).send("CSRF protection failed!");

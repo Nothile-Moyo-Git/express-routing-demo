@@ -27,6 +27,7 @@ import MongoStore from "connect-mongo";
 import { password } from "./data/connection";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
+import flash from "connect-flash";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -43,6 +44,12 @@ const app = express();
 
 // Get our port number from our environment file
 const port = process.env.DEV_PORT;
+
+// Extending the functionality of our express framework
+// We define our views, our bodyparser so we can get the request.body from request (forms)
+// We define our static routes for css files and images
+// We define our cookie parser so we can work with our cookies and read them
+// Finally, we use flash so we can temporarily pass values from one request to another(such as a failed login)
 
 // Set the type of view engine we want to use
 // We can use pug or EJS since it's supported out of the box
@@ -61,12 +68,10 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 app.use( express.static( path.join( __dirname, "/images" ) ));
 
 // Enable cookie parsing middleware
-app.use(cookieParser());
+app.use( cookieParser() );
 
-// Generate a random CSRF token without using a deprecated package
-const generateCSRFToken = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-};
+// Allow flash messages to be used.
+app.use( flash() );
 
 // Here we create a session, but unlike before, we store it on the server side.
 // We instead store a secret key that's passed through to the backend
@@ -92,6 +97,11 @@ app.use(
         })     
     })
 ); 
+
+// Generate a random CSRF token without using a deprecated package
+const generateCSRFToken = () => {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
 
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
