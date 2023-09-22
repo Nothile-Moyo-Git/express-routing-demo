@@ -24,12 +24,12 @@
                 </div>
 
                 <div class="signup__field">
-                    <label for="emailInput" id="emailLabel" class="<%= emailValid === true ? `signup__label` : `signup__label signup__label--error` %>"><%= emailValid === true ? "Email Address*" : emailErrorMessage %></label>
+                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= emailError.length === 0 ? "Email Address*" : emailError %></label>
                     <input
                         type="email"
                         id="emailInput"
                         name="emailInput"
-                        class="<%= emailValid === true ? `signup__input` : `signup__input signup__input--error` %>"
+                        class="<%= emailError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
                         required
@@ -37,12 +37,12 @@
                 </div>
 
                 <div class="signup__field">
-                    <label for="passwordInput" id="passwordLabel" class="<%= passwordsMatch === true ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordsMatch === true ? "Password*" : "Error : Passwords aren't the same" %></label>
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Password*" : "Error : Passwords aren't the same" %></label>
                     <input
                         type="password"
                         id="passwordInput"
                         name="passwordInput"
-                        class="<%= passwordsMatch === true ? `signup__input` : `signup__input signup__input--error` %>"
+                        class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="passwordLabel"
                         placeholder="Please enter your password"
                         required
@@ -50,12 +50,12 @@
                 </div>
 
                 <div class="signup__field">
-                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordsMatch === true ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordsMatch === true ? "Confirm Your Password*" : "Error : Passwords aren't the same" %></label>
+                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Confirm Your Password*" : "Error : Passwords aren't the same" %></label>
                     <input
                         type="password"
                         id="secondPasswordInput"
                         name="secondPasswordInput"
-                        class="<%= passwordsMatch === true ? `signup__input` : `signup__input signup__input--error` %>"
+                        class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="secondPasswordLabel"
                         placeholder="Please enter your password"
                         required

@@ -71,11 +71,6 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     const emailError : string = request.flash("emailError").toString();
     const passwordError : string = request.flash("passwordError").toString();
 
-    console.log("Email");
-    console.log(emailError);
-    console.log("Password");
-    console.log(passwordError);
-
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
@@ -105,12 +100,16 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
+    // Convert values to a string, we do this because we otherwise get the flash data type which we can't get the length of
+    const emailError : string = request.flash("emailError").toString();
+    const passwordError : string = request.flash("passwordError").toString();
+
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : true, passwordsMatch : true, csrfToken : csrfToken });
+        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailError : emailError, passwordError : passwordError, csrfToken : csrfToken });
     }else{
 
         // If we're already logged in, redirect to the products page
@@ -158,9 +157,13 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
 
             // Set the error message using a ternary operator based on if we already have a user with the same email or not
             const emailErrorMessage = tempUser === null ? "Error : Email address isn't valid" : "Error : Email address is already in use";
+
+            // Set our flash messages
+            !isEmailValid && request.flash("emailError", emailErrorMessage);
+            !passwordsMatch && request.flash("passwordError", "Error : passwords don't match"); 
         
             // Reload the login page with the correct values
-            response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailValid : isEmailValid, emailErrorMessage : emailErrorMessage, passwordsMatch : passwordsMatch });
+            response.redirect("back");
         }
 
     }else{
