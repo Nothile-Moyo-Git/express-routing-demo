@@ -11,12 +11,12 @@
             <form class="login__form" method="POST" action="/login">
 
                 <div class="login__field">
-                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? `login__label` : `login__label login__label--error` %>"><%= emailError.length === 0 ? `Email Address*` : emailError %></label>
+                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? 'login__label' : 'login__label login__label--error' %>"><%= emailError.length === 0 ? `Email Address*` : emailError %></label>
                     <input
                         type="email"
                         id="emailInput"
                         name="emailInput"
-                        class="login__input"
+                        class="<%= emailError.length === 0 ? 'login__input' : 'login__input login__input--error' %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
                         autocomplete="on"
@@ -25,13 +25,13 @@
                 </div>
 
                 <div class="login__field">
-                    <label for="passwordInput" id="passwordLabel" class="login__label">Password*</label>
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? 'login__label' : 'login__label--error' %>">Password*</label>
                     <input
                         type="password"
                         id="passwordInput"
                         name="passwordInput"
-                        class="login__input"
-                        aria-labelledby="passwordLabel"
+                        class="<%= passwordError === 0 ? 'login__input' : 'login__input login__input--error' %>"
+                        aria-labelledby="passwordLabel"                                 
                         placeholder="Please enter your password"
                         autocomplete="on"
                         required

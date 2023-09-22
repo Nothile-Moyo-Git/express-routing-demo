@@ -29,9 +29,9 @@
                 </li>
 
                 <li class="menu__item">
-                    <form action="/logout" method="POST">
+                    <form action="/logout" method="POST" class="menu__form">
                         <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
-                        <input type="submit" value="Logout"/>
+                        <input type="submit" class="menu__logout-text" value="Logout"/>
                     </form>
                 </li>
                 

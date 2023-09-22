@@ -71,6 +71,11 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     const emailError : string = request.flash("emailError").toString();
     const passwordError : string = request.flash("passwordError").toString();
 
+    console.log("Email");
+    console.log(emailError);
+    console.log("Password");
+    console.log(passwordError);
+
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
