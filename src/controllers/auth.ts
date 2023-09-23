@@ -5,6 +5,10 @@ import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import bcrypt from "bcrypt";
 import { validate } from 'email-validator';
+import nodemailer from "nodemailer";
+import sgTransport from "nodemailer-sendgrid-transport";
+import { sendgridOptions } from "../data/connection";
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 // Cart items interface
 interface CartItem {
@@ -58,8 +62,36 @@ interface ExtendedRequest extends Request{
     passwordsMatch : boolean,
 }
 
+// Create a "transporter" object which allows you to send emails
+const transporter = nodemailer.createTransport(sgTransport(sendgridOptions));
+
 // Get login page controller
 const getLoginPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // Testing and debugging code
+    const testEmail = {
+        to : ["nothile1@gmail.com"],
+        from: "nothile1@gmail.com",
+        subject : "Signup successful",
+        text : "Congratulations, you successfully signed up",
+        html : "<h1>Good job on your successful signup :)</h1>"
+    };
+
+    // Send the email from sendgrid
+    transporter.sendMail(testEmail, (error : Error, response : SMTPTransport.SentMessageInfo) => {
+
+        // Email handling
+        if (error) {
+
+            console.clear();
+            console.log("There was an error sending your email");
+            console.log(error);
+        }else{
+            console.clear();
+            console.log("Email successful, response below");
+            console.log(response);
+        }
+    });
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
