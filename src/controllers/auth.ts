@@ -68,31 +68,6 @@ const transporter = nodemailer.createTransport(sgTransport(sendgridOptions));
 // Get login page controller
 const getLoginPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Testing and debugging code
-    const testEmail = {
-        to : ["nothile1@gmail.com"],
-        from: "nothile1@gmail.com",
-        subject : "Signup successful",
-        text : "Congratulations, you successfully signed up",
-        html : "<h1>Good job on your successful signup :)</h1>"
-    };
-
-    // Send the email from sendgrid
-    transporter.sendMail(testEmail, (error : Error, response : SMTPTransport.SentMessageInfo) => {
-
-        // Email handling
-        if (error) {
-
-            console.clear();
-            console.log("There was an error sending your email");
-            console.log(error);
-        }else{
-            console.clear();
-            console.log("Email successful, response below");
-            console.log(response);
-        }
-    });
-
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
@@ -182,6 +157,31 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
 
             // Save the new user to the database
             await newUser.save();
+
+            // Testing and debugging code
+            const options = {
+                to : [request.body.emailInput],
+                from: "nothile1@gmail.com",
+                subject : "Signup successful",
+                text : "Congratulations, you successfully signed up",
+                html : "<h1>Good job on your successful signup :)</h1>"
+            };
+
+            // Send the email from sendgrid
+            transporter.sendMail(options, (error : Error, response : SMTPTransport.SentMessageInfo) => {
+
+                // Email handling
+                if (error) {
+
+                    console.clear();
+                    console.log("There was an error sending your email");
+                    console.log(error);
+                }else{
+                    console.clear();
+                    console.log("Email successful, response below");
+                    console.log(response);
+                }
+            });
             
             // Go the login page since we now have a valid check
             response.redirect("/login");

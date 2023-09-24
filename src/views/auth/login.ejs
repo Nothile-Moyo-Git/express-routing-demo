@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="login__field">
-                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? 'login__label' : 'login__label--error' %>">Password*</label>
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? 'login__label' : 'login__label--error' %>"><%= passwordError === 0 ? 'Password*' : 'Error : Password is incorrect' %></label>
                     <input
                         type="password"
                         id="passwordInput"
