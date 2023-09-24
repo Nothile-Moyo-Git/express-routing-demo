@@ -124,6 +124,16 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
     }
 };
 
+// Render the password reset page
+const getPasswordResetPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
+    // Render the password reset page
+    response.render("auth/password-reset", { pageTitle : "Reset your password", csrfToken : csrfToken, isAuthenticated : false });
+};
+
 // Post signup page controller, handles the signup form submission
 const postSignupPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
@@ -327,4 +337,4 @@ const postLogoutAttemptController = async (request : ExtendedRequest, response :
 };
 
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController };
+export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController };
