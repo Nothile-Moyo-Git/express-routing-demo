@@ -54,7 +54,11 @@ interface ExtendedRequest extends Request{
         passwordInput : string,
         secondPasswordInput : string,
         nameInput : string,
-        csrfToken : string
+        csrfToken : string,
+        previousPasswordInput ?: string,
+        newPasswordInput ?: string,
+        confirmNewPasswordInput ?: string
+
     },
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>,
@@ -132,6 +136,52 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
 
     // Render the password reset page
     response.render("auth/password-reset", { pageTitle : "Reset your password", csrfToken : csrfToken, isAuthenticated : false });
+};
+
+// Handle the password reset functionality
+const postPasswordResetPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // csrfToken from our session
+    const sessionCSRFToken : string = request.session.csrfToken;
+    const requestCSRFToken : string = String(request.body.csrfToken).replace(/\/$/, "");
+    
+    // Check if our csrf values are correct
+    const isCSRFValid : boolean = sessionCSRFToken === requestCSRFToken;
+
+    if (isCSRFValid === true) {
+        
+
+        // Get our inputs so we can verify and check them
+        const emailAddress : string = request.body.emailInput;
+        const previousPassword : string = request.body.previousPasswordInput;
+        const newPassword : string = request.body.newPasswordInput;
+        const confirmNewPassword : string = request.body.confirmNewPasswordInput;
+
+        // Verify our inputs
+        console.clear();
+        console.log("Email address");
+        console.log(emailAddress);
+        console.log("\n\n");
+        console.log("Previous password");
+        console.log(previousPassword);
+        console.log("\n\n");
+        console.log("New password");
+        console.log(newPassword);
+        console.log("\n\n");
+        console.log("New password confirmation");
+        console.log(confirmNewPassword);
+        console.log("\n\n");
+        console.log("csrfToken");
+ 
+
+        // Render the password reset page
+        response.render("auth/password-reset", { pageTitle : "Reset your password", csrfToken : sessionCSRFToken, isAuthenticated : false });
+
+    }else{
+        
+        response.status(403).send("CSRF protection failed!");
+    }
+
 };
 
 // Post signup page controller, handles the signup form submission
@@ -337,4 +387,4 @@ const postLogoutAttemptController = async (request : ExtendedRequest, response :
 };
 
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController };
+export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController };
