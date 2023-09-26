@@ -139,20 +139,18 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     const previousPasswordError = request.flash("previousPasswordError");
     const newPasswordError = request.flash("newPasswordError");
 
-    console.clear();
-
-    console.log("Testing my flash messages for resetting the password");
-    console.log("Email error");
-    console.log(emailError);
-
-    console.log("Previous password error");
-    console.log(previousPasswordError);
-
-    console.log("New password error");
-    console.log(newPasswordError);
-
     // Render the password reset page
-    response.render("auth/password-reset", { pageTitle : "Reset your password", csrfToken : csrfToken, isAuthenticated : false });
+    response.render(
+        "auth/password-reset", 
+        { 
+            pageTitle : "Reset your password", 
+            csrfToken : csrfToken, 
+            isAuthenticated : false,
+            emailError : emailError,
+            previousPasswordError : previousPasswordError,
+            newPasswordError : newPasswordError
+        }
+    );
 };
 
 // Handle the password reset functionality
@@ -192,7 +190,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         }
 
         // Set our flash messages
-        tempUser === null && request.flash("emailError", "Error : User doesn't exist");
+        tempUser === null && request.flash("emailError", "Error : Email address not found in the database");
         isPasswordValid === false && request.flash("previousPasswordError", "Error : Previous password is wrong");
         newPassword !== confirmNewPassword && request.flash("newPasswordError", "Error : Passwords don't match");
 

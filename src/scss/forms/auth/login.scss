@@ -7,12 +7,14 @@
     flex-direction: column;
     width: calc(100% - 2rem);
     margin: auto;
+    max-width: 400px;
 
     &__form{
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 350px;
+        width: 100%;
+        margin: auto;
         max-width: 350px;
         grid-row-gap: 1rem;
     }
@@ -44,5 +46,11 @@
             border-color: pink;
             background-color: pink !important;
         }
+    }
+
+    &__reset-link{
+
+        color: white;
+        margin: 1rem auto auto auto;
     }
 }
