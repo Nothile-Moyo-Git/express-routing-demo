@@ -134,6 +134,23 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
+    // Get our flash messages, if they don't exist, they'll be empty
+    const emailError = request.flash("emailError");
+    const previousPasswordError = request.flash("previousPasswordError");
+    const newPasswordError = request.flash("newPasswordError");
+
+    console.clear();
+
+    console.log("Testing my flash messages for resetting the password");
+    console.log("Email error");
+    console.log(emailError);
+
+    console.log("Previous password error");
+    console.log(previousPasswordError);
+
+    console.log("New password error");
+    console.log(newPasswordError);
+
     // Render the password reset page
     response.render("auth/password-reset", { pageTitle : "Reset your password", csrfToken : csrfToken, isAuthenticated : false });
 };
@@ -149,39 +166,43 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
     const isCSRFValid : boolean = sessionCSRFToken === requestCSRFToken;
 
     if (isCSRFValid === true) {
-        
 
+        // We define these variables here as we need to scope them correctly as we validate the user
+        let isPasswordValid : boolean = false;
+        
         // Get our inputs so we can verify and check them
         const emailAddress : string = request.body.emailInput;
         const previousPassword : string = request.body.previousPasswordInput;
         const newPassword : string = request.body.newPasswordInput;
         const confirmNewPassword : string = request.body.confirmNewPasswordInput;
 
-        // Verify our inputs
-        console.clear();
-        console.log("Email address");
-        console.log(emailAddress);
-        console.log("\n\n");
-        console.log("Previous password");
-        console.log(previousPassword);
-        console.log("\n\n");
-        console.log("New password");
-        console.log(newPassword);
-        console.log("\n\n");
-        console.log("New password confirmation");
-        console.log(confirmNewPassword);
-        console.log("\n\n");
-        console.log("csrfToken");
- 
+        // See if we have a user in our database with the email address
+        const tempUser = await User.findOne({email : emailAddress});
+
+        // Check if the password works
+        if (tempUser !== null) {
+
+            // Compare the submitted password to the hashed password
+            if (bcrypt.compareSync(tempUser.password, previousPassword)) {
+                isPasswordValid = true;
+            }
+        }else{
+
+            isPasswordValid = true;
+        }
+
+        // Set our flash messages
+        tempUser === null && request.flash("emailError", "Error : User doesn't exist");
+        isPasswordValid === false && request.flash("previousPasswordError", "Error : Previous password is wrong");
+        newPassword !== confirmNewPassword && request.flash("newPasswordError", "Error : Passwords don't match");
 
         // Render the password reset page
-        response.render("auth/password-reset", { pageTitle : "Reset your password", csrfToken : sessionCSRFToken, isAuthenticated : false });
+        response.redirect("back");
 
     }else{
         
         response.status(403).send("CSRF protection failed!");
     }
-
 };
 
 // Post signup page controller, handles the signup form submission
@@ -252,7 +273,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
 
             // Set our flash messages
             !isEmailValid && request.flash("emailError", emailErrorMessage);
-            !passwordsMatch && request.flash("passwordError", "Error : passwords don't match"); 
+            !passwordsMatch && request.flash("passwordError", "Error : passwords don't match");
         
             // Reload the login page with the correct values
             response.redirect("back");
