@@ -9,6 +9,7 @@ import nodemailer from "nodemailer";
 import sgTransport from "nodemailer-sendgrid-transport";
 import { sendgridOptions } from "../data/connection";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import crypto from "crypto";
 
 // Cart items interface
 interface CartItem {
@@ -28,6 +29,8 @@ interface UserInterface {
         totalPrice : number,
         items : CartItem[]
     }
+    resetToken : string,
+    resetTokenExpiration : Date
 }
 
 // Session user
@@ -179,10 +182,59 @@ const getNewPasswordForm = async (request : ExtendedRequest, response : Response
 // Send the email which redirects to the password reset page
 const postNewPasswordController =  async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
-    // Set the response message
-        
+    // csrfToken from our session
+    const sessionCSRFToken : string = request.session.csrfToken;
+    const requestCSRFToken : string = String(request.body.csrfToken).replace(/\/$/, "");  
 
-    response.redirect("back");
+    // Get our inputs so we can verify and check them
+    const emailAddress : string = request.body.emailInput;
+
+    // Check if our csrf values are correct
+    const isCSRFValid : boolean = sessionCSRFToken === requestCSRFToken;
+
+    // Creating the token
+    let token : string = null;
+    crypto.randomBytes(32, (error, buffer) => {
+
+        if (error) {
+
+            console.clear();
+            console.log("Error below");
+            console.log("\n");
+            console.log(error);
+        }else{
+
+            token = buffer.toString("hex");
+        }
+    });
+
+    // CSRF protection
+    if (isCSRFValid === true) {
+
+        // See if we have a user in our database with the email address
+        const tempUser = await User.findOne({email : emailAddress});
+    
+        // If we have a user, then save a reset token we're going to use later
+        // If we don't have a user, then reload the page
+        if ( tempUser !== null ) {
+
+            // Set the variables we're going to save to the User object
+            tempUser.resetToken = token;
+            tempUser.resetTokenExpiration = new Date(Date.now() + 360000);
+
+            // Update the user with the reset tokens so we can update their password later
+            await tempUser.save();
+
+        }else{
+
+        }
+
+        response.redirect("back");
+
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
+    }
 };
 
 // Handle the password reset functionality
