@@ -43,7 +43,9 @@ interface User {
     cart : {
         totalPrice : number,
         items : CartItem[]
-    }
+    },
+    resetToken : string,
+    resetTokenExpiration : Date
 }
 
 // Adding the typing system for our methods in mongoose
@@ -77,6 +79,15 @@ const userSchema = new mongoose.Schema<User>({
             _id : false
         }],
         totalPrice : { type : Number, required : true }
+    },
+    resetToken : {
+        type : String,
+        lowercase : true,
+        required : false
+    },
+    resetTokenExpiration : {
+        type : Date,
+        required : false
     }
 });
 

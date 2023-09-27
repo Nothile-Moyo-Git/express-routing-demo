@@ -153,6 +153,38 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     );
 };
 
+// Render the new password form
+const getNewPasswordForm = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // Get the CSRF token from the session, it's automatically defined before we perform any queries
+    const csrfToken = request.session.csrfToken;
+
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
+
+    // Get the response message, we get this as a flash message which we only get once we've submitted a request
+    const requestResponseMessage = request.flash("response");
+    const userExists = request.flash("userExists");
+
+    // Render the new password Form
+    response.render("auth/new-password",{
+        pageTitle : "Request a new password",
+        csrfToken : csrfToken,
+        isAuthenticated : isLoggedIn,
+        requestResponseMessage : requestResponseMessage,
+        userExists : userExists
+    }); 
+};
+
+// Send the email which redirects to the password reset page
+const postNewPasswordController =  async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+
+    // Set the response message
+        
+
+    response.redirect("back");
+};
+
 // Handle the password reset functionality
 const postPasswordResetPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
 
@@ -181,9 +213,10 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         if (tempUser !== null) {
 
             // Compare the submitted password to the hashed password
-            if (bcrypt.compareSync(tempUser.password, previousPassword)) {
+            if (bcrypt.compareSync(previousPassword, tempUser.password) === true) {
                 isPasswordValid = true;
             }
+
         }else{
 
             isPasswordValid = true;
@@ -406,4 +439,4 @@ const postLogoutAttemptController = async (request : ExtendedRequest, response :
 };
 
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController };
+export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController, getNewPasswordForm, postNewPasswordController };

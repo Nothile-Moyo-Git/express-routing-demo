@@ -6,7 +6,7 @@
 import express from "express";
 
 // Get the controller so we can handle all of our requests
-import { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController } from "../controllers/auth";
+import { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController, getNewPasswordForm, postNewPasswordController } from "../controllers/auth";
 
 // Define the object for our router which we pass through to the index file
 const authRoutes = express.Router();
@@ -26,8 +26,14 @@ authRoutes.get("/signup", getSignupPageController)
 // Handle the sign up request
 authRoutes.post("/signup", postSignupPageController);
 
+// Render the new password form
+authRoutes.get("/new-password", getNewPasswordForm);
+
+// Handle the new password request
+authRoutes.post("/new-password", postNewPasswordController);
+
 // Render the password reset form
-authRoutes.get("/reset", getPasswordResetPageController);
+authRoutes.get("/reset/:resetToken", getPasswordResetPageController);
 
 // Handle the password reset request
 authRoutes.post("/reset", postPasswordResetPageController);
