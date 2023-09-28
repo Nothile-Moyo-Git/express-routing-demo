@@ -60,8 +60,8 @@ interface ExtendedRequest extends Request{
         csrfToken : string,
         previousPasswordInput ?: string,
         newPasswordInput ?: string,
-        confirmNewPasswordInput ?: string
-
+        confirmNewPasswordInput ?: string,
+        resetToken : string
     },
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionData>,
@@ -137,6 +137,17 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
+    // Set the reset token value
+    const resetToken = request.params.resetToken;
+
+    // See if there is a user based on the reset token, if not, then we'll need to pass an error through
+    const tempUser : UserInterface = await User.findOne({resetToken : resetToken});
+    const hasUser = tempUser !== null;
+    let tokenExpired = false;
+
+    // Make sure the token isn't expired
+    if (tempUser !== null) { tokenExpired = new Date(Date.now()) > tempUser.resetTokenExpiration ? true : false; }
+
     // Get our flash messages, if they don't exist, they'll be empty
     const emailError = request.flash("emailError");
     const previousPasswordError = request.flash("previousPasswordError");
@@ -146,12 +157,15 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     response.render(
         "auth/password-reset", 
         { 
-            pageTitle : "Reset your password", 
+            pageTitle : "Reset your password",
             csrfToken : csrfToken, 
             isAuthenticated : false,
             emailError : emailError,
             previousPasswordError : previousPasswordError,
-            newPasswordError : newPasswordError
+            newPasswordError : newPasswordError,
+            hasUser : hasUser,
+            resetToken : resetToken,
+            tokenExpired : tokenExpired
         }
     );
 };
@@ -221,6 +235,34 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
             // Set the flash messages we're going to send back to the new-password view so the user can tell if they've successfully requested a password reset
             request.flash("userExists", "true");
             request.flash("response", "success");
+
+            // Testing and debugging code
+            const options = {
+                to : [emailAddress],
+                from: "nothile1@gmail.com",
+                subject : "Password Reset",
+                text : "Congratulations, you successfully signed up",
+                html : `
+                    <h1>You have requested a password reset</h1>
+                    <p>Click this <a href="http://localhost:3000/reset/${token}">Link</a> to set a new password</p>
+                `
+            };
+
+            // Send the email from sendgrid
+            transporter.sendMail(options, (error : Error, response : SMTPTransport.SentMessageInfo) => {
+
+                // Email handling
+                if (error) {
+
+                    console.clear();
+                    console.log("There was an error sending your email");
+                    console.log(error);
+                }else{
+                    console.clear();
+                    console.log("Email successful, response below");
+                    console.log(response);
+                }
+            });
         }
 
         response.redirect("back");
@@ -251,6 +293,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         const previousPassword : string = request.body.previousPasswordInput;
         const newPassword : string = request.body.newPasswordInput;
         const confirmNewPassword : string = request.body.confirmNewPasswordInput;
+        const passwordsMatch : boolean = newPassword === confirmNewPassword;
 
         // See if we have a user in our database with the email address
         const tempUser = await User.findOne({email : emailAddress});
@@ -260,7 +303,18 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
 
             // Compare the submitted password to the hashed password
             if (bcrypt.compareSync(previousPassword, tempUser.password) === true) {
+
+                // Set the password to valid for our error handling on the view
                 isPasswordValid = true;
+
+                // The final check, the reset tokens are valid, csrf protection is valid, passwords have been checked with bcrypt encryption and they're the same
+                if (passwordsMatch === true) {
+
+                    // Create a new password and update it in the user
+                    const updatedPassword = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(8));
+                    tempUser.password = updatedPassword;
+                    await tempUser.save();
+                }
             }
 
         }else{
@@ -271,7 +325,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         // Set our flash messages
         tempUser === null && request.flash("emailError", "Error : Email address not found in the database");
         isPasswordValid === false && request.flash("previousPasswordError", "Error : Previous password is wrong");
-        newPassword !== confirmNewPassword && request.flash("newPasswordError", "Error : Passwords don't match");
+        passwordsMatch !== true && request.flash("newPasswordError", "Error : Passwords don't match");
 
         // Render the password reset page
         response.redirect("back");
@@ -306,7 +360,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
             const newUser = new User({
                 name : request.body.nameInput,
                 email : request.body.emailInput,
-                password :  bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
+                password : bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
                 cart : {
                     items : [],
                     totalPrice : 0
