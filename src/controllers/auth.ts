@@ -168,6 +168,7 @@ const getNewPasswordForm = async (request : ExtendedRequest, response : Response
     // Get the response message, we get this as a flash message which we only get once we've submitted a request
     const requestResponseMessage = request.flash("response");
     const userExists = request.flash("userExists");
+    const isSubmitted = request.flash("isSubmitted");
 
     // Render the new password Form
     response.render("auth/new-password",{
@@ -175,7 +176,8 @@ const getNewPasswordForm = async (request : ExtendedRequest, response : Response
         csrfToken : csrfToken,
         isAuthenticated : isLoggedIn,
         requestResponseMessage : requestResponseMessage,
-        userExists : userExists
+        userExists : userExists,
+        isSubmitted : isSubmitted
     }); 
 };
 
@@ -192,41 +194,33 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
     // Check if our csrf values are correct
     const isCSRFValid : boolean = sessionCSRFToken === requestCSRFToken;
 
-    // Creating the token
-    let token : string = null;
-    crypto.randomBytes(32, (error, buffer) => {
-
-        if (error) {
-
-            console.clear();
-            console.log("Error below");
-            console.log("\n");
-            console.log(error);
-        }else{
-
-            token = buffer.toString("hex");
-        }
-    });
-
     // CSRF protection
     if (isCSRFValid === true) {
 
         // See if we have a user in our database with the email address
         const tempUser = await User.findOne({email : emailAddress});
     
+        // A reference to tell whether our form has been submitted or not
+        request.flash("isSubmitted", "true");
+
         // If we have a user, then save a reset token we're going to use later
         // If we don't have a user, then reload the page
         if ( tempUser !== null ) {
 
+            // Create our token
+            const token = crypto.randomBytes(32).toString("hex");
+
             // Set the variables we're going to save to the User object
+            // Our expiration date is 1 day after we set the token
             tempUser.resetToken = token;
-            tempUser.resetTokenExpiration = new Date(Date.now() + 360000);
+            tempUser.resetTokenExpiration = new Date(Date.now() + 86400000);
 
             // Update the user with the reset tokens so we can update their password later
             await tempUser.save();
 
-        }else{
-
+            // Set the flash messages we're going to send back to the new-password view so the user can tell if they've successfully requested a password reset
+            request.flash("userExists", "true");
+            request.flash("response", "success");
         }
 
         response.redirect("back");

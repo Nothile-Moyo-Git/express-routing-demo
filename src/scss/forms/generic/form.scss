@@ -50,4 +50,15 @@
             background-color: pink !important;
         }
     }
+
+    &__submission-text{
+
+        color: branding.$brand_color_five;
+        text-align: center;
+        font-size: 1.35rem;
+
+        &--error{
+            color: pink;
+        }
+    }
 }
