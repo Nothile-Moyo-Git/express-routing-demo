@@ -310,8 +310,8 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
                     // Also, reset our token and expiration date
                     const updatedPassword = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(8));
                     tempUser.password = updatedPassword;
-                    tempUser.resetToken = null;
-                    tempUser.resetTokenExpiration = null;
+                    tempUser.resetToken = undefined;
+                    tempUser.resetTokenExpiration = undefined;
 
                     await tempUser.save();
 

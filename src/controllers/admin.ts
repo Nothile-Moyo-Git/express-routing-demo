@@ -171,16 +171,26 @@ const updateProduct = async (request : ExtendedRequest, response : Response, nex
 
     if (isCSRFValid === true) {
 
-        // Update the product information using mongoose's updateOne method with the id provided previously
-        await Product.updateOne({ _id : productId },{ 
-            title : title,
-            price : price,
-            description : description,
-            image : image
-        });
+        // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
+        const product = await Product.findById(productId);
 
-        // Render the view of the page
-        response.redirect("/admin/products");
+        if (product.userId.toString() === request.session.user._id.toString()) {
+
+            // Update the product information using mongoose's updateOne method with the id provided previously
+            await Product.updateOne({ _id : productId },{ 
+                title : title,
+                price : price,
+                description : description,
+                image : image
+            });
+
+            // Render the view of the page
+            console.log("Updated products");
+            response.redirect("/admin/products");
+        }else{
+
+            response.redirect("back");
+        }
 
     }else{
 
@@ -213,12 +223,20 @@ const deleteProduct = async (request : ExtendedRequest, response : Response, nex
         // Create a new product Id and guard it
         const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
-        if (hasUser === true) {
-            await Product.deleteOne( {_id : productId} );
-        }
+        // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
+        const product = await Product.findById(productId);
 
-        // Redirect to the admin products page since we executed admin functionality
-        response.redirect("/admin/products");
+        if (hasUser === true && product.userId.toString() === request.session.user._id.toString()) {
+
+            await Product.deleteOne( {_id : productId} );
+
+            // Redirect to the admin products page since we executed admin functionality
+            response.redirect("/admin/products");
+        }else{
+
+            // Redirect to the products page
+            response.redirect("back");
+        }
 
     }else{
 
