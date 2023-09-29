@@ -141,12 +141,8 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     const resetToken = request.params.resetToken;
 
     // See if there is a user based on the reset token, if not, then we'll need to pass an error through
-    const tempUser : UserInterface = await User.findOne({resetToken : resetToken});
+    const tempUser : UserInterface = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
     const hasUser = tempUser !== null;
-    let tokenExpired = false;
-
-    // Make sure the token isn't expired
-    if (tempUser !== null) { tokenExpired = new Date(Date.now()) > tempUser.resetTokenExpiration ? true : false; }
 
     // Get our flash messages, if they don't exist, they'll be empty
     const emailError = request.flash("emailError");
@@ -164,8 +160,7 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
             previousPasswordError : previousPasswordError,
             newPasswordError : newPasswordError,
             hasUser : hasUser,
-            resetToken : resetToken,
-            tokenExpired : tokenExpired
+            resetToken : resetToken
         }
     );
 };
@@ -287,6 +282,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
 
         // We define these variables here as we need to scope them correctly as we validate the user
         let isPasswordValid : boolean = false;
+        let passwordUpdated : boolean = false;
         
         // Get our inputs so we can verify and check them
         const emailAddress : string = request.body.emailInput;
@@ -296,7 +292,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         const passwordsMatch : boolean = newPassword === confirmNewPassword;
 
         // See if we have a user in our database with the email address
-        const tempUser = await User.findOne({email : emailAddress});
+        const tempUser = await User.findOne({email : emailAddress, resetTokenExpiration : {$gt: Date.now()}});
 
         // Check if the password works
         if (tempUser !== null) {
@@ -311,9 +307,16 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
                 if (passwordsMatch === true) {
 
                     // Create a new password and update it in the user
+                    // Also, reset our token and expiration date
                     const updatedPassword = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(8));
                     tempUser.password = updatedPassword;
+                    tempUser.resetToken = null;
+                    tempUser.resetTokenExpiration = null;
+
                     await tempUser.save();
+
+                    // Redirect to the login page once we've updated the password
+                    passwordUpdated = true;
                 }
             }
 
@@ -327,8 +330,16 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         isPasswordValid === false && request.flash("previousPasswordError", "Error : Previous password is wrong");
         passwordsMatch !== true && request.flash("newPasswordError", "Error : Passwords don't match");
 
-        // Render the password reset page
-        response.redirect("back");
+        if (passwordUpdated === true) {
+
+            // Redirect to the login page if we successfully reset our password
+            response.redirect("login");
+
+        }else{
+
+            // Render the password reset page
+            response.redirect("back");
+        }
 
     }else{
         
