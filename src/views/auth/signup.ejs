@@ -45,6 +45,7 @@
                         class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="passwordLabel"
                         placeholder="Please enter your password"
+                        minimum="6"
                         required
                     />
                 </div>
@@ -58,6 +59,7 @@
                         class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="secondPasswordLabel"
                         placeholder="Please enter your password"
+                        minimum="6"
                         required
                     />
                 </div>
