@@ -96,4 +96,4 @@ There are design principles to help with the scalability of the applcation, for 
 > Link for DRY is here, it's about reducing code duplication
 
 [Solid Principles](https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/)
-> Link for SOLID is here, it's about 
+> Link for SOLID is here, it's about figuring out superior ways to use our Models, properties and methods with the appropriate naming conventions.
