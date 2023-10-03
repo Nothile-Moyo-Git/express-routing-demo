@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="signup__field">
-                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Password*" : "Error : Passwords aren't the same" %></label>
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Password*" : passwordError %></label>
                     <input
                         type="password"
                         id="passwordInput"
@@ -45,13 +45,12 @@
                         class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="passwordLabel"
                         placeholder="Please enter your password"
-                        minimum="6"
                         required
                     />
                 </div>
 
                 <div class="signup__field">
-                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Confirm Your Password*" : "Error : Passwords aren't the same" %></label>
+                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Confirm Your Password*" : passwordError %></label>
                     <input
                         type="password"
                         id="secondPasswordInput"
@@ -59,7 +58,6 @@
                         class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="secondPasswordLabel"
                         placeholder="Please enter your password"
-                        minimum="6"
                         required
                     />
                 </div>

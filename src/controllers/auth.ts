@@ -354,6 +354,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
     const tempUser = await User.findOne({email : request.body.emailInput});
     const isEmailValid = (validate(request.body.emailInput) && tempUser === null); 
     const passwordsMatch = request.body.passwordInput === request.body.secondPasswordInput;
+    const isPasswordLengthValid = (request.body.passwordInput.length >= 6) && (request.body.secondPasswordInput.length >= 6);
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
@@ -365,7 +366,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
     if (isCSRFValid === true) {
 
         // If our validation checks are valid, then we redirect to the login page since we've created a new user
-        if (isEmailValid === true && passwordsMatch === true && tempUser === null) {
+        if (isEmailValid === true && passwordsMatch === true && isPasswordLengthValid === true && tempUser === null) {
 
             // Create a new user since our checks are valid
             const newUser = new User({
@@ -408,6 +409,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
             
             // Go the login page since we now have a valid check
             response.redirect("/login");
+
         }else{
 
             // Set the error message using a ternary operator based on if we already have a user with the same email or not
@@ -415,10 +417,12 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
 
             // Set our flash messages
             !isEmailValid && request.flash("emailError", emailErrorMessage);
-            !passwordsMatch && request.flash("passwordError", "Error : passwords don't match");
+            !passwordsMatch && request.flash("passwordError", "Error : Passwords don't match");
+            !isPasswordLengthValid && request.flash("passwordError", "Error : Both passwords must be at least 6 characters long");
         
             // Reload the login page with the correct values
             response.redirect("back");
+            
         }
 
     }else{
