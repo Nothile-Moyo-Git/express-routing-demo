@@ -114,16 +114,20 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
-    // Convert values to a string, we do this because we otherwise get the flash data type which we can't get the length of
-    const emailError : string = request.flash("emailError").toString();
-    const passwordError : string = request.flash("passwordError").toString();
-
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/signup", { pageTitle : "Signup", isAuthenticated : false, emailError : emailError, passwordError : passwordError, csrfToken : csrfToken });
+        response.render("auth/signup", { 
+            pageTitle : "Signup", 
+            isAuthenticated : false, 
+            emailError : "", 
+            passwordError : "", 
+            csrfToken : csrfToken,
+            oldInput : {} 
+        });
+
     }else{
 
         // If we're already logged in, redirect to the products page
@@ -144,11 +148,6 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
     const tempUser : UserInterface = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
     const hasUser = tempUser !== null;
 
-    // Get our flash messages, if they don't exist, they'll be empty
-    const emailError = request.flash("emailError");
-    const previousPasswordError = request.flash("previousPasswordError");
-    const newPasswordError = request.flash("newPasswordError");
-
     // Render the password reset page
     response.render(
         "auth/password-reset", 
@@ -156,9 +155,9 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
             pageTitle : "Reset your password",
             csrfToken : csrfToken, 
             isAuthenticated : false,
-            emailError : emailError,
-            previousPasswordError : previousPasswordError,
-            newPasswordError : newPasswordError,
+            emailError : "",
+            previousPasswordError : "",
+            newPasswordError : "",
             hasUser : hasUser,
             resetToken : resetToken
         }
@@ -416,12 +415,25 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
             const emailErrorMessage = tempUser === null ? "Error : Email address isn't valid" : "Error : Email address is already in use";
 
             // Set our flash messages
-            !isEmailValid && request.flash("emailError", emailErrorMessage);
-            !passwordsMatch && request.flash("passwordError", "Error : Passwords don't match");
-            !isPasswordLengthValid && request.flash("passwordError", "Error : Both passwords must be at least 6 characters long");
+            let passwordError : string = "";
+            !passwordsMatch && (passwordError = "Error : Passwords don't match");
+            !isPasswordLengthValid && (passwordError = "Error : Both passwords must be at least 6 characters long");
         
-            // Reload the login page with the correct values
-            response.redirect("back");
+            // Render the login page here
+            // Note: Don't use a forward slash when defining URL's here
+            response.render("auth/signup", { 
+                pageTitle : "Signup", 
+                isAuthenticated : false, 
+                emailError : emailErrorMessage, 
+                passwordError : passwordError, 
+                csrfToken : sessionCSRFToken, 
+                oldInput : {
+                    oldName : request.body.nameInput,
+                    oldEmail : request.body.emailInput,
+                    oldPassword : request.body.passwordInput,
+                    oldConfirmPassword : request.body.secondPasswordInput
+                } 
+            });
             
         }
 

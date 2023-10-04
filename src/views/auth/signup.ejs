@@ -19,6 +19,7 @@
                         class="signup__input"
                         aria-labelledby="nameLabel"
                         placeholder="Please enter your email address"
+                        value="<%= oldInput.oldName && oldInput.oldName %>"
                         required
                     />
                 </div>
@@ -32,6 +33,7 @@
                         class="<%= emailError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
+                        value="<%= oldInput.oldEmail && oldInput.oldEmail %>"
                         required
                     />
                 </div>
@@ -45,6 +47,7 @@
                         class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="passwordLabel"
                         placeholder="Please enter your password"
+                        value="<%= oldInput.oldPassword && oldInput.oldPassword %>"
                         required
                     />
                 </div>
@@ -58,6 +61,7 @@
                         class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
                         aria-labelledby="secondPasswordLabel"
                         placeholder="Please enter your password"
+                        value="<%= oldInput.oldConfirmPassword && oldInput.oldConfirmPassword %>"
                         required
                     />
                 </div>

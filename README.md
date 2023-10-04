@@ -6,6 +6,23 @@
 
 _I wanted to get a better idea about how to create API endpoints and handle API requests, as well as understanding security measures in the backend, as well as features such as working with non-relational databases, GraphQL, Stripe payments and using the MVC architecture_
 
+### Setup
+The version of node used when building this application is v18.12. If you need to change your node version for your installation, you can use `nvm`.
+
+> nvm is known as "node version manager" which allows you manage your node installations to make dependency management easier. You can find it [here](https://github.com/nvm-sh/nvm).
+
+In order to install the required packages, run `npm run install` followed by `npm audit fix`. The audit fix will automatically fix any issues that can be resolved without breaking the potential build.
+
+In order to deploy the app, run `npm run deploy` which will deploy it to the database.
+
+If you are visiting this repository and need the connection.ts file, _please send an email to [this](mailto:nothile1@gmail.com) email address._ If you know me personally, send a message requesting it.
+
+### Running the App
+Once you've successfully copied and installed the packages, you'll want to run the application. 
+To do this, run `npm run start` in order to start your local node server.
+
+It will automatically open the web page in your browser, but if this doesn't suffice, try visiting [localhost:3000](http://) as a default link.
+
 ## Models
 This application is a full stack MVC application. The models are found in the "/src/models" folder. The Mongoose models define our schema's that we used in order to gain the advantages of using a relational functionality in a non-relational database. It also helps with scaling since we don't need to replicate as much data.
 
@@ -53,17 +70,6 @@ As we're using EJS, you can find the syntax of how to use it [here](https://ejs.
 
 [Trunk based development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development)
 > This explains trunk based development, gitflow is also used. Trunk based development is very good for a reliable CICD process.
-
-### Setup
-The version of node used when building this application is v18.12. If you need to change your node version for your installation, you can use `nvm`.
-
-> nvm is known as "node version manager" which allows you manage your node installations to make dependency management easier. You can find it [here](https://github.com/nvm-sh/nvm).
-
-In order to install the required packages, run `npm run install` followed by `npm audit fix`. The audit fix will automatically fix any issues that can be resolved without breaking the potential build.
-
-In order to deploy the app, run `npm run deploy` which will deploy it to the database.
-
-If you are visiting this repository and need the connection.ts file, _please send an email to [this](mailto:nothile1@gmail.com) email address._ If you know me personally, send a message requesting it.
 
 ### Server
 This app uses express.js with a port of 3000 found in _./src/index.ts_.
