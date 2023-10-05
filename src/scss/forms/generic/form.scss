@@ -6,6 +6,7 @@
     align-items: center;
     flex-direction: column;
     width: calc(100% - 2rem);
+    max-width: 350px;
     margin: auto;
 
     &__title{
@@ -58,7 +59,11 @@
         font-size: 1.35rem;
 
         &--error{
-            color: pink;
+            color: white;
+            background-color: red;
+            border-radius: 5px;
+            padding: 0.35rem 0;
+            width: 100%;
         }
     }
 }

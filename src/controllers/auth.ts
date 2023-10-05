@@ -81,10 +81,6 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
-    // Convert values to a string, we do this because we otherwise get the flash data type which we can't get the length of
-    const emailError : string = request.flash("emailError").toString();
-    const passwordError : string = request.flash("passwordError").toString();
-
     // Decide whether we render the login page or whether we redirect to the shop 
     if (isLoggedIn === undefined) {
         
@@ -94,8 +90,9 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
             pageTitle : "Login", 
             isAuthenticated : false, 
             csrfToken : csrfToken, 
-            emailError : emailError,
-            passwordError : passwordError
+            emailError : "",
+            passwordError : "",
+            oldInput : {}
         });
 
     }else{
@@ -159,7 +156,8 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
             previousPasswordError : "",
             newPasswordError : "",
             hasUser : hasUser,
-            resetToken : resetToken
+            resetToken : resetToken,
+            oldInput : {}
         }
     );
 };
@@ -173,19 +171,14 @@ const getNewPasswordForm = async (request : ExtendedRequest, response : Response
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
 
-    // Get the response message, we get this as a flash message which we only get once we've submitted a request
-    const requestResponseMessage = request.flash("response");
-    const userExists = request.flash("userExists");
-    const isSubmitted = request.flash("isSubmitted");
-
     // Render the new password Form
     response.render("auth/new-password",{
         pageTitle : "Request a new password",
         csrfToken : csrfToken,
         isAuthenticated : isLoggedIn,
-        requestResponseMessage : requestResponseMessage,
-        userExists : userExists,
-        isSubmitted : isSubmitted
+        userExists : "",
+        isSubmitted : "",
+        oldInput : {}
     }); 
 };
 
@@ -195,6 +188,9 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;
     const requestCSRFToken : string = String(request.body.csrfToken).replace(/\/$/, "");  
+
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
 
     // Get our inputs so we can verify and check them
     const emailAddress : string = request.body.emailInput;
@@ -207,9 +203,6 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
 
         // See if we have a user in our database with the email address
         const tempUser = await User.findOne({email : emailAddress});
-    
-        // A reference to tell whether our form has been submitted or not
-        request.flash("isSubmitted", "true");
 
         // If we have a user, then save a reset token we're going to use later
         // If we don't have a user, then reload the page
@@ -225,10 +218,6 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
 
             // Update the user with the reset tokens so we can update their password later
             await tempUser.save();
-
-            // Set the flash messages we're going to send back to the new-password view so the user can tell if they've successfully requested a password reset
-            request.flash("userExists", "true");
-            request.flash("response", "success");
 
             // Testing and debugging code
             const options = {
@@ -257,9 +246,30 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
                     console.log(response);
                 }
             });
-        }
 
-        response.redirect("back");
+            // Render the new password Form
+            response.render("auth/new-password",{
+                pageTitle : "Request a new password",
+                csrfToken : sessionCSRFToken,
+                isAuthenticated : isLoggedIn,
+                userExists : "true",
+                isSubmitted : "true",
+                oldInput : {}
+            }); 
+
+        }else{
+
+            // Render the new password Form
+            response.render("auth/new-password",{
+                pageTitle : "Request a new password",
+                csrfToken : sessionCSRFToken,
+                isAuthenticated : isLoggedIn,
+                userExists : "",
+                isSubmitted : "true",
+                oldInput : {}
+            }); 
+
+        }
 
     }else{
 
@@ -273,6 +283,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;
     const requestCSRFToken : string = String(request.body.csrfToken).replace(/\/$/, "");
+    const resetToken : string = request.body.resetToken;
     
     // Check if our csrf values are correct
     const isCSRFValid : boolean = sessionCSRFToken === requestCSRFToken;
@@ -280,8 +291,9 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
     if (isCSRFValid === true) {
 
         // We define these variables here as we need to scope them correctly as we validate the user
-        let isPasswordValid : boolean = false;
-        let passwordUpdated : boolean = false;
+        let isPasswordValid = false;
+        let passwordUpdated = false;
+        let hasUser = false;
         
         // Get our inputs so we can verify and check them
         const emailAddress : string = request.body.emailInput;
@@ -295,6 +307,8 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
 
         // Check if the password works
         if (tempUser !== null) {
+
+            hasUser = true;
 
             // Compare the submitted password to the hashed password
             if (bcrypt.compareSync(previousPassword, tempUser.password) === true) {
@@ -324,21 +338,31 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
             isPasswordValid = true;
         }
 
-        // Set our flash messages
-        tempUser === null && request.flash("emailError", "Error : Email address not found in the database");
-        isPasswordValid === false && request.flash("previousPasswordError", "Error : Previous password is wrong");
-        passwordsMatch !== true && request.flash("newPasswordError", "Error : Passwords don't match");
-
         if (passwordUpdated === true) {
 
             // Redirect to the login page if we successfully reset our password
             response.redirect("login");
-
+            
         }else{
 
             // Render the password reset page
-            response.redirect("back");
-        }
+            response.render( "auth/password-reset", { 
+                pageTitle : "Reset your password",
+                csrfToken : sessionCSRFToken, 
+                isAuthenticated : false,
+                emailError : hasUser ? "" : "Error : Email address not found in the database",
+                previousPasswordError : isPasswordValid ? "" : "Error : Previous password is wrong",
+                newPasswordError : passwordsMatch ? "" : "Error : Passwords don't match",
+                hasUser : hasUser,
+                resetToken : resetToken,
+                oldInput : {
+                    oldEmail : emailAddress,
+                    oldPreviousPassword : previousPassword,
+                    oldNewPassword : newPassword,
+                    oldConfirmNewPassword : confirmNewPassword
+                }
+            });
+    }
 
     }else{
         
@@ -415,7 +439,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
             const emailErrorMessage = tempUser === null ? "Error : Email address isn't valid" : "Error : Email address is already in use";
 
             // Set our flash messages
-            let passwordError : string = "";
+            let passwordError = "";
             !passwordsMatch && (passwordError = "Error : Passwords don't match");
             !isPasswordLengthValid && (passwordError = "Error : Both passwords must be at least 6 characters long");
         
@@ -500,12 +524,19 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
 
             } else {
 
-                // Set the email and password error messages if they're available
-                isEmailValid === false && request.flash("emailError", "Error : Email address isn't a valid format");
-                isPasswordValid === false && request.flash("passwordError", "Error : Password isn't valid");
-
                 // Reload the login page
-                response.redirect('back');
+                // We do it like this in order to pass the previous input through without using a flash message
+                response.render("auth/login", { 
+                    pageTitle : "Login", 
+                    isAuthenticated : false, 
+                    csrfToken : sessionCSRFToken, 
+                    emailError : !isEmailValid ? "Error : Email address isn't a valid format" : "",
+                    passwordError : !isPasswordValid ? "Error : Password isn't valid" : "",
+                    oldInput : {
+                        oldEmail : email,
+                        oldPassword : password
+                    }
+                });
             }
 
         }else{
@@ -514,7 +545,17 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
             request.flash("emailError", "Error : User doesn't exist in the database");
 
             // Reload the login page
-            response.redirect('back');
+            response.render("auth/login", { 
+                pageTitle : "Login", 
+                isAuthenticated : false, 
+                csrfToken : sessionCSRFToken, 
+                emailError : "Error : User doesn't exist in the database",
+                passwordError : "",
+                oldInput : {
+                    oldEmail : email,
+                    oldPassword : password
+                }
+            });
         }
 
     }else{

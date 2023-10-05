@@ -19,7 +19,7 @@
                         class="<%= emailError.length === 0 ? 'login__input' : 'login__input login__input--error' %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
-                        autocomplete="on"
+                        value="<%= oldInput.oldEmail && oldInput.oldEmail %>"
                         required
                     />
                 </div>
@@ -30,10 +30,10 @@
                         type="password"
                         id="passwordInput"
                         name="passwordInput"
-                        class="<%= passwordError === 0 ? 'login__input' : 'login__input login__input--error' %>"
+                        class="<%= passwordError.length === 0 ? 'login__input' : 'login__input login__input--error' %>"
                         aria-labelledby="passwordLabel"                                 
                         placeholder="Please enter your password"
-                        autocomplete="on"
+                        value="<%= oldInput.oldPassword && oldInput.oldPassword %>"
                         required
                     />
                 </div>
