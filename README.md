@@ -87,6 +87,13 @@ You can find all the route handling in the */src/index.ts* and */src/routes*.
 Routes are also handled in the call order, and you can add multiple route handlers when handling a single request, which basically means that we can run a route handler which deals with authentication then we handle the normal route. If the authentication handling fails, then we go back to the default page.
 
 ### TypeScript
+TypeScript is used to reduce the amount of issues experienced at runtime and on the live server. It forces developers to write cleaner, safer code. 
+
+You can find re-usable interfaces in the _'src/@types/index.d.ts'_ file. This is used due to trying to apply the DRY principle.
+
+> TypeScript increases the initial difficulty of building a codebase, but avoids issues such as having to perform null and undefined checks everywhere
+
+**NOTE: You can find more information on TypeScript and it's usage [here](https://www.typescriptlang.org/why-create-typescript)**
 
 ### SCSS and styling
 ### Security
