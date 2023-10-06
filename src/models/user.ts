@@ -18,6 +18,7 @@
 import mongoose, { Model } from "mongoose";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
+import { CartItemInterface } from "../@types";
 
 // Product interface for the product we pass through to the add to cart method
 interface Product {
@@ -29,20 +30,13 @@ interface Product {
     userId ?: ObjectId
 }
 
-// Create an interface representing a document in MongoDB
-interface CartItem{
-    productId : ObjectId,
-    title : string,
-    quantity : number, 
-    price : number
-}
 interface User {
     name : string,
     email : string,
     password : string,
     cart : {
         totalPrice : number,
-        items : CartItem[]
+        items : CartItemInterface[]
     },
     resetToken : string,
     resetTokenExpiration : Date
@@ -95,7 +89,7 @@ const userSchema = new mongoose.Schema<User>({
 userSchema.method('addToCart', function addToCart (product : Product) {
 
     // Get the index of the product in our cart items
-    const cartProductIndex : number = this.cart.items.findIndex((childProduct : CartItem) => {
+    const cartProductIndex : number = this.cart.items.findIndex((childProduct : CartItemInterface) => {
         return childProduct.productId.toString() === product._id.toString();
     });
 
@@ -129,7 +123,7 @@ userSchema.method('addToCart', function addToCart (product : Product) {
 userSchema.method('deleteFromCart', function (productId : string) {
 
     // Filter out the cart and reduce the total price
-    const filteredCartItems = this.cart.items.filter((item : CartItem) => {
+    const filteredCartItems = this.cart.items.filter((item : CartItemInterface) => {
 
         // If the id's match, reduce the total price
         if (productId === item.productId.toString()) {

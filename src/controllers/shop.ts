@@ -21,14 +21,7 @@ import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
 import { SessionData, Session } from 'express-session';
-
-// Cart items interface
-interface CartItem {
-    productId : ObjectId,
-    title : string,
-    quantity : number,
-    price : number
-}
+import { CartItemInterface } from '../@types';
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -37,7 +30,7 @@ interface UserInterface {
     email : string
     cart : {
         totalPrice : number,
-        items : CartItem[]
+        items : CartItemInterface[]
     }
 }
 

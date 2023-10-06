@@ -10,14 +10,7 @@ import sgTransport from "nodemailer-sendgrid-transport";
 import { sendgridOptions } from "../data/connection";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import crypto from "crypto";
-
-// Cart items interface
-interface CartItem {
-    productId : ObjectId,
-    title : string,
-    quantity : number,
-    price : number
-}
+import { CartItemInterface } from '../@types';
 
 // Extend the request object in order to set variables in my request object
 interface UserInterface {
@@ -27,7 +20,7 @@ interface UserInterface {
     password : string,
     cart : {
         totalPrice : number,
-        items : CartItem[]
+        items : CartItemInterface[]
     }
     resetToken : string,
     resetTokenExpiration : Date
@@ -40,7 +33,7 @@ interface SessionUser {
     email : string,
     cart : {
         totalPrice : number,
-        items : CartItem[]
+        items : CartItemInterface[]
     }
 }
 
@@ -254,7 +247,9 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
                 isAuthenticated : isLoggedIn,
                 userExists : "true",
                 isSubmitted : "true",
-                oldInput : {}
+                oldInput : {
+                    oldEmail : emailAddress
+                }
             }); 
 
         }else{
@@ -266,7 +261,9 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
                 isAuthenticated : isLoggedIn,
                 userExists : "",
                 isSubmitted : "true",
-                oldInput : {}
+                oldInput : {
+                    oldEmail : emailAddress
+                }
             }); 
 
         }
@@ -296,14 +293,13 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
         let hasUser = false;
         
         // Get our inputs so we can verify and check them
-        const emailAddress : string = request.body.emailInput;
         const previousPassword : string = request.body.previousPasswordInput;
         const newPassword : string = request.body.newPasswordInput;
         const confirmNewPassword : string = request.body.confirmNewPasswordInput;
         const passwordsMatch : boolean = newPassword === confirmNewPassword;
 
         // See if we have a user in our database with the email address
-        const tempUser = await User.findOne({email : emailAddress, resetTokenExpiration : {$gt: Date.now()}});
+        const tempUser = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
 
         // Check if the password works
         if (tempUser !== null) {
@@ -356,7 +352,6 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
                 hasUser : hasUser,
                 resetToken : resetToken,
                 oldInput : {
-                    oldEmail : emailAddress,
                     oldPreviousPassword : previousPassword,
                     oldNewPassword : newPassword,
                     oldConfirmNewPassword : confirmNewPassword

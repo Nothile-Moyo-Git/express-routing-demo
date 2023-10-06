@@ -11,14 +11,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ObjectId } from 'mongodb';
 import { Session, SessionData } from "express-session";
-
-// Cart items interface
-interface CartItem {
-    productId : ObjectId,
-    title : string,
-    quantity : number,
-    price : number
-}
+import { CartItemInterface } from '../@types';
 
 // Session user
 interface SessionUser {
@@ -34,7 +27,7 @@ interface UserInterface {
     email : string
     cart : {
         totalPrice : number,
-        items : CartItem[]
+        items : CartItemInterface[]
     }
 }
 
