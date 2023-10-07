@@ -19,7 +19,6 @@ import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
 import { CartItemInterface, UserInterface, ProductInterface, UserMethodsInterface } from "../@types";
 
-
 // Setting the user type so we can define methods
 type UserModel = Model<UserInterface, {}, UserMethodsInterface>;
 

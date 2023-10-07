@@ -1,5 +1,7 @@
 # Nothile's Node.js Shop Application
 
+## *Note: This application uses Node v18.16*
+
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose
 
 **The purpose of this Application is to learn the backend in a simple way. This is a shop application with the ability to make orders, handle carts, create users, create orders, send emails, handle payments, perform admin & security functionality**
@@ -16,6 +18,38 @@ In order to install the required packages, run `npm run install` followed by `np
 In order to deploy the app, run `npm run deploy` which will deploy it to the database.
 
 If you are visiting this repository and need the connection.ts file, _please send an email to [this](mailto:nothile1@gmail.com) email address._ If you know me personally, send a message requesting it.
+
+You can copy the required commands from below
+
+> Get node 18.16
+```
+nvm use 18.16
+```
+
+> Install dependencies
+```
+npm install
+```
+
+> Automatically fix dependency issues
+```
+npm audit fix
+```
+
+> Deploy the application
+```
+npm run deploy
+```
+
+> Start local server
+```
+npm run start
+```
+
+> Start styling processing (you need to run this alongside the server)
+```
+npm run watch
+```
 
 ### Running the App
 Once you've successfully copied and installed the packages, you'll want to run the application. 
@@ -96,6 +130,28 @@ You can find re-usable interfaces in the _'src/@types/index.d.ts'_ file. This is
 **NOTE: You can find more information on TypeScript and it's usage [here](https://www.typescriptlang.org/why-create-typescript)**
 
 ### SCSS and styling
+For this application, I've chosen SCSS with the BEM methodology. Since this isn't a component based framework like React, we won't use something like css modules. 
+
+BEM refers to the Block, Element, Modifier methodology which was explained previously. You can find the "root" styling file in _"/src/scss/custom.scss"_. This file imports all the other styles using the @use method instead of @import (since import will be deprecated).
+
+In order to compile our SCSS, we use a gulp run in order to do this. You can find this in the _"gulpfile.js_ file adjacent to this file.
+
+The partials folder has my re-usable styles. You can see an example of this below:
+_animations.scss_
+```
+// Slowly increase opacity of the card
+@keyframes fade-in{
+    0%{ opacity: 0; }
+    100%{ opacity: 1; }
+}
+```
+
+The comments will explain how the code is processed. 
+
+**Note: Please be careful about what packages you use with gulp, it can change the order in which your gulp is parsed.**
+
+If you add a new stylesheet, you must import it into the custom.scss file using @use.
+
 ### Security
 
 ### Development Principles

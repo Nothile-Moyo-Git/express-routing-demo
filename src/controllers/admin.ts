@@ -1,9 +1,8 @@
 // import our express types for TypeScript use
-import { Response, NextFunction } from 'express';
+import { Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
-
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {

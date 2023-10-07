@@ -63,7 +63,15 @@ export interface ExtendedRequestInterface extends Request{
         price : number,
         description : string,
         csrfToken : string,
-        productId ?: ObjectId
+        productId ?: ObjectId,
+        emailInput ?: string,
+        resetToken ?: string,
+        previousPasswordInput ?: string,
+        newPasswordInput ?: string,
+        confirmNewPasswordInput ?: string,
+        nameInput ?: string,
+        passwordInput ?: string,
+        secondPasswordInput ?: string,
     }
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionDataInterface>
