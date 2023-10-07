@@ -14,19 +14,10 @@
 
 // Imports
 import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
-
-// Create an interface representing a document in MongoDB
-interface Product {
-    title : string,
-    price : number,
-    description : string,
-    image : string,
-    userId : ObjectId
-}
+import { ProductInterface } from "../@types";
 
 // Define our Mongoose product schema
-const productSchema = new mongoose.Schema<Product>({
+const productSchema = new mongoose.Schema<ProductInterface>({
     title : { type : String, required : true },
     price : { type : Number, required : true },
     description : { type : String, required : true },

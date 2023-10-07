@@ -16,47 +16,15 @@
 
 // Imports
 import mongoose, { Model } from "mongoose";
-import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
-import { CartItemInterface } from "../@types";
-
-// Product interface for the product we pass through to the add to cart method
-interface Product {
-    _id : ObjectId,
-    title : string,
-    price : number,
-    description ?: string,
-    image ?: string,
-    userId ?: ObjectId
-}
-
-interface User {
-    name : string,
-    email : string,
-    password : string,
-    cart : {
-        totalPrice : number,
-        items : CartItemInterface[]
-    },
-    resetToken : string,
-    resetTokenExpiration : Date
-}
-
-// Adding the typing system for our methods in mongoose
-interface UserMethods {
-    addToCart : (product : Product) => void,
-    deleteFromCart : (productId : string) => void,
-    emptyCart : () => void,
-    generateHash : (password : string) => string,
-    validatePassword : (password : string) => boolean
-}
+import { CartItemInterface, UserInterface, ProductInterface, UserMethodsInterface } from "../@types";
 
 // Setting the user type so we can define methods
-type UserModel = Model<User, {}, UserMethods>;
+type UserModel = Model<UserInterface, {}, UserMethodsInterface>;
 
 // Define our mongoose User schema
 // Mongoose automatically adds in _id to every table when working with schemas, so you must set it to false
-const userSchema = new mongoose.Schema<User>({
+const userSchema = new mongoose.Schema<UserInterface>({
     name : { type : String, required : [true, "Add a name to the User object you're sending to MongoDB"] },
     email : { 
         type : String, 
@@ -86,7 +54,7 @@ const userSchema = new mongoose.Schema<User>({
 });
 
 // Create the add to cart method for our user in Mongoose
-userSchema.method('addToCart', function addToCart (product : Product) {
+userSchema.method('addToCart', function addToCart (product : ProductInterface) {
 
     // Get the index of the product in our cart items
     const cartProductIndex : number = this.cart.items.findIndex((childProduct : CartItemInterface) => {
@@ -172,6 +140,6 @@ userSchema.method('validatePassword', function(password : string) {
 });
 
 // Create our model for exporting
-const User = mongoose.model<User, UserModel>("User", userSchema);
+const User = mongoose.model<UserInterface, UserModel>("User", userSchema);
 
 export default User;

@@ -1,6 +1,5 @@
 // import our express types for TypeScript use
-import { Request, Response, NextFunction } from 'express';
-import { Session, SessionData } from 'express-session';
+import { Response } from 'express';
 import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import bcrypt from "bcrypt";
@@ -10,63 +9,13 @@ import sgTransport from "nodemailer-sendgrid-transport";
 import { sendgridOptions } from "../data/connection";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import crypto from "crypto";
-import { CartItemInterface } from '../@types';
-
-// Extend the request object in order to set variables in my request object
-interface UserInterface {
-    _id : ObjectId,
-    name : string,
-    email : string,
-    password : string,
-    cart : {
-        totalPrice : number,
-        items : CartItemInterface[]
-    }
-    resetToken : string,
-    resetTokenExpiration : Date
-}
-
-// Session user
-interface SessionUser {
-    _id : Object,
-    name : string,
-    email : string,
-    cart : {
-        totalPrice : number,
-        items : CartItemInterface[]
-    }
-}
-
-// Extending session data as opposed to declaration merging
-interface ExtendedSessionData extends SessionData {
-    isLoggedIn : boolean,
-    user : SessionUser,
-    csrfToken : string
-}
-interface ExtendedRequest extends Request{
-    User : UserInterface,
-    body : {
-        emailInput : string,
-        passwordInput : string,
-        secondPasswordInput : string,
-        nameInput : string,
-        csrfToken : string,
-        previousPasswordInput ?: string,
-        newPasswordInput ?: string,
-        confirmNewPasswordInput ?: string,
-        resetToken : string
-    },
-    isAuthenticated : boolean,
-    session : Session & Partial<ExtendedSessionData>,
-    emailAddressValid : boolean,
-    passwordsMatch : boolean,
-}
+import { ExtendedRequestInterface, UserInterface } from '../@types';
 
 // Create a "transporter" object which allows you to send emails
 const transporter = nodemailer.createTransport(sgTransport(sendgridOptions));
 
 // Get login page controller
-const getLoginPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getLoginPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -96,7 +45,7 @@ const getLoginPageController = async (request : ExtendedRequest, response : Resp
 };
 
 // Get signup page controller
-const getSignupPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getSignupPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -126,7 +75,7 @@ const getSignupPageController = async (request : ExtendedRequest, response : Res
 };
 
 // Render the password reset page
-const getPasswordResetPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getPasswordResetPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
@@ -156,7 +105,7 @@ const getPasswordResetPageController = async (request : ExtendedRequest, respons
 };
 
 // Render the new password form
-const getNewPasswordForm = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getNewPasswordForm = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
@@ -176,7 +125,7 @@ const getNewPasswordForm = async (request : ExtendedRequest, response : Response
 };
 
 // Send the email which redirects to the password reset page
-const postNewPasswordController =  async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postNewPasswordController =  async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;
@@ -275,7 +224,7 @@ const postNewPasswordController =  async (request : ExtendedRequest, response : 
 };
 
 // Handle the password reset functionality
-const postPasswordResetPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postPasswordResetPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;
@@ -366,7 +315,7 @@ const postPasswordResetPageController = async (request : ExtendedRequest, respon
 };
 
 // Post signup page controller, handles the signup form submission
-const postSignupPageController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postSignupPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get the fields from the form submission
     const tempUser = await User.findOne({email : request.body.emailInput});
@@ -463,7 +412,7 @@ const postSignupPageController = async (request : ExtendedRequest, response : Re
 };
 
 // Post login page controller
-const postLoginAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postLoginAttemptController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get email address and password
     const email = request.body.emailInput;
@@ -487,7 +436,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
             // We define these variables here as we need to scope them correctly as we validate the user
             let isPasswordValid : boolean = false;
             let isEmailValid : boolean = false;
-            let currentUser : SessionUser | undefined = undefined;
+            let currentUser : UserInterface | undefined = undefined;
 
             // Compare the submitted password to the hashed password
             if (bcrypt.compareSync(password, user.password)) {
@@ -560,7 +509,7 @@ const postLoginAttemptController = async (request : ExtendedRequest, response : 
 };
 
 // Logout page controller
-const postLogoutAttemptController = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postLogoutAttemptController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
