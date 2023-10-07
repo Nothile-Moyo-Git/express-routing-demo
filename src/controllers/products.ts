@@ -7,41 +7,13 @@
  */
 
 // import our express types for TypeScript use
-import { Request, Response, NextFunction } from 'express';
+import { Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
-import { SessionData, Session } from 'express-session';
-import { CartItemInterface } from '../@types';
-
-// Extend the request object in order to set variables in my request object
-interface UserInterface {
-    _id : ObjectId,
-    name : string,
-    email : string
-    cart : {
-        totalPrice : number,
-        items : CartItemInterface[]
-    }
-}
-
-// Extending session data as opposed to declaration merging
-interface ExtendedSessionData extends SessionData {
-    isLoggedIn : boolean,
-    user : UserInterface,
-    csrfToken : string
-}
-
-interface ExtendedRequest extends Request{
-    User : UserInterface,
-    body : {
-        productId : ObjectId
-    }
-    isAuthenticated : boolean,
-    session : Session & Partial<ExtendedSessionData>
-}
+import { ExtendedRequestInterface } from '../@types';
 
 // Get admin edit product controller
-const getAdminEditProduct = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getAdminEditProduct = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;

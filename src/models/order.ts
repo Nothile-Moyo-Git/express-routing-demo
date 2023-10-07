@@ -15,38 +15,15 @@
  */
 
 import mongoose, { Model } from "mongoose";
-import { ObjectId } from "mongodb";
-
-// Defining our interfaces and our type in order to use TypeScript with Mongoose
-interface OrderItem {
-    title : string,
-    price : number,
-    quantity : number
-}
-
-interface Order {
-    totalPrice : number,
-    orderItems : OrderItem[],
-    createdAt : Date,
-    updatedAt : Date,
-    user : {
-        _id : ObjectId,
-        name : string
-    }
-}
-
-// Define our interfaces for our methods which we use to extend our mongoose model
-interface OrderMethods {
-
-}
+import { OrderInterface } from "../@types";
 
 // Setting the order type so we can define methods
 // This is an extension of the Model generic type
-type OrderModel = Model<Order, {}, OrderMethods>;
+type OrderModel = Model<OrderInterface, {}>;
 
 // Define our mongoose Order schema
 // Mongoose automatically adds in _id to every table when working with schemas, so you must set it to false
-const orderSchema = new mongoose.Schema<Order>({
+const orderSchema = new mongoose.Schema<OrderInterface>({
     totalPrice : { type : Number, required : [true, "Please enter a total price"] },
     orderItems : [{
        title : { type : String },
@@ -61,6 +38,6 @@ const orderSchema = new mongoose.Schema<Order>({
 }, { timestamps : true });
 
 // Create Mongoose model for our ODM
-const Order = mongoose.model<Order, OrderModel>("Order", orderSchema);
+const Order = mongoose.model<OrderInterface, OrderModel>("Order", orderSchema);
 
 export default Order;

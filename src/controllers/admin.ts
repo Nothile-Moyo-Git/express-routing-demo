@@ -1,57 +1,12 @@
 // import our express types for TypeScript use
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
-import { Session, SessionData } from "express-session";
+import { ExtendedRequestInterface } from '../@types';
 
-// Cart items interface
-interface CartItem {
-    productId : ObjectId,
-    title : string,
-    quantity : number,
-    price : number
-}
-
-// Session user
-interface SessionUser {
-    _id : ObjectId,
-    name : string,
-    email : string
-}
-
-// Extend the request object in order to set variables in my request object
-interface UserInterface {
-    _id : ObjectId,
-    name : string,
-    email : string
-    cart : {
-        totalPrice : number,
-        items : CartItem[]
-    }
-}
-
-// Extending session data as opposed to declaration merging
-interface ExtendedSessionData extends SessionData {
-    isLoggedIn : boolean,
-    user : SessionUser,
-    csrfToken : string
-}
-
-interface ExtendedRequest extends Request{
-    User : UserInterface,
-    body : {
-        title : string,
-        image : string,
-        price : number,
-        description : string,
-        csrfToken : string
-    }
-    isAuthenticated : boolean,
-    session : Session & Partial<ExtendedSessionData>
-}
 
 // Add product controller
-const getAddProduct = (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -69,7 +24,7 @@ const getAddProduct = (request : ExtendedRequest, response : Response, next : Ne
 };
 
 // Post add product controller
-const postAddProduct = async(request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postAddProduct = async( request : ExtendedRequestInterface, response : Response ) => {
 
     // Fields
     const title = request.body.title;
@@ -117,7 +72,7 @@ const postAddProduct = async(request : ExtendedRequest, response : Response, nex
 };
 
 // Get admin products controller
-const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getProducts = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -147,7 +102,7 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
 };
 
 // Update product controller
-const updateProduct = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const updateProduct = async (request : ExtendedRequestInterface, response : Response ) => {
 
     // Get the fields in order to update our product
     const title = request.body.title;
@@ -199,7 +154,7 @@ const updateProduct = async (request : ExtendedRequest, response : Response, nex
 };
 
 // Delete product controller
-const deleteProduct = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const deleteProduct = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds

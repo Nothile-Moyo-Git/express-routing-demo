@@ -13,53 +13,23 @@
  * @method getProductDetails : ( request : Request, response : Response, next : NextFunction ) => void
  */
 
-
 // import our express types for TypeScript use
-import { Request, Response, NextFunction } from 'express';
+import { Response } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
-import { SessionData, Session } from 'express-session';
-import { CartItemInterface } from '../@types';
-
-// Extend the request object in order to set variables in my request object
-interface UserInterface {
-    _id : ObjectId,
-    name : string,
-    email : string
-    cart : {
-        totalPrice : number,
-        items : CartItemInterface[]
-    }
-}
-
-// Extending session data as opposed to declaration merging
-interface ExtendedSessionData extends SessionData {
-    isLoggedIn : boolean,
-    user : UserInterface,
-    csrfToken : string
-}
-
-interface ExtendedRequest extends Request{
-    User : UserInterface,
-    body : {
-        productId : ObjectId,
-        csrfToken : string
-    }
-    isAuthenticated : boolean,
-    session : Session & Partial<ExtendedSessionData>
-}
+import { ExtendedRequestInterface } from '../@types';
 
 // Get the shop index page
-const getIndex = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
+const getIndex = ( response : Response ) => {
 
     // For now, redirect to the products page
     response.redirect("/products");
 };
 
 // Get products controller
-const getProducts = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getProducts = async (request : ExtendedRequestInterface, response : Response ) => {
 
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
@@ -84,7 +54,7 @@ const getProducts = async (request : ExtendedRequest, response : Response, next 
 };
 
 // Get the orders
-const getOrders = async ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
+const getOrders = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -110,7 +80,7 @@ const getOrders = async ( request : ExtendedRequest, response : Response, next :
 };
 
 // Get the checkout page from the cart
-const getCheckout = ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
+const getCheckout = ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our CSRF token if we don't have one already
     const csrfToken = request.session.csrfToken;
@@ -123,7 +93,7 @@ const getCheckout = ( request : ExtendedRequest, response : Response, next : Nex
 };
 
 // Get product detail controller
-const getProductDetails = async ( request : ExtendedRequest, response : Response, next : NextFunction ) => {
+const getProductDetails = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -155,7 +125,7 @@ const getProductDetails = async ( request : ExtendedRequest, response : Response
 };
 
 // Get the cart and all the products inside of it
-const getCart = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const getCart = async (request : ExtendedRequestInterface, response : Response ) => {
 
     // Instantiate the User that we have
     const user = request.session.user;
@@ -182,7 +152,7 @@ const getCart = async (request : ExtendedRequest, response : Response, next : Ne
 
 // Add a new product to the cart using a post request
 // Acts as an add product handler
-const postCart = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postCart = async (request : ExtendedRequestInterface, response : Response ) => {
 
     // Instantiate the user that we have
     const user = request.session.user;
@@ -232,7 +202,7 @@ const postCart = async (request : ExtendedRequest, response : Response, next : N
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postCartDelete = (request : ExtendedRequestInterface, response : Response ) => {
 
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
@@ -265,7 +235,7 @@ const postCartDelete = (request : ExtendedRequest, response : Response, next : N
 };
 
 // Create an order in the SQL backend
-const postOrderCreate = async (request : ExtendedRequest, response : Response, next : NextFunction) => {
+const postOrderCreate = async (request : ExtendedRequestInterface, response : Response ) => {
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
