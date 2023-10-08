@@ -1,28 +1,39 @@
-@use "../../partials/branding" as branding;
-@use "../../partials/animations" as animations;
+@use "../partials/branding" as branding;
+@use "../partials/animations" as animations;
+@use "../partials/mixins" as mixins;
 
-.login{
+.form{
     display : flex;
     align-items: center;
     flex-direction: column;
     width: calc(100% - 2rem);
+    max-width: 350px;
     margin: auto;
-    max-width: 400px;
+    grid-row-gap: 1rem;
 
-    &__form{
+    &__page-title{
+        text-align: center;
+    }
+
+    &__title{
+        text-align: center;
+    }
+
+    &__wrapper{
         display: flex;
         flex-direction: column;
         justify-content: center;
         width: 100%;
-        margin: auto;
         max-width: 350px;
         grid-row-gap: 1rem;
+        margin: auto;
     }
 
     &__field{
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        width: 100%;
     }
 
     &__label{
@@ -48,9 +59,30 @@
         }
     }
 
+    &__submission-text{
+
+        color: branding.$brand_color_five;
+        text-align: center;
+        font-size: 1.35rem;
+
+        &--error{
+            color: white;
+            background-color: red;
+            border-radius: 5px;
+            padding: 0.35rem 0;
+            width: 100%;
+        }
+    }
+
     &__reset-link{
 
         color: white;
         margin: 1rem auto auto auto;
+        border-bottom: 2px solid white;
+        transition: animations.$standard_transition;
+
+        @include mixins.state{
+            border-color: branding.$brand_color_two;
+        }   
     }
 }

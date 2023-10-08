@@ -6,7 +6,18 @@
 import express from "express";
 
 // Get the controller so we can handle all of our requests
-import { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController, getNewPasswordForm, postNewPasswordController } from "../controllers/auth";
+import { 
+    getLoginPageController, 
+    postLoginAttemptController, 
+    postLogoutAttemptController, 
+    getSignupPageController, 
+    postSignupPageController, 
+    getPasswordResetPageController, 
+    postPasswordResetPageController, 
+    getNewPasswordForm, 
+    postNewPasswordController,
+    getPasswordResetRedirectController
+} from "../controllers/auth";
 
 // Define the object for our router which we pass through to the index file
 const authRoutes = express.Router();
@@ -31,6 +42,9 @@ authRoutes.get("/new-password", getNewPasswordForm);
 
 // Handle the new password request
 authRoutes.post("/new-password", postNewPasswordController);
+
+// Redirect to the new password page if no token has been added, this allows us to pass the csrf token through
+authRoutes.get("/reset", getPasswordResetRedirectController);
 
 // Render the password reset form
 authRoutes.get("/reset/:resetToken", getPasswordResetPageController);

@@ -104,6 +104,11 @@ const getPasswordResetPageController = async ( request : ExtendedRequestInterfac
     );
 };
 
+// Redirect if we don't have the appropriate paramaters to the new password page
+const getPasswordResetRedirectController = async ( request : ExtendedRequestInterface, response : Response ) => {
+    response.redirect("/new-password");
+};
+
 // Render the new password form
 const getNewPasswordForm = async ( request : ExtendedRequestInterface, response : Response ) => {
 
@@ -551,4 +556,15 @@ const postLogoutAttemptController = async ( request : ExtendedRequestInterface, 
 };
 
 // Export the controllers
-export { getLoginPageController, postLoginAttemptController, postLogoutAttemptController, getSignupPageController, postSignupPageController, getPasswordResetPageController, postPasswordResetPageController, getNewPasswordForm, postNewPasswordController };
+export { 
+    getLoginPageController, 
+    postLoginAttemptController, 
+    postLogoutAttemptController, 
+    getSignupPageController, 
+    postSignupPageController, 
+    getPasswordResetPageController, 
+    postPasswordResetPageController, 
+    getNewPasswordForm, 
+    postNewPasswordController,
+    getPasswordResetRedirectController
+};

@@ -8,15 +8,15 @@
 
             <h1><%= pageTitle %></h1>
 
-            <form class="signup__form" method="POST" action="/signup">
+            <form class="form" method="POST" action="/signup">
 
-                <div class="signup__field">
-                    <label for="nameInput" id="nameLabel" class="signup__label">Name*</label>
+                <div class="form__field">
+                    <label for="nameInput" id="nameLabel" class="form__label">Name*</label>
                     <input
                         type="text"
                         id="nameInput"
                         name="nameInput"
-                        class="signup__input"
+                        class="form__input"
                         aria-labelledby="nameLabel"
                         placeholder="Please enter your email address"
                         value="<%= oldInput.oldName && oldInput.oldName %>"
@@ -24,13 +24,13 @@
                     />
                 </div>
 
-                <div class="signup__field">
-                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= emailError.length === 0 ? "Email Address*" : emailError %></label>
+                <div class="form__field">
+                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? `form__label` : `form__label form__label--error` %>"><%= emailError.length === 0 ? "Email Address*" : emailError %></label>
                     <input
                         type="email"
                         id="emailInput"
                         name="emailInput"
-                        class="<%= emailError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
+                        class="<%= emailError.length === 0 ? `form__input` : `form__input form__input--error` %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
                         value="<%= oldInput.oldEmail && oldInput.oldEmail %>"
@@ -38,13 +38,13 @@
                     />
                 </div>
 
-                <div class="signup__field">
-                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Password*" : passwordError %></label>
+                <div class="form__field">
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? `form__label` : `form__label form__label--error` %>"><%= passwordError.length === 0 ? "Password*" : passwordError %></label>
                     <input
                         type="password"
                         id="passwordInput"
                         name="passwordInput"
-                        class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
+                        class="<%= passwordError.length === 0 ? `form__input` : `form__input form__input--error` %>"
                         aria-labelledby="passwordLabel"
                         placeholder="Please enter your password"
                         value="<%= oldInput.oldPassword && oldInput.oldPassword %>"
@@ -52,13 +52,13 @@
                     />
                 </div>
 
-                <div class="signup__field">
-                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordError.length === 0 ? `signup__label` : `signup__label signup__label--error` %>"><%= passwordError.length === 0 ? "Confirm Your Password*" : passwordError %></label>
+                <div class="form__field">
+                    <label for="secondPasswordInput" id="secondPasswordLabel" class="<%= passwordError.length === 0 ? `form__label` : `form__label form__label--error` %>"><%= passwordError.length === 0 ? "Confirm Your Password*" : passwordError %></label>
                     <input
                         type="password"
                         id="secondPasswordInput"
                         name="secondPasswordInput"
-                        class="<%= passwordError.length === 0 ? `signup__input` : `signup__input signup__input--error` %>"
+                        class="<%= passwordError.length === 0 ? `form__input` : `form__input form__input--error` %>"
                         aria-labelledby="secondPasswordLabel"
                         placeholder="Please enter your password"
                         value="<%= oldInput.oldConfirmPassword && oldInput.oldConfirmPassword %>"
