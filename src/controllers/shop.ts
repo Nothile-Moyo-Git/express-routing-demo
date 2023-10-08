@@ -22,14 +22,14 @@ import Order from "../models/order";
 import { ExtendedRequestInterface } from '../@types';
 
 // Get the shop index page
-const getIndex = ( response : Response ) => {
+const getIndex = ( request : ExtendedRequestInterface, response : Response ) => {
 
     // For now, redirect to the products page
     response.redirect("/products");
 };
 
 // Get products controller
-const getProducts = async (request : ExtendedRequestInterface, response : Response ) => {
+const getProducts = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
