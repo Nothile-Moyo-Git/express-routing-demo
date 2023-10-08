@@ -1,6 +1,8 @@
 # Nothile's Node.js Shop Application
 
-## *Note: This application uses Node v18.16*
+## *Note: This application uses Node v18.12*
+
+## Here is a screenshot of the application :)
 
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose
 
@@ -21,9 +23,9 @@ If you are visiting this repository and need the connection.ts file, _please sen
 
 You can copy the required commands from below
 
-> Get node 18.16
+> Get node 18.12
 ```
-nvm use 18.16
+nvm use 18.12
 ```
 
 > Install dependencies
@@ -77,6 +79,10 @@ As we're using EJS, you can find the syntax of how to use it [here](https://ejs.
 ## Databases
 **Note: Sequelize and MySQL were used previously, and have now been replaced with Mongoose. Mongoose is an ORM for MongoDB used with Node.js**
 
+You can find the connection details in the _"src/data/connection.ts"_ file.
+
+If you ever decide to use MongoDB yourself, you can use [MongoDB Atlas](https://www.mongodb.com/atlas/database) with a free tier which gives you AWS cloud instances for a de-coupled web application.
+
 ## Links to various tools & frameworks used:
 [MongoDB](https://www.mongodb.com/)
 > This is the non-relational database used for this application.
@@ -108,6 +114,7 @@ As we're using EJS, you can find the syntax of how to use it [here](https://ejs.
 ### Server
 This app uses express.js with a port of 3000 found in _./src/index.ts_.
 The port number is set in the .env file and is pulled through to the index file.
+
 To open the app, go to [localhost:3000](http://localhost:3000/).
 
 ### Routing
@@ -153,9 +160,25 @@ The comments will explain how the code is processed.
 If you add a new stylesheet, you must import it into the custom.scss file using @use.
 
 ### Security
+Security measures have been taken with this application to ensure as much safety as possible.
 
+All passwords are encrypted using bcrypt.
 
-### Development Principles
+CSRF protection is in place with all form requests and cannot be bypassed.
+
+Session tokens are also used in conjuction with CSRF requests.
+
+No sensitive data is held on this website.
+
+Note: **IF YOU ARE TRYING OUT THIS APPLICATON, DO NOT STORE SENSITIVE DATA ON THE SERVER, THIS IS A TOY APPLICATION**.
+
+### Development Process
+
+1: Duplicate the development branch by creating a feature or bugfix branch
+2: Complete your work
+3: Merge your branch into **develop** by creating a PR
+4: Once approved, I will deploy the **develop** branch into master when testing is completed
+5: If possible, please apply linting and testing to the application (although this isn't done yet)
 
 ### Potential Improvements
 
@@ -167,3 +190,5 @@ There are design principles to help with the scalability of the applcation, for 
 
 [Solid Principles](https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/)
 > Link for SOLID is here, it's about figuring out superior ways to use our Models, properties and methods with the appropriate naming conventions.
+
+

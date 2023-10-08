@@ -8,15 +8,15 @@
 
             <h1><%= pageTitle %></h1>
 
-            <form class="login__form" method="POST" action="/login">
+            <form class="form" method="POST" action="/login">
 
-                <div class="login__field">
-                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? 'login__label' : 'login__label login__label--error' %>"><%= emailError.length === 0 ? `Email Address*` : emailError %></label>
+                <div class="form__field">
+                    <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? 'form__label' : 'form__label form__label--error' %>"><%= emailError.length === 0 ? `Email Address*` : emailError %></label>
                     <input
                         type="email"
                         id="emailInput"
                         name="emailInput"
-                        class="<%= emailError.length === 0 ? 'login__input' : 'login__input login__input--error' %>"
+                        class="<%= emailError.length === 0 ? 'form__input' : 'form__input form__input--error' %>"
                         aria-labelledby="emailLabel"
                         placeholder="Please enter your email address"
                         value="<%= oldInput.oldEmail && oldInput.oldEmail %>"
@@ -24,13 +24,13 @@
                     />
                 </div>
 
-                <div class="login__field">
-                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? 'login__label' : 'login__label--error' %>"><%= passwordError.length === 0 ? 'Password*' : 'Error : Password is incorrect' %></label>
+                <div class="form__field">
+                    <label for="passwordInput" id="passwordLabel" class="<%= passwordError.length === 0 ? 'form__label' : 'form__label form__label--error' %>"><%= passwordError.length === 0 ? 'Password*' : 'Error : Password is incorrect' %></label>
                     <input
                         type="password"
                         id="passwordInput"
                         name="passwordInput"
-                        class="<%= passwordError.length === 0 ? 'login__input' : 'login__input login__input--error' %>"
+                        class="<%= passwordError.length === 0 ? 'form__input' : 'form__input form__input--error' %>"
                         aria-labelledby="passwordLabel"                                 
                         placeholder="Please enter your password"
                         value="<%= oldInput.oldPassword && oldInput.oldPassword %>"
@@ -41,9 +41,9 @@
                 <input type="hidden" name="csrfToken" value=<%= csrfToken %> />
                 <button type="submit" class="button button--yellow">Login</button>
 
-            </form>
+                <a href="/new-password" class="form__reset-link">Reset Your Password</a>
 
-            <a href="/new-password" class="login__reset-link">Reset Your Password</a>
+            </form>
 
         </main>
 
