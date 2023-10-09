@@ -36,7 +36,7 @@ const getAdminEditProduct = async ( request : ExtendedRequestInterface, response
 
     // Render the edit products template
     response.render(      
-        "admin/edit-product", 
+        "pages/admin/edit-product", 
         { 
             pageTitle : "Edit Products", 
             id : productId, 

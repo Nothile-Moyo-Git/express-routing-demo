@@ -147,7 +147,7 @@ app.use( async( request : any, response : Response, next : NextFunction ) => {
 });
 
 // Use our admin router which handles the admin pages, which allow us to create, delete, or edit products
-app.use( '/admin', adminRoutes );
+app.use( adminRoutes );
 
 // Use our shop router which handles the output for the home and product pages
 app.use( shopRoutes );

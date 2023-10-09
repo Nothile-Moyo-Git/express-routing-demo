@@ -28,7 +28,7 @@ const getLoginPageController = async ( request : ExtendedRequestInterface, respo
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/login", { 
+        response.render("pages/auth/login", { 
             pageTitle : "Login", 
             isAuthenticated : false, 
             csrfToken : csrfToken, 
@@ -58,7 +58,7 @@ const getSignupPageController = async ( request : ExtendedRequestInterface, resp
         
         // Render the login page here
         // Note: Don't use a forward slash when defining URL's here
-        response.render("auth/signup", { 
+        response.render("pages/auth/signup", { 
             pageTitle : "Signup", 
             isAuthenticated : false, 
             emailError : "", 
@@ -89,7 +89,7 @@ const getPasswordResetPageController = async ( request : ExtendedRequestInterfac
 
     // Render the password reset page
     response.render(
-        "auth/password-reset", 
+        "pages/auth/password-reset", 
         { 
             pageTitle : "Reset your password",
             csrfToken : csrfToken, 
@@ -119,7 +119,7 @@ const getNewPasswordForm = async ( request : ExtendedRequestInterface, response 
     const isLoggedIn = request.session.isLoggedIn;
 
     // Render the new password Form
-    response.render("auth/new-password",{
+    response.render("pages/auth/new-password",{
         pageTitle : "Request a new password",
         csrfToken : csrfToken,
         isAuthenticated : isLoggedIn,
@@ -195,7 +195,7 @@ const postNewPasswordController =  async ( request : ExtendedRequestInterface, r
             });
 
             // Render the new password Form
-            response.render("auth/new-password",{
+            response.render("pages/auth/new-password",{
                 pageTitle : "Request a new password",
                 csrfToken : sessionCSRFToken,
                 isAuthenticated : isLoggedIn,
@@ -209,7 +209,7 @@ const postNewPasswordController =  async ( request : ExtendedRequestInterface, r
         }else{
 
             // Render the new password Form
-            response.render("auth/new-password",{
+            response.render("pages/auth/new-password",{
                 pageTitle : "Request a new password",
                 csrfToken : sessionCSRFToken,
                 isAuthenticated : isLoggedIn,
@@ -296,7 +296,7 @@ const postPasswordResetPageController = async ( request : ExtendedRequestInterfa
         }else{
 
             // Render the password reset page
-            response.render( "auth/password-reset", { 
+            response.render( "pages/auth/password-reset", { 
                 pageTitle : "Reset your password",
                 csrfToken : sessionCSRFToken, 
                 isAuthenticated : false,
@@ -394,7 +394,7 @@ const postSignupPageController = async ( request : ExtendedRequestInterface, res
         
             // Render the login page here
             // Note: Don't use a forward slash when defining URL's here
-            response.render("auth/signup", { 
+            response.render("pages/auth/signup", { 
                 pageTitle : "Signup", 
                 isAuthenticated : false, 
                 emailError : emailErrorMessage, 
@@ -475,7 +475,7 @@ const postLoginAttemptController = async ( request : ExtendedRequestInterface, r
 
                 // Reload the login page
                 // We do it like this in order to pass the previous input through without using a flash message
-                response.render("auth/login", { 
+                response.render("pages/auth/login", { 
                     pageTitle : "Login", 
                     isAuthenticated : false, 
                     csrfToken : sessionCSRFToken, 
@@ -494,7 +494,7 @@ const postLoginAttemptController = async ( request : ExtendedRequestInterface, r
             request.flash("emailError", "Error : User doesn't exist in the database");
 
             // Reload the login page
-            response.render("auth/login", { 
+            response.render("pages/auth/login", { 
                 pageTitle : "Login", 
                 isAuthenticated : false, 
                 csrfToken : sessionCSRFToken, 
