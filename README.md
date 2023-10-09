@@ -4,6 +4,8 @@
 
 ## Here is a screenshot of the application :)
 
+![image](https://github.com/Nothile-Moyo-Git/express-routing-demo/assets/15236959/b321d5fe-90e5-4200-b767-587a9e285aff)
+
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose
 
 **The purpose of this Application is to learn the backend in a simple way. This is a shop application with the ability to make orders, handle carts, create users, create orders, send emails, handle payments, perform admin & security functionality**
@@ -190,5 +192,3 @@ There are design principles to help with the scalability of the applcation, for 
 
 [Solid Principles](https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/)
 > Link for SOLID is here, it's about figuring out superior ways to use our Models, properties and methods with the appropriate naming conventions.
-
-
