@@ -9,21 +9,21 @@ import isAuthenticated from "../middleware/is-auth";
 const adminRoutes = express.Router();
 
 // Handle and eventually render the admin/add-product page
-adminRoutes.get("/add-product", isAuthenticated, getAddProduct);
+adminRoutes.get("/admin/add-product", isAuthenticated, getAddProduct);
 
 // Handle the add-product request and then redirect to the shop page
-adminRoutes.post("/add-product", isAuthenticated, postAddProduct);
+adminRoutes.post("/admin/add-product", isAuthenticated, postAddProduct);
 
 // Handle and eventally render the admin/products page
-adminRoutes.get("/products", isAuthenticated, getProducts);
+adminRoutes.get("/admin/products", isAuthenticated, getProducts);
 
 // Handle the edit product dynamic route and render the admin/edit-products page
-adminRoutes.get("/edit-product/:id", isAuthenticated, getAdminEditProduct);
+adminRoutes.get("/admin/edit-product/:id", isAuthenticated, getAdminEditProduct);
 
 // Handle the update product dynamic route which updates the product in the JSON
-adminRoutes.post("/update-product/:id", isAuthenticated, updateProduct);
+adminRoutes.post("/admin/update-product/:id", isAuthenticated, updateProduct);
 
 // Delete the item from the products json array based on the id
-adminRoutes.post("/delete-product/:id", isAuthenticated, deleteProduct);
+adminRoutes.post("/admin/delete-product/:id", isAuthenticated, deleteProduct);
 
 export default adminRoutes;

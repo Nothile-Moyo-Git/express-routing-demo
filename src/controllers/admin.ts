@@ -14,9 +14,8 @@ const getAddProduct = ( request : ExtendedRequestInterface, response : Response 
     const csrfToken = request.session.csrfToken;
 
     // Send our HTML file to the browser
-    response.render("admin/add-product", { 
+    response.render("pages/admin/add-product", { 
         pageTitle: "Add Product", 
-        path: "/admin/add-product", 
         isAuthenticated : isLoggedIn === undefined ? false : true,
         csrfToken : csrfToken
     });
@@ -91,7 +90,7 @@ const getProducts = async ( request : ExtendedRequestInterface, response : Respo
     .populate("userId", "name");
 
     // Render the view of the page
-    response.render("admin/products", { 
+    response.render("pages/admin/products", { 
         prods : products, 
         pageTitle : "Admin Products", 
         hasProducts : products.length > 0,
