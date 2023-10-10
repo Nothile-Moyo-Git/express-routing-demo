@@ -1,10 +1,10 @@
-<%- include('../includes/header'); %>
+<%- include('../../includes/header'); %>
 
     <body>
 
         <main>
 
-            <%- include('../includes/menu'); %>
+            <%- include('../../includes/menu'); %>
 
             <% if (isAuthenticated === true) { %>
 
@@ -62,7 +62,7 @@
 
             <% } else { %>
 
-                <%- include('../components/fallback'); %>
+                <%- include('../../components/fallback'); %>
 
             <% } %>
 
@@ -70,4 +70,4 @@
 
     </body>
 
-<%- include('../includes/footer'); %>
+<%- include('../../includes/footer'); %>

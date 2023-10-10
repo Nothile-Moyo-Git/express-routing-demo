@@ -1,11 +1,11 @@
-<%- include('../includes/header'); %>
+<%- include('../../includes/header'); %>
     <body>
 
-        <%- include('../includes/menu'); %>
+        <%- include('../../includes/menu'); %>
 
         <main class="content">
 
-            <h1><%= pageTitle %></h1>
+            <h1 class="content__title"><%= pageTitle %></h1>
 
             <% if (hasProducts) {%>
 
@@ -45,5 +45,5 @@
 
     </body>
     
-<%- include('../includes/footer'); %>
+<%- include('../../includes/footer'); %>
 
