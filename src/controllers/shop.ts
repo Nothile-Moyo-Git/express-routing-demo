@@ -43,7 +43,7 @@ const getProducts = async ( request : ExtendedRequestInterface, response : Respo
     .populate("userId", "name");
 
     // Render the products view
-    response.render("shop/product-list", { 
+    response.render("pages/shop/product-list", { 
         prods : products, 
         pageTitle: "My Products", 
         path: "/", 
@@ -70,7 +70,7 @@ const getOrders = async ( request : ExtendedRequestInterface, response : Respons
     .select("totalPrice orderItems createdAt user");
 
     // Render the view page
-    response.render("shop/orders", { 
+    response.render("pages/shop/orders", { 
         pageTitle : "Orders", 
         orders : orders, 
         hasOrders : orders.length > 0,
@@ -85,7 +85,7 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
     // Get our CSRF token if we don't have one already
     const csrfToken = request.session.csrfToken;
 
-    response.render("shop/checkout", { 
+    response.render("pages/shop/checkout", { 
         pageTitle : "Checkout",
         isAuthenticated : true,
         csrfToken : csrfToken
@@ -115,7 +115,7 @@ const getProductDetails = async ( request : ExtendedRequestInterface, response :
     const hasProduct = singleProduct !== null;
 
     // Render the admin products ejs template, make sure it's for the first object we get since Mongoose returns an array of BSON objects
-    response.render("shop/product-detail", { 
+    response.render("pages/shop/product-detail", { 
         hasProduct : hasProduct, 
         productDetails : singleProduct,
         pageTitle : "Product details",
@@ -140,7 +140,7 @@ const getCart = async (request : ExtendedRequestInterface, response : Response )
     const hasUser = user !== undefined;
  
     // Render the admin products ejs template
-    response.render("shop/cart", { 
+    response.render("pages/shop/cart", { 
         hasProducts : hasProducts, 
         products : hasUser === true ? user.cart.items : [],
         pageTitle : "Your Cart",

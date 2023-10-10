@@ -13,19 +13,24 @@
 _I wanted to get a better idea about how to create API endpoints and handle API requests, as well as understanding security measures in the backend, as well as features such as working with non-relational databases, GraphQL, Stripe payments and using the MVC architecture_
 
 ### Setup
-The version of node used when building this application is v18.12. If you need to change your node version for your installation, you can use `nvm`.
+The version of node used when building this application is v18.12. If you need to change your node version for your installation, you can use ```nvm```.
 
 > nvm is known as "node version manager" which allows you manage your node installations to make dependency management easier. You can find it [here](https://github.com/nvm-sh/nvm).
 
-In order to install the required packages, run `npm run install` followed by `npm audit fix`. The audit fix will automatically fix any issues that can be resolved without breaking the potential build.
+In order to install the required packages, run ```npm run install``` followed by ```npm audit fix```. The audit fix will automatically fix any issues that can be resolved without breaking the potential build.
 
-In order to deploy the app, run `npm run deploy` which will deploy it to the database.
+In order to deploy the app, run ```npm run deploy``` which will deploy it to the database.
 
 If you are visiting this repository and need the connection.ts file, _please send an email to [this](mailto:nothile1@gmail.com) email address._ If you know me personally, send a message requesting it.
 
 You can copy the required commands from below
 
-> Get node 18.12
+> Install node v18.12
+```
+nvm install 18.12
+```
+
+> Use node v18.12
 ```
 nvm use 18.12
 ```
@@ -57,7 +62,7 @@ npm run watch
 
 ### Running the App
 Once you've successfully copied and installed the packages, you'll want to run the application. 
-To do this, run `npm run start` in order to start your local node server.
+To do this, run ```npm run start``` in order to start your local node server.
 
 It will automatically open the web page in your browser, but if this doesn't suffice, try visiting [localhost:3000](http://) as a default link.
 
