@@ -17,6 +17,7 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import authRoutes from "./routes/auth";
+import userRoutes from "./routes/user";
 import User from "./models/user";
 import errorRoutes from "./routes/error";
 import { createMongooseConnection, sessionUrl } from "./data/connection";
@@ -154,6 +155,9 @@ app.use( shopRoutes );
 
 // Use the auth router which handles the login page
 app.use( authRoutes );
+
+// Use our user router which handles anything related to users or profile-based functionality
+app.use( userRoutes );
 
 // Use the error page router
 // Place the error router last as it will override all of your other routes after it
