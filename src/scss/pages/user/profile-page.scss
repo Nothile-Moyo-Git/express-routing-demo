@@ -1,0 +1,36 @@
+@use "../../../scss/partials/branding" as branding;
+@use "../../../scss/partials/responsive" as responsive;
+@use "../../../scss/partials/mixins" as mixins;
+@use "../../../scss/partials/animations" as animations;
+
+.profile-page{
+
+    display: flex;
+    flex-direction: column;
+ 
+    &__image{
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid white;
+        transition: animations.$standard_transition;
+        margin: auto auto 1rem auto;
+
+        @include mixins.state(){
+            border-radius: 3px;
+        }
+    }
+
+    &__link{
+        color: white;
+        transition: animations.$standard_transition;
+        border-bottom: 2px solid white;
+        padding-bottom: 0.15rem;
+
+        @include mixins.state(){
+            color: branding.$brand_color_two;
+            border-color: branding.$brand_color_two;
+        }
+    }
+}

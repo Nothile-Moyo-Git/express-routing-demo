@@ -1,0 +1,26 @@
+<%- include('../../includes/header'); %>
+    <body>
+
+        <%- include('../../includes/menu'); %>
+
+        <main class="content">
+
+            <h1 class="content__title"><%= pageTitle %></h1>
+
+            <section class="profile-page">
+
+                <img 
+                    src="https://picsum.photos/150" 
+                    alt="Your profile image if you have one!"
+                    class="profile-page profile-page__image"
+                />
+
+                <a href="/new-password" class="profile-page profile-page__link">Reset your password</a>
+
+            </section>
+
+        </main>
+
+    </body>
+        
+<%- include('../../includes/footer'); %>
