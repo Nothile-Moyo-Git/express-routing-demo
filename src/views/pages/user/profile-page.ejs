@@ -1,4 +1,5 @@
 <%- include('../../includes/header'); %>
+
     <body>
 
         <%- include('../../includes/menu'); %>
@@ -9,13 +10,18 @@
 
             <section class="profile-page">
 
+                <p class="profile-page__text">Name : <%= userData.name %></p>
+                <p class="profile-page__text">Email : <%= userData.email %></p>
+
                 <img 
                     src="https://picsum.photos/150" 
                     alt="Your profile image if you have one!"
-                    class="profile-page profile-page__image"
+                    class="profile-page__image"
                 />
 
-                <a href="/new-password" class="profile-page profile-page__link">Reset your password</a>
+                <a href="/edit-profile" class="profile-page__link">Edit Your Profile</a>
+
+                <a href="/new-password" class="profile-page__link">Reset your password</a>
 
             </section>
 
