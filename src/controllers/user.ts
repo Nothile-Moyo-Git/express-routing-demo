@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import { ExtendedRequestInterface, UserInterface } from '../@types';
+import { validate } from 'email-validator';
 
 // Handle our get profile page
 const getProfilePageController = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -36,12 +37,31 @@ const getEditProfilePageController = ( request : ExtendedRequestInterface, respo
     // Get our user information so we can describe it on the profile page
     const userData : UserInterface = request.session.user;
 
+    // Note, we use strings instead of a boolean
     response.render("pages/user/edit-profile-page", {
         pageTitle : "Edit Profile",
         csrfToken : csrfToken,
         isAuthenticated : isLoggedIn,
-        userData : userData
+        userData : userData,
+        isNameValid : "true",
+        isEmailValid : "true",
+        isFormSubmitted : ""
     });
 };
 
-export { getProfilePageController, getEditProfilePageController };
+// Handle out edit profile post request
+const postEditProfileRequestController = ( request : ExtendedRequestInterface, response : Response ) => {
+
+    console.clear();
+    console.log("Edit profile page post request");
+
+    if (request.body.nameInput.length < 3) {
+        request.flash("isNameLengthValid", "true");
+    }
+
+
+
+    response.redirect("back");
+};
+
+export { getProfilePageController, getEditProfilePageController, postEditProfileRequestController };

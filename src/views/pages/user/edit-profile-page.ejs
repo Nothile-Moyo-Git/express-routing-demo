@@ -8,7 +8,47 @@
 
             <h1 class="content__title"><%= pageTitle %></h1>
 
+            <% if (isFormSubmitted.toString().length > 0) { %> 
+                <div>Form Submitted</div>    
+            <% } %>
+
             <form class="form" method="POST" action="/edit-profile">
+
+                <div class="form__field">
+                    <label class="form__label" id="inputLabel" for="nameInput">Name*</label>
+                    <input
+                        class="form__input"
+                        aria-labelledby="inputLabel"
+                        type="text"
+                        name="nameInput"
+                        id="nameInput"
+                        placeholder="Please enter your new name"
+                        value="<%= userData.name %>"
+                        required
+                    />
+                </div>
+
+                <div class="form__field">
+                    <label class="form__label" id="emailLabel" for="emailInput">Email*</label>
+                    <input
+                        class="form__input"
+                        aria-labelledby="emailLabel"
+                        type="email"
+                        name="emailInput"
+                        id="emailInput"
+                        placeholder="Please enter your email address"
+                        value="<%= userData.email %>"
+                        required
+                    />
+                </div>
+
+                <input
+                    type="hidden"
+                    name="csrfToken"
+                    value="<%= csrfToken %>"
+                />
+
+                <button class="button button--yellow">Submit</button>
 
             </form>
 
