@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import { ExtendedRequestInterface, UserInterface } from '../@types';
+import { validate } from 'email-validator';
 
 // Handle our get profile page
 const getProfilePageController = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -10,14 +11,57 @@ const getProfilePageController = ( request : ExtendedRequestInterface, response 
     // Get our csrf token
     const csrfToken = request.session.csrfToken;
 
+    // Get our user information so we can describe it on the profile page
+    const userData : UserInterface = request.session.user;
+
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
 
-    response.render("pages/user/profile-page",{
+    response.render("pages/user/profile-page", {
         pageTitle : "Profile Page",
         csrfToken : csrfToken,
-        isAuthenticated : isLoggedIn
+        isAuthenticated : isLoggedIn,
+        userData : userData
     });
 };
 
-export { getProfilePageController };
+// Handle our edit profile page controller
+const getEditProfilePageController = ( request : ExtendedRequestInterface, response : Response ) => {
+
+    // Get our csrf token
+    const csrfToken = request.session.csrfToken;
+
+    // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
+    const isLoggedIn = request.session.isLoggedIn;
+
+    // Get our user information so we can describe it on the profile page
+    const userData : UserInterface = request.session.user;
+
+    // Note, we use strings instead of a boolean
+    response.render("pages/user/edit-profile-page", {
+        pageTitle : "Edit Profile",
+        csrfToken : csrfToken,
+        isAuthenticated : isLoggedIn,
+        userData : userData,
+        isNameValid : "true",
+        isEmailValid : "true",
+        isFormSubmitted : ""
+    });
+};
+
+// Handle out edit profile post request
+const postEditProfileRequestController = ( request : ExtendedRequestInterface, response : Response ) => {
+
+    console.clear();
+    console.log("Edit profile page post request");
+
+    if (request.body.nameInput.length < 3) {
+        request.flash("isNameLengthValid", "true");
+    }
+
+
+
+    response.redirect("back");
+};
+
+export { getProfilePageController, getEditProfilePageController, postEditProfileRequestController };

@@ -7,15 +7,21 @@
 
     display: flex;
     flex-direction: column;
+
+    &__text{
+        color: white;
+        margin: 0.25rem auto 0.25rem auto;
+        text-align: center;
+    }
  
     &__image{
         width: 150px;
         height: 150px;
         object-fit: cover;
         border-radius: 50%;
-        border: 2px solid white;
+        border: 2px solid branding.$brand_color_one;
         transition: animations.$standard_transition;
-        margin: auto auto 1rem auto;
+        margin: 1rem auto 1rem auto;
 
         @include mixins.state(){
             border-radius: 3px;
@@ -26,7 +32,9 @@
         color: white;
         transition: animations.$standard_transition;
         border-bottom: 2px solid white;
-        padding-bottom: 0.15rem;
+        padding-bottom: 0.05rem;
+        width: max-content;
+        margin: 0 auto 0.75rem auto;
 
         @include mixins.state(){
             color: branding.$brand_color_two;
