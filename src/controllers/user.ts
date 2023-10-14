@@ -31,37 +31,56 @@ const getEditProfilePageController = ( request : ExtendedRequestInterface, respo
     // Get our csrf token
     const csrfToken = request.session.csrfToken;
 
-    // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
-    const isLoggedIn = request.session.isLoggedIn;
-
     // Get our user information so we can describe it on the profile page
     const userData : UserInterface = request.session.user;
 
-    // Note, we use strings instead of a boolean
+    const isLoggedIn = request.session.isLoggedIn;
+
     response.render("pages/user/edit-profile-page", {
         pageTitle : "Edit Profile",
         csrfToken : csrfToken,
-        isAuthenticated : isLoggedIn,
         userData : userData,
-        isNameValid : "true",
-        isEmailValid : "true",
-        isFormSubmitted : ""
+        isNameValid : true,
+        isEmailValid : true,
+        isFormSubmitted : false,
+        isAuthenticated : isLoggedIn
     });
 };
 
 // Handle out edit profile post request
 const postEditProfileRequestController = ( request : ExtendedRequestInterface, response : Response ) => {
 
-    console.clear();
-    console.log("Edit profile page post request");
+    // Validate inputs 
+    const isNameValid = request.body.nameInput.length >= 3;
+    const isEmailValid = validate(request.body.emailInput);
 
-    if (request.body.nameInput.length < 3) {
-        request.flash("isNameLengthValid", "true");
+    // Get our csrf token
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = request.body.csrfToken;
+
+    // Get our user information so we can describe it on the profile page
+    const userData : UserInterface = request.session.user;
+
+    const isLoggedIn = request.session.isLoggedIn;
+
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
+
+    if (isCSRFValid === true){
+        response.render("pages/user/edit-profile-page", {
+            pageTitle : "Edit Profile",
+            csrfToken : sessionCSRFToken,
+            userData : userData,
+            isNameValid : isNameValid,
+            isEmailValid : isEmailValid,
+            isFormSubmitted : true,
+            isAuthenticated : isLoggedIn
+        });
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
     }
 
-
-
-    response.redirect("back");
 };
 
 export { getProfilePageController, getEditProfilePageController, postEditProfileRequestController };
