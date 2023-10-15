@@ -2,7 +2,7 @@
 // This file is for the product routes
 import express from "express";
 import { getAdminEditProduct } from "../controllers/products";
-import { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct } from "../controllers/admin";
+import { getAddProduct, postAddProduct, getProducts, updateProductController, deleteProduct } from "../controllers/admin";
 import isAuthenticated from "../middleware/is-auth";
 
 // Create our express router
@@ -21,7 +21,7 @@ adminRoutes.get("/admin/products", isAuthenticated, getProducts);
 adminRoutes.get("/admin/edit-product/:id", isAuthenticated, getAdminEditProduct);
 
 // Handle the update product dynamic route which updates the product in the JSON
-adminRoutes.post("/admin/update-product/:id", isAuthenticated, updateProduct);
+adminRoutes.post("/admin/update-product/:id", isAuthenticated, updateProductController);
 
 // Delete the item from the products json array based on the id
 adminRoutes.post("/admin/delete-product/:id", isAuthenticated, deleteProduct);
