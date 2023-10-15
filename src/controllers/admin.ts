@@ -3,6 +3,7 @@ import { Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
+import { isFloat } from "../util/utility-methods";
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -26,7 +27,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
     // Fields
     const title = request.body.title;
-    const image = request.body.image;
+    const imageUrl = request.body.image;
     const price = Number(request.body.price);
     const description = request.body.description;
 
@@ -40,6 +41,29 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
     // Instantiate the User that we have
     const user = request.session.user;
 
+    // Validate our inputs
+    const isTitleValid = title.length >= 3;
+    // const isImageUrlValid = isUrl(imageUrl);
+    const isDecriptionValid = description.length >= 5 && description.length <= 400;
+    const isPriceValid = isFloat(price);
+
+    console.clear();
+    console.log("Testing product creation validation");
+    console.log("Is title valid?");
+    console.log(isTitleValid);
+    console.log("\n");
+
+    console.log("Is image valid?");
+    // console.log(isImageUrlValid);
+    console.log("\n");
+
+    console.log("Is decription valid?");
+    console.log(isDecriptionValid);
+    console.log("\n");
+
+    console.log("Is price valid?");
+    console.log(isPriceValid);
+
     if (isCSRFValid === true) {
 
         // Check if we have a user
@@ -48,7 +72,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
         // Instantiate our product
         const product = new Product({
             title : title,
-            image : image,
+            image : imageUrl,
             description : description,
             price : price,
             userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
@@ -100,13 +124,13 @@ const getProducts = async ( request : ExtendedRequestInterface, response : Respo
 };
 
 // Update product controller
-const updateProduct = async (request : ExtendedRequestInterface, response : Response ) => {
+const updateProductController = async (request : ExtendedRequestInterface, response : Response ) => {
 
     // Get the fields in order to update our product
     const title = request.body.title;
     const price = request.body.price;
     const description = request.body.description;
-    const image = request.body.image;
+    const imageUrl = request.body.image;
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -134,7 +158,7 @@ const updateProduct = async (request : ExtendedRequestInterface, response : Resp
                 title : title,
                 price : price,
                 description : description,
-                image : image
+                image : imageUrl
             });
 
             // Render the view of the page
@@ -197,4 +221,4 @@ const deleteProduct = async ( request : ExtendedRequestInterface, response : Res
     }
 };
 
-export { getAddProduct, postAddProduct, getProducts, updateProduct, deleteProduct }; 
+export { getAddProduct, postAddProduct, getProducts, updateProductController, deleteProduct }; 
