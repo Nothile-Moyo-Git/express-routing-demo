@@ -3,7 +3,7 @@ import { Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
-import { isFloat } from "../util/utility-methods";
+import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -18,7 +18,14 @@ const getAddProduct = ( request : ExtendedRequestInterface, response : Response 
     response.render("pages/admin/add-product", { 
         pageTitle: "Add Product", 
         isAuthenticated : isLoggedIn === undefined ? false : true,
-        csrfToken : csrfToken
+        csrfToken : csrfToken,
+        oldInput : {},
+        inputsValid : {
+            titleValid : true,
+            imageUrlValid : true,
+            priceValid : true,
+            description : true
+        }
     });
 };
 
@@ -38,54 +45,63 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
+
     // Instantiate the User that we have
     const user = request.session.user;
 
     // Validate our inputs
     const isTitleValid = title.length >= 3;
-    // const isImageUrlValid = isUrl(imageUrl);
+    const isImageUrlValid = isValidUrl(imageUrl);
     const isDecriptionValid = description.length >= 5 && description.length <= 400;
-    const isPriceValid = isFloat(price);
-
-    console.clear();
-    console.log("Testing product creation validation");
-    console.log("Is title valid?");
-    console.log(isTitleValid);
-    console.log("\n");
-
-    console.log("Is image valid?");
-    // console.log(isImageUrlValid);
-    console.log("\n");
-
-    console.log("Is decription valid?");
-    console.log(isDecriptionValid);
-    console.log("\n");
-
-    console.log("Is price valid?");
-    console.log(isPriceValid);
+    const isPriceValid = isFloat(price) ?? isInt(price);
 
     if (isCSRFValid === true) {
 
-        // Check if we have a user
-        const hasUser = user !== undefined;
+        if (isTitleValid === true && isImageUrlValid === true && isDecriptionValid === true && isPriceValid === true) {
+            // Check if we have a user
+            const hasUser = user !== undefined;
 
-        // Instantiate our product
-        const product = new Product({
-            title : title,
-            image : imageUrl,
-            description : description,
-            price : price,
-            userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
-        });
+            // Instantiate our product
+            const product = new Product({
+                title : title,
+                image : imageUrl,
+                description : description,
+                price : price,
+                userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
+            });
 
-        // Save our new product to the database
-        // Note : This method is inherited from the Mongoose model
-        // Only save the product if we're logged in
-        if (hasUser === true) {
-            product.save();
+            // Save our new product to the database
+            // Note : This method is inherited from the Mongoose model
+            // Only save the product if we're logged in
+            if (hasUser === true) {
+                product.save();
+            }
+
+            response.redirect("/products");
+
+        }else{
+
+            // Send our HTML file to the browser
+            response.render("pages/admin/add-product", { 
+                pageTitle: "Add Product", 
+                isAuthenticated : isLoggedIn === undefined ? false : true,
+                csrfToken : sessionCSRFToken,
+                oldInput : {
+                    oldTitle : title,
+                    oldImageUrl : imageUrl,
+                    oldPrice : price,
+                    oldDescription : description
+                },
+                inputsValid : {
+                    titleValid : isTitleValid,
+                    imageUrlValid : isImageUrlValid,
+                    priceValid : isPriceValid,
+                    description : isDecriptionValid
+                }
+            });  
         }
-
-        response.redirect("/products");
 
     }else{
         
