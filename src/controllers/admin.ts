@@ -24,7 +24,7 @@ const getAddProduct = ( request : ExtendedRequestInterface, response : Response 
             titleValid : true,
             imageUrlValid : true,
             priceValid : true,
-            description : true
+            descriptionValid : true
         }
     });
 };
@@ -55,7 +55,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
     const isTitleValid = title.length >= 3;
     const isImageUrlValid = isValidUrl(imageUrl);
     const isDecriptionValid = description.length >= 5 && description.length <= 400;
-    const isPriceValid = isFloat(price) ?? isInt(price);
+    const isPriceValid = isFloat(price) || isInt(price);
 
     if (isCSRFValid === true) {
 
@@ -98,7 +98,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                     titleValid : isTitleValid,
                     imageUrlValid : isImageUrlValid,
                     priceValid : isPriceValid,
-                    description : isDecriptionValid
+                    descriptionValid : isDecriptionValid
                 }
             });  
         }
