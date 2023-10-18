@@ -19,6 +19,19 @@ nav{
         flex-direction: column;
     }
 
+    &__link{
+
+        font-size: 14px;
+        transition: animations.$standard-transition;
+        border-radius: 3px;
+        padding : 0.4rem 0.85rem 0.45rem 0.85rem;
+
+        @include mixins.state(){
+            background-color: branding.$brand_color_six__alt_1;
+            color : rgba(0, 0, 0, 0.9);
+        }
+    }
+
     &__item{
         width: 100%;
         text-align: center;
@@ -44,13 +57,15 @@ nav{
         border: none;
         height: 100%;
         cursor: pointer;
-        font-size: 1.1rem;
-        width: inherit;
+        font-size: 14px;
+        width: max-content;
         margin: auto;
+        border-radius: 3px;
+        padding : 0.4rem 0.85rem 0.45rem 0.85rem;
         transition: animations.$standard-transition;
 
         @include mixins.state(){
-            color: branding.$brand_color_two;
+            background-color: branding.$brand_color_six__alt_1;  
         }
     }
 }

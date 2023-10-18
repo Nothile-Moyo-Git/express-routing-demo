@@ -32,18 +32,18 @@
 .header{
     position: fixed;
     top: 0;
-    height: 50px;
+    height: 55px;
     width: 100%;
-    box-shadow: 0px 0px 15px 0px branding.$brand_color_one;
+    box-shadow: 0px 0px 15px 0px branding.$brand_color_six;
     display: flex;
     align-items: center;
-    background: branding.$brand_color_one;
+    background: branding.$brand_color_six;
     z-index: 2;
 
     &__logged-in{
 
         @include responsive.breakpoint(tablet){
-            height: 173px;
+            height: 233px;
         }
     }
 

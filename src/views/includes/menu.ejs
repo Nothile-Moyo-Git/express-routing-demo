@@ -3,29 +3,29 @@
         <ul class="menu">
 
             <li class="menu__item">
-                <a href="/products">Products</a>
+                <a class="menu__link" href="/products">Products</a>
             </li>
 
             <% if (isAuthenticated === true) { %>
 
                 <li class="menu__item">
-                    <a href="/cart">Cart</a>
+                    <a class="menu__link" href="/cart">Cart</a>
                 </li>
 
                 <li class="menu__item">
-                    <a href="/orders">Orders</a>
+                    <a class="menu__link" href="/orders">Orders</a>
                 </li>
 
                 <li class="menu__item">
-                    <a href="/admin/add-product">Add Product</a>
+                    <a class="menu__link" href="/admin/add-product">Add Product</a>
                 </li>
 
                 <li class="menu__item">
-                    <a href="/admin/products">Admin Products</a>
+                    <a class="menu__link" href="/admin/products">Admin Products</a>
                 </li>
 
                 <li class="menu__item">
-                    <a href="/profile">Profile</a>
+                    <a class="menu__link" href="/profile">Profile</a>
                 </li>
 
                 <li class="menu__item">
@@ -38,11 +38,11 @@
             <% } else { %>
 
                 <li class="menu__item">
-                    <a href="/signup">Signup</a>
+                    <a class="menu__link" href="/signup">Signup</a>
                 </li>
 
                 <li class="menu__item">
-                    <a href="/login">Login</a>
+                    <a class="menu__link"href="/login">Login</a>
                 </li>
 
             <% } %>
