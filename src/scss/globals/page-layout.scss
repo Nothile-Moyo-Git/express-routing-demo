@@ -12,7 +12,7 @@
     align-items: center;
 
     &__title{
-        font-size: 2rem;
+        font-size: 1.5rem;
         text-align: center;
         margin: 0 0 1rem 0;
     }
@@ -25,32 +25,6 @@
         @include mixins.state(){
             color: branding.$brand_color_two;
             border-color: branding.$brand_color_two;
-        }
-    }
-}
-
-.header{
-    position: fixed;
-    top: 0;
-    height: 55px;
-    width: 100%;
-    box-shadow: 0px 0px 15px 0px branding.$brand_color_six;
-    display: flex;
-    align-items: center;
-    background: branding.$brand_color_six;
-    z-index: 2;
-
-    &__logged-in{
-
-        @include responsive.breakpoint(tablet){
-            height: 233px;
-        }
-    }
-
-    &__logged-out{
-
-        @include responsive.breakpoint(tablet){
-            height: 100px;
         }
     }
 }

@@ -6,15 +6,18 @@
     overflow : hidden;
     position : relative;
     z-index : 1;
-    padding : 0.35rem 1rem;
+    padding : 0.45rem 1rem 0.4rem 1rem;
     border-radius: 4px;
     border: 0;
-    box-shadow: branding.$box_shadow_yellow;
+    color: branding.$brand_color_three;
     width: max-content;
     margin: auto;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
     font-size: 1rem;
+    border: 2px solid branding.$brand_color_three;
     transition: animations.$standard_transition;
+    background: transparent;
+    filter: contrast(90%);
 
     &--yellow{
         @include mixins.backgroundGradientEffect(){
@@ -23,8 +26,8 @@
     }
 
     @include mixins.state(){
-        color: branding.$brand_color_two;
         cursor: pointer;
         filter: contrast(150%);
+        box-shadow: branding.$box_shadow_blue;
     }
 }

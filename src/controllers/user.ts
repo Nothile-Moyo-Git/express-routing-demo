@@ -59,6 +59,10 @@ const getEditProfilePageController = ( request : ExtendedRequestInterface, respo
 // Handle out edit profile post request
 const postEditProfileRequestController = async ( request : ExtendedRequestInterface, response : Response ) => {
 
+    // Get inputs
+    const name = request.body.nameInput;
+    const email = request.body.emailInput;
+
     // Validate inputs 
     const isNameValid = request.body.nameInput.length >= 3;
     const isEmailValid = validate(request.body.emailInput);
@@ -88,17 +92,38 @@ const postEditProfileRequestController = async ( request : ExtendedRequestInterf
             // Update the user session
             request.session.user.name = request.body.nameInput;
             request.session.user.email = request.body.emailInput;
+
+            response.render("pages/user/edit-profile-page", {
+                pageTitle : "Edit Profile",
+                csrfToken : sessionCSRFToken,
+                userData : userData,
+                isNameValid : isNameValid,
+                isEmailValid : isEmailValid,
+                isFormSubmitted : true,
+                isAuthenticated : isLoggedIn,
+                oldInput : {
+                    oldName : name,
+                    oldEmail : email
+                }
+            });
+
+        }else{
+
+            response.render("pages/user/edit-profile-page", {
+                pageTitle : "Edit Profile",
+                csrfToken : sessionCSRFToken,
+                userData : userData,
+                isNameValid : isNameValid,
+                isEmailValid : isEmailValid,
+                isFormSubmitted : true,
+                isAuthenticated : isLoggedIn,
+                oldInput : {
+                    oldName : name, 
+                    oldEmail : email
+                }
+            });
         }
 
-        response.render("pages/user/edit-profile-page", {
-            pageTitle : "Edit Profile",
-            csrfToken : sessionCSRFToken,
-            userData : userData,
-            isNameValid : isNameValid,
-            isEmailValid : isEmailValid,
-            isFormSubmitted : true,
-            isAuthenticated : isLoggedIn
-        });
     }else{
 
         response.status(403).send("CSRF protection failed!");

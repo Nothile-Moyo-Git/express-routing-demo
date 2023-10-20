@@ -12,6 +12,7 @@
     grid-row-gap: 1rem;
 
     &__page-title{
+        font-size: 1.25rem;
         text-align: center;
     }
 
@@ -82,7 +83,7 @@
         transition: animations.$standard_transition;
 
         @include mixins.state{
-            border-color: branding.$brand_color_two;
+            border-color: branding.$brand_color_three;
         }   
     }
 }

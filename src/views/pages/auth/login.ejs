@@ -4,9 +4,9 @@
 
         <%- include('../../includes/menu'); %>
 
-        <main class="login">
+        <main class="content">
 
-            <h1><%= pageTitle %></h1>
+            <h1 class="content__title"><%= pageTitle %></h1>
 
             <form class="form" method="POST" action="/login">
 
@@ -39,7 +39,7 @@
                 </div>
 
                 <input type="hidden" name="csrfToken" value=<%= csrfToken %> />
-                <button type="submit" class="button button--yellow">Login</button>
+                <button type="submit" class="button">Login</button>
 
                 <a href="/new-password" class="form__reset-link">Reset Your Password</a>
 

@@ -43,7 +43,14 @@ const getAdminEditProduct = async ( request : ExtendedRequestInterface, response
             productInformation : singleProduct,
             hasProducts : hasProduct,
             isAuthenticated : isLoggedIn === undefined ? false : true,
-            csrfToken : csrfToken
+            csrfToken : csrfToken,
+            isSubmitted : false,
+            inputsValid : {
+                isTitleValid : true,
+                isImageValid : true,
+                isDescriptionValid : true,
+                isPriceValid : true
+            }
         }
     );
 };

@@ -54,12 +54,12 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
     // Validate our inputs
     const isTitleValid = title.length >= 3;
     const isImageUrlValid = isValidUrl(imageUrl);
-    const isDecriptionValid = description.length >= 5 && description.length <= 400;
+    const isDescriptionValid = description.length >= 5 && description.length <= 400;
     const isPriceValid = isFloat(price) || isInt(price);
 
     if (isCSRFValid === true) {
 
-        if (isTitleValid === true && isImageUrlValid === true && isDecriptionValid === true && isPriceValid === true) {
+        if (isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
             // Check if we have a user
             const hasUser = user !== undefined;
 
@@ -98,7 +98,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                     titleValid : isTitleValid,
                     imageUrlValid : isImageUrlValid,
                     priceValid : isPriceValid,
-                    descriptionValid : isDecriptionValid
+                    descriptionValid : isDescriptionValid
                 }
             });  
         }
@@ -162,27 +162,81 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
+    // Validate our inputs
+    const isTitleValid = title.length >= 3;
+    const isImageUrlValid = isValidUrl(imageUrl);
+    const isDescriptionValid = description.length >= 5 && description.length <= 400;
+    const isPriceValid = isFloat(Number(price)) || isInt(price);
+
+    // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
+    const product = isDescriptionValid === true ? await Product.findById(productId) : null;
+    const hasProduct = product !== null;
+
+    // Get our request session from our Mongoose database and check if we're logged in
+    const isLoggedIn = request.session.isLoggedIn;
+
+    console.clear();
+    console.log("Valid checks");
+    console.log("Title");
+    console.log(isTitleValid);
+    console.log("\n");
+
+    console.log("Image");
+    console.log(isImageUrlValid);
+    console.log("\n");
+
+    console.log("Description");
+    console.log(isDescriptionValid);
+    console.log("\n");
+
+    console.log("Price");
+    console.log(price);
+    console.log(isPriceValid);
+
+    
     if (isCSRFValid === true) {
 
-        // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
-        const product = await Product.findById(productId);
+        if (isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
+            
+            if (product.userId.toString() === request.session.user._id.toString()) {
 
-        if (product.userId.toString() === request.session.user._id.toString()) {
+                // Update the product information using mongoose's updateOne method with the id provided previously
+                await Product.updateOne({ _id : productId },{ 
+                    title : title,
+                    price : price,
+                    description : description,
+                    image : imageUrl
+                });
 
-            // Update the product information using mongoose's updateOne method with the id provided previously
-            await Product.updateOne({ _id : productId },{ 
-                title : title,
-                price : price,
-                description : description,
-                image : imageUrl
-            });
-
-            // Render the view of the page
-            console.log("Updated products");
-            response.redirect("/admin/products");
+                // Render the view of the page
+                response.redirect("/admin/products");
+            }
         }else{
 
-            response.redirect("back");
+            // Render the edit products template
+            response.render(      
+                "pages/admin/edit-product", 
+                { 
+                    pageTitle : "Edit Products", 
+                    id : productId, 
+                    productInformation : {
+                        title : title,
+                        price : price,
+                        description : description,
+                        image : imageUrl
+                    },
+                    hasProducts : hasProduct,
+                    isAuthenticated : isLoggedIn === undefined ? false : true,
+                    csrfToken : sessionCSRFToken,
+                    isSubmitted : true,
+                    inputsValid : {
+                        isTitleValid : isTitleValid,
+                        isImageUrlValid : isImageUrlValid,
+                        isPriceValid : isPriceValid,
+                        isDescriptionValid : isDescriptionValid
+                    }
+                }
+            );
         }
 
     }else{
