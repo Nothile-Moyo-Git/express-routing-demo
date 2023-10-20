@@ -8,10 +8,11 @@ $brand_color_two__alt_1: #5800e6;
 $brand_color_two__alt_2: #721aff;
 $brand_color_two__alt_3: #4e00cc;
 
-$brand_color_three: #41a5db;
+$brand_color_three: #41A5DB;
 $brand_color_three__alt_1: #3A94C5;
 $brand_color_three__alt_2: #54AEDE;
 $brand_color_three__alt_3: #66B7E2;
+$brand_color_three__alt_4: #3484AF;
 
 $brand_color_four: #db5d41;
 $brand_color_four__alt_1: #C5533A;
@@ -37,6 +38,9 @@ $toggle_shadow: (0px 0px 10px 0px rgba(0,0,0,0.2) );
 $box_shadow_white: ( 0px 0px 10px 0px rgba(255, 255, 255, 0.9) );
 $box_shadow_yellow: (0px 0px 10px 0px $brand_color_one);
 $box_shadow_purple: (0px 0px 10px 0px $brand_color_two);
+$box_shadow_green: (0px 0px 10px 0px $brand_color_five);
+$box_shadow_cyan: (0px 0px 10px 0px $brand_color_six);
+$box_shadow_blue: (0px 0px 8px 0px $brand_color_three);
 
 // Backdrops
 $backdrop_color_one: rgba(30, 32, 42, 0.97);
@@ -46,3 +50,7 @@ $backdrop_color_three: rgba(20, 22, 32, 0.97);
 // Gradients
 $gradient_color_one: linear-gradient(60deg, $brand_color_one, $brand_color_one__alt_1, $brand_color_one__alt_2, $brand_color_one__alt_3);
 $gradient_color_two: linear-gradient(60deg, $brand_color_two, $brand_color_two__alt_1, $brand_color_two__alt_2, $brand_color_two__alt_3);
+$gradient_color_three: linear-gradient(60deg, $brand_color_three, $brand_color_three__alt_2, $brand_color_three__alt_3);
+$gradient_color_four: linear-gradient(60deg, $brand_color_four, $brand_color_four__alt_1, $brand_color_four__alt_2, $brand_color_four__alt_3);
+$gradient_color_five: linear-gradient(60deg, $brand_color_five, $brand_color_five__alt_1, $brand_color_five__alt_3);
+$gradient_color_six: linear-gradient(60deg, $brand_color_six, $brand_color_six__alt_2, $brand_color_six__alt_3);

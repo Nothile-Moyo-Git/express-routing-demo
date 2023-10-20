@@ -15,12 +15,10 @@
                         action="<%= `/admin/update-product/${id}` %>"
                     >
 
-                        <div class="form__page-title">
-                            <h1>Edit Product</h1>
-                        </div>
+                        <h1 class="form__page-title">Edit Product</h1>
 
                         <div class="form__field">
-                            <label for="title" id="title-label" class="form__label">Title</label>
+                            <label for="title" id="title-label" class="form__label">Title*</label>
                             <input
                                 required
                                 type="text"
@@ -32,7 +30,7 @@
                         </div>
 
                         <div class="form__field">
-                            <label for="image" id="image-label" class="form__label">Image</label>
+                            <label for="image" id="image-label" class="form__label">Image*</label>
                             <input
                                 required
                                 type="text"
@@ -44,7 +42,7 @@
                         </div>
 
                         <div class="form__field">
-                            <label for="description" id="description-label" class="form__label">Description</label>
+                            <label for="description" id="description-label" class="form__label">Description*</label>
                             <input
                                 required
                                 type="text"
@@ -56,19 +54,20 @@
                         </div>
 
                         <div class="form__field">
-                            <label for="price" id="price-label" class="form__label">Price</label>
+                            <label for="price" id="price-label" class="form__label">Price*</label>
                             <input
                                 required
                                 type="number"
                                 name="price"
                                 class="form__input"
+                                step="0.01"
                                 aria-labelledby="price-label"
                                 value="<%= productInformation.price %>"
                             />
                         </div>
 
                         <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
-                        <button type="submit" class="button button--yellow">Submit</button>
+                        <button type="submit" class="button">Submit</button>
 
                     </form>
 

@@ -21,13 +21,13 @@ nav{
 
     &__link{
 
-        font-size: 14px;
+        font-size: 15px;
         transition: animations.$standard-transition;
-        border-radius: 3px;
+        border-radius: 4px;
         padding : 0.4rem 0.85rem 0.45rem 0.85rem;
 
         @include mixins.state(){
-            background-color: branding.$brand_color_six__alt_1;
+            background-color: branding.$brand_color_three__alt_1;
             color : rgba(0, 0, 0, 0.9);
         }
     }
@@ -57,15 +57,15 @@ nav{
         border: none;
         height: 100%;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 15px;
         width: max-content;
         margin: auto;
-        border-radius: 3px;
+        border-radius: 4px;
         padding : 0.4rem 0.85rem 0.45rem 0.85rem;
         transition: animations.$standard-transition;
 
         @include mixins.state(){
-            background-color: branding.$brand_color_six__alt_1;  
+            background-color: branding.$brand_color_three__alt_1;  
         }
     }
 }

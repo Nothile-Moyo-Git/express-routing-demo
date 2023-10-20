@@ -1,0 +1,35 @@
+@use "../scss/partials/branding" as branding;
+@use "../scss/partials/responsive" as responsive;
+@use "../scss/partials/mixins" as mixins;
+@use "../partials/animations" as animations;
+
+.header{
+    position: fixed;
+    top: 0;
+    height: 55px;
+    width: 100%;
+    box-shadow: 0px 0px 15px 0px branding.$brand_color_six;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    overflow: hidden;
+    transition: animations.$standard_transition;
+
+    @include mixins.backgroundGradientEffect(){
+        background: branding.$gradient_color_three;
+    }
+
+    &__logged-in{
+
+        @include responsive.breakpoint(tablet){
+            height: 233px;
+        }
+    }
+
+    &__logged-out{
+
+        @include responsive.breakpoint(tablet){
+            height: 100px;
+        }
+    }
+}
