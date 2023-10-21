@@ -9,10 +9,10 @@
     max-width: 40rem;
     padding: 2rem 1rem;
     position: relative;
-    border: 1px solid branding.$brand_color_one;
+    border: 1px solid branding.$brand_color_three;
     border-radius: 5px;
     flex-direction: column;
-    box-shadow: branding.$box_shadow;
+    box-shadow: branding.$box_shadow_blue;
     justify-content: center;
     margin: 1rem auto;
 
@@ -44,17 +44,21 @@
 
     &__modal-button{
         font-size: 1rem;
-        box-shadow: 0px 0px 7px 0px branding.$brand_color_one;
-        background: branding.$brand_color_one;
-        border: 1px solid branding.$brand_color_one;
+        box-shadow: 0px 0px 7px 0px branding.$brand_color_three;
+        border: 1px solid branding.$brand_color_three;
         border-radius: 3px;
         padding: 0.1rem 0.5rem;
         cursor: pointer;
         transition: all 0.3s linear;
         filter: contrast(95%);
+        overflow: hidden;
+
+        @include mixins.backgroundGradientEffect(){
+            background : branding.$gradient_color_three;
+        }
 
         @include mixins.state(){
-            filter: contrast(120%);
+            filter: contrast(150%);
         }    
     }
 
@@ -77,15 +81,19 @@
 
     &__checkout-button{
         font-size: 1rem;
-        box-shadow: 0px 0px 7px 0px branding.$brand_color_one;
-        background: branding.$brand_color_one;
-        border: 1px solid branding.$brand_color_one;
+        box-shadow: 0px 0px 7px 0px branding.$brand_color_three;
+        border: 1px solid branding.$brand_color_three;
         border-radius: 3px;
         padding: 0.3rem 0.75rem;
         cursor: pointer;
         transition: all 0.3s linear;
         filter: contrast(95%);
         width: calc(100% / 4);
+        overflow: hidden;
+
+        @include mixins.backgroundGradientEffect(){
+            background : branding.$gradient_color_three;
+        }
 
         @include responsive.breakpoint(mobile){
             width: calc(100% / 4);
@@ -93,7 +101,6 @@
 
         @include mixins.state(){
             filter: contrast(150%);
-            color : branding.$brand_color_two;
         }
     }
 

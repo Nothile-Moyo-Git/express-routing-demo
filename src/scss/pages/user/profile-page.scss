@@ -15,11 +15,11 @@
     }
  
     &__image{
-        width: 150px;
-        height: 150px;
+        width: 200px;
+        height: 200px;
         object-fit: cover;
         border-radius: 50%;
-        border: 2px solid branding.$brand_color_one;
+        border: 2px solid branding.$brand_color_three;
         transition: animations.$standard_transition;
         margin: 1rem auto 1rem auto;
 
@@ -37,8 +37,8 @@
         margin: 0 auto 0.75rem auto;
 
         @include mixins.state(){
-            color: branding.$brand_color_two;
-            border-color: branding.$brand_color_two;
+            color: branding.$brand_color_three;
+            border-color: branding.$brand_color_three;
         }
     }
 }
