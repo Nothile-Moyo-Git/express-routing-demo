@@ -166,33 +166,14 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const isTitleValid = title.length >= 3;
     const isImageUrlValid = isValidUrl(imageUrl);
     const isDescriptionValid = description.length >= 5 && description.length <= 400;
-    const isPriceValid = isFloat(Number(price)) || isInt(price);
+    const isPriceValid = isFloat(Number(price)) || isInt(Number(price));
 
     // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
-    const product = isDescriptionValid === true ? await Product.findById(productId) : null;
+    const product = isObjectIdValid === true ? await Product.findById(productId) : null;
     const hasProduct = product !== null;
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
-
-    console.clear();
-    console.log("Valid checks");
-    console.log("Title");
-    console.log(isTitleValid);
-    console.log("\n");
-
-    console.log("Image");
-    console.log(isImageUrlValid);
-    console.log("\n");
-
-    console.log("Description");
-    console.log(isDescriptionValid);
-    console.log("\n");
-
-    console.log("Price");
-    console.log(price);
-    console.log(isPriceValid);
-
     
     if (isCSRFValid === true) {
 

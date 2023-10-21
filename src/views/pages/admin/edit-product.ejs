@@ -18,48 +18,64 @@
                         <h1 class="form__page-title">Edit Product</h1>
 
                         <div class="form__field">
-                            <label for="title" id="title-label" class="form__label">Title*</label>
+                            <label 
+                                for="title" 
+                                id="title-label" 
+                                class="<%= `form__label ${ inputsValid.isTitleValid === false && 'form__label--error' }` %>"
+                            ><%= inputsValid.isTitleValid === true ? 'Title*' : 'Error : Title must be 3 characters or more' %></label>
                             <input
                                 required
                                 type="text"
                                 name="title"
-                                class="form__input"
+                                class="<%= `form__input ${ inputsValid.isTitleValid === false && 'form__input--error' }` %>"
                                 aria-labelledby="title-label"
                                 value="<%= productInformation.title %>"
                             />
                         </div>
 
                         <div class="form__field">
-                            <label for="image" id="image-label" class="form__label">Image*</label>
+                            <label 
+                                for="image" 
+                                id="image-label" 
+                                class="<%= `form__label ${ inputsValid.isImageUrlValid === false && 'form__label--error' }` %>"
+                            ><%= inputsValid.isImageUrlValid === true ? 'Image Url*' : "Error :  Image Url isn't valid" %></label>
                             <input
                                 required
                                 type="text"
                                 name="image"
-                                class="form__input"
+                                class="<%= `form__input ${ inputsValid.isImageUrlValid === false && 'form__input--error' }` %>"
                                 aria-labelledby="image-label"
                                 value="<%= productInformation.image %>"
                             />
                         </div>
 
                         <div class="form__field">
-                            <label for="description" id="description-label" class="form__label">Description*</label>
+                            <label 
+                                for="description" 
+                                id="description-label" 
+                                class="<%= `form__label ${ inputsValid.isDescriptionValid === false && 'form__label--error' }` %>"
+                            ><%= inputsValid.isDescriptionValid === true ? "Description*" : "Error : Description must be between 5 and 400 characters" %></label>
                             <input
                                 required
                                 type="text"
                                 name="description"
-                                class="form__input"
+                                class="<%= `form__input ${ inputsValid.isDescriptionValid === false && 'form__input--error' }` %>"
                                 aria-labelledby="description-label"
                                 value="<%= productInformation.description %>"
                             />
                         </div>
 
                         <div class="form__field">
-                            <label for="price" id="price-label" class="form__label">Price*</label>
+                            <label 
+                                for="price" 
+                                id="price-label" 
+                                class="<%= `form__label ${ inputsValid.isPriceValid === false && 'form__label--error' }` %>"
+                            ><%= inputsValid.isPriceValid === true ? 'Price*' : "Error : Price isn't valid" %></label>
                             <input
                                 required
                                 type="number"
                                 name="price"
-                                class="form__input"
+                                class="<%= `form__input ${ inputsValid.isPriceValid === false && 'form__input--error' }` %>"
                                 step="0.01"
                                 aria-labelledby="price-label"
                                 value="<%= productInformation.price %>"
