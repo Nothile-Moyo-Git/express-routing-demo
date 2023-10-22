@@ -9,6 +9,7 @@
     &__header{
         text-align: center;
         width: 100%;
+        margin-bottom: 1.5rem;
     }
 
     &__details{
@@ -37,10 +38,10 @@
 
         &:nth-child(odd){
             color: black;
-            box-shadow: branding.$box_shadow_yellow;
+            box-shadow: branding.$box_shadow_blue;
 
             @include mixins.backgroundGradientEffect{
-                background: branding.$gradient_color_one;
+                background: branding.$gradient_color_three;
             }
         }
     }
