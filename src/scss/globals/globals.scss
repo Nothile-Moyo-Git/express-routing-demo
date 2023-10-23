@@ -1,6 +1,7 @@
 @use "../scss/partials/branding" as branding;
 @use "../scss/partials/mixins" as mixins;
 @use "../scss/partials/responsive" as responsive;
+@use "../scss/partials/animations" as animations;
 
 html{
     height: 100%;
@@ -13,6 +14,7 @@ body{
     animation: fade-in 0.2s linear;
     font-family: "Open Sans", sans-serif;
     font-size: 1.1rem;
+    transition: animations.$standard-transition;
 
     @include responsive.breakpoint(tablet){
         margin-top: 314px;
@@ -48,9 +50,9 @@ h1{
 }
 
 .hidden{
-    display: none;
+    display: none !important;
 }
 
 .show{
-    display: block;
+    display: block !important;
 }
