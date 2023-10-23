@@ -24,17 +24,3 @@ export const isValidUrl = (url : string) => {
     '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
     return !!urlPattern.test(url);
 };
-
-export const hideMenu = () => {
-    
-    console.clear();
-    console.log("Hide menu event clicked");
-
-};
-
-export const renderMenu = () => {
-
-    console.clear();
-    console.log("Render menu toggle clicked");
-    
-};
