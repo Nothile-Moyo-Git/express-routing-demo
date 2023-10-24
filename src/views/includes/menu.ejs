@@ -70,20 +70,37 @@
 <script>
 
     // Event handlers here, we do it here because we're simply toggling a menu and we need to do it client side
-    document.getElementById("hide_menu").onclick = () => {
-
-        // Hide menu button has been clicked
-        console.clear();
-        console.log("Hide menu button clicked");
+    document.getElementById("hide_menu").onclick = (event) => {
 
         // Hide the menu
-        document.querySelector("header").classList.add("hidden");
-        document.body.style.marginTop = "20px";
+        document.querySelector("header").classList.add("hidden", "hidden--show-desktop");
 
-        // Show the hamburger menu
+        // Remove the margin from the bodu of the DOM
+        document.body.classList.remove("menu-open");
+
+        // Show the hamburger menu icon
         document.querySelector("#show_menu").classList.add("show");
-        document.querySelector("#hide_menu").classList.add("hidden");    
+        document.querySelector("#show_menu").classList.remove("hidden");
+
+        document.querySelector("#hide_menu").classList.add("hidden"); 
+        document.querySelector("#hide_menu").classList.remove("show");
         
+    };
+
+    document.getElementById("show_menu").onclick = (event) => {
+
+        // Show the menu
+        document.querySelector("header").classList.remove("hidden", "hidden--show-desktop");
+
+        // Add the margin spacing back in
+        document.body.classList.add("menu-open");
+
+        // Alternate between the hamburger icon and the cross
+        document.querySelector("#show_menu").classList.add("hidden");
+        document.querySelector("#show_menu").classList.remove("show");
+
+        document.querySelector("#hide_menu").classList.add("show");
+        document.querySelector("#hide_menu").classList.remove("hidden");
     };
 
 </script>
