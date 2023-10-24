@@ -72,15 +72,57 @@ nav{
 
 .toggle-menu-button{
     position: absolute;
-    right: 3px;
-    top: 3px;
     z-index: 3;
     display: none;
+    animation: fade-in 0.2s linear;
+    cursor: pointer;
 
     @include responsive.breakpoint(tablet){
         
         &__show{
             display: block;
         }
+    }
+}
+
+#show_menu{
+    top: 20px;
+    right: 20px;
+
+    svg{
+        @include mixins.state(){
+            rect{
+                transition: animations.$standard-transition;
+                fill : branding.$brand_color_three;
+            }
+        }
+    }
+
+
+    @include responsive.breakpoint-min(tablet){
+        display: none !important;
+    }
+}
+
+#hide_menu{
+    top: 3px;
+    right: 3px;
+
+    svg{
+
+        transition: animations.$standard-transition;
+
+        @include mixins.state(){
+            fill : white;
+        }
+    }
+}
+
+.menu-open{
+
+    margin-top: 62px;
+
+    @include responsive.breakpoint(tablet){
+        margin-top: 314px;
     }
 }

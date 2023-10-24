@@ -10,14 +10,14 @@ html{
 
 body{ 
     margin: 0px;
-    margin-top: 82px;
+    margin-top: 62px;
     animation: fade-in 0.2s linear;
     font-family: "Open Sans", sans-serif;
     font-size: 1.1rem;
     transition: animations.$standard-transition;
 
     @include responsive.breakpoint(tablet){
-        margin-top: 314px;
+        margin-top: 20px;
     }
 }
 
@@ -51,6 +51,12 @@ h1{
 
 .hidden{
     display: none !important;
+
+    &--show-desktop{
+        @include responsive.breakpoint-min(tablet){
+            display: flex !important;
+        }
+    }
 }
 
 .show{
