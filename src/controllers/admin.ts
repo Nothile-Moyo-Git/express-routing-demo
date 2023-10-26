@@ -1,6 +1,6 @@
 /**
  * Author : Nothile Moyo
- * Date Written : 25/10/2023
+ * Date Written : 25/04 /2023
  * License : MIT
  *
  * Admin Controller, handles the requests to do with administration ( adding products etc... )
@@ -76,26 +76,39 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
     if (isCSRFValid === true) {
 
         if (isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
-            // Check if we have a user
-            const hasUser = user !== undefined;
+            
+            try{
 
-            // Instantiate our product
-            const product = new Product({
-                title : title,
-                image : imageUrl,
-                description : description,
-                price : price,
-                userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
-            });
+                // Check if we have a user
+                const hasUser = user !== undefined;
 
-            // Save our new product to the database
-            // Note : This method is inherited from the Mongoose model
-            // Only save the product if we're logged in
-            if (hasUser === true) {
-                product.save();
+                // Instantiate our product
+                const product = new Product({
+                    title : title,
+                    image : imageUrl,
+                    description : description,
+                    price : price,
+                    userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
+                });
+
+                // Save our new product to the database
+                // Note : This method is inherited from the Mongoose model
+                // Only save the product if we're logged in
+                if (hasUser === true) {
+                    product.save();
+                }
+
+                response.redirect("/products");
+
+            }catch(error : unknown){
+
+                console.clear();
+                console.log("Error occured in request in file 'admin.ts'");
+                console.log("\n", "Error message below");
+                console.log(error);
+
+                response.redirect("/products");
             }
-
-            response.redirect("/products");
 
         }else{
 
