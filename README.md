@@ -4,7 +4,7 @@
 
 ## Here is a screenshot of the application :)
 
-![screenshot](https://github.com/Nothile-Moyo-Git/express-routing-demo/assets/15236959/1657e4aa-4681-416e-83a9-153e8dc52d57)
+![image](https://github.com/Nothile-Moyo-Git/express-routing-demo/assets/15236959/5baf903b-55d6-4ce2-abbd-b2e224f66a33)
 
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose
 
