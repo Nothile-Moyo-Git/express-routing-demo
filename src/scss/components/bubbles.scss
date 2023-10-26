@@ -22,13 +22,14 @@ $sway-type: "sway-left-to-right", "sway-right-to-left";
 .bubble {
     position: absolute;
     left: var(--bubble-left-offset);
-    bottom: -75%;
+    bottom: -30%;
     display: block;
     width: var(--bubble-radius);
     height: var(--bubble-radius);
     border-radius: 50%;
     animation: float-up var(--bubble-float-duration) var(--bubble-float-delay) ease-in infinite;
-  
+    z-index: 0;
+
     &::before {
       position: absolute;
       content: '';
@@ -36,7 +37,7 @@ $sway-type: "sway-left-to-right", "sway-right-to-left";
       left: 0;
       width: 100%;
       height: 100%;
-      background: hsla(183, 94%, 76%, 0.3);
+      background: hsla(201, 68%, 56%, 0.4);
       border-radius: inherit;
       animation: var(--bubble-sway-type) var(--bubble-sway-duration) var(--bubble-sway-delay) ease-in-out alternate infinite;
     }
@@ -45,9 +46,9 @@ $sway-type: "sway-left-to-right", "sway-right-to-left";
         &:nth-child(#{$i}) {
             --bubble-left-offset: #{random_range(0vw, 100vw)};
             --bubble-radius: #{random_range(1vw, 10vw)};
-            --bubble-float-duration: #{random_range(6s, 12s)};
+            --bubble-float-duration: #{random_range(6s, 14s)};
             --bubble-sway-duration: #{random_range(4s, 6s)};
-            --bubble-float-delay: #{random_range(0s, 4s)};
+            --bubble-float-delay: #{random_range(0s, 8s)};
             --bubble-sway-delay: #{random_range(0s, 4s)};
             --bubble-sway-type: #{sample($sway-type)};
         }
