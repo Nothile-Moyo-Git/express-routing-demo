@@ -1,8 +1,7 @@
 // Import express router for the admin and shop pages
 // This file is for the product routes
 import express from "express";
-import { getAdminEditProduct } from "../controllers/products";
-import { getAddProduct, postAddProduct, getProducts, updateProductController, deleteProduct } from "../controllers/admin";
+import { getAdminEditProduct, getAddProduct, postAddProduct, getProducts, updateProductController, deleteProduct } from "../controllers/admin";
 import isAuthenticated from "../middleware/is-auth";
 
 // Create our express router
