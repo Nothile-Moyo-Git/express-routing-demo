@@ -85,6 +85,9 @@ userSchema.method('addToCart', function addToCart (product : ProductInterface) {
         this.cart.totalPrice += product.price;
     }
 
+    // Add the userId to the cart item
+    this.cart.userId = this._id;
+
 });
 
 // Create the delete from cart method for our user in Mongoose

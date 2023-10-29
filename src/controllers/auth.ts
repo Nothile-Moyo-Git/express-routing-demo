@@ -439,8 +439,8 @@ const postLoginAttemptController = async ( request : ExtendedRequestInterface, r
         if (user !== null) {
 
             // We define these variables here as we need to scope them correctly as we validate the user
-            let isPasswordValid : boolean = false;
-            let isEmailValid : boolean = false;
+            let isPasswordValid = false;
+            let isEmailValid = false;
             let currentUser : UserInterface | undefined = undefined;
 
             // Compare the submitted password to the hashed password
@@ -469,6 +469,11 @@ const postLoginAttemptController = async ( request : ExtendedRequestInterface, r
                 // Set the user in the current session
                 request.session.user = currentUser;
                 request.session.isLoggedIn = true;
+                request.session.cart = {
+                    userId : new ObjectId(currentUser._id),
+                    totalPrice : currentUser.cart.totalPrice,
+                    items : currentUser.cart.items
+                }
                 response.redirect("products");
 
             } else {

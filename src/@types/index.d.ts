@@ -36,15 +36,18 @@ export interface CartItemInterface{
     quantity : number,
     price : number
 }
+
+export interface CartInterface{
+    userId ?: ObjectId,
+    totalPrice : number,
+    items : CartItemInterface[]
+}
 export interface UserInterface{
     _id : ObjectId,
     name : string,
     email : string,
     password ?: string,
-    cart ?: {
-        totalPrice : number,
-        items : CartItemInterface[]
-    }
+    cart ?: CartInterface,
     resetToken ?: string,
     resetTokenExpiration ?: Date
 }
@@ -52,7 +55,8 @@ export interface UserInterface{
 export interface ExtendedSessionDataInterface extends SessionData {
     isLoggedIn : boolean,
     user : UserInterface,
-    csrfToken : string
+    csrfToken : string,
+    cart ?: CartInterface
 }
 
 export interface ExtendedRequestInterface extends Request{

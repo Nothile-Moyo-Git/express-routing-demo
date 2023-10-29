@@ -4,6 +4,8 @@
 
 ## Here is a screenshot of the application :)
 
+## License : MIT _(You can use what you wish, it's a toy app)_
+
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose
 
 **The purpose of this Application is to learn the backend in a simple way. This is a shop application with the ability to make orders, handle carts, create users, create orders, send emails, handle payments, perform admin & security functionality**
