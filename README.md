@@ -6,6 +6,8 @@
 
 ## License : MIT _(You can use what you wish, it's a toy app)_
 
+![image](https://github.com/Nothile-Moyo-Git/express-routing-demo/assets/15236959/5baf903b-55d6-4ce2-abbd-b2e224f66a33)
+
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose
 
 **The purpose of this Application is to learn the backend in a simple way. This is a shop application with the ability to make orders, handle carts, create users, create orders, send emails, handle payments, perform admin & security functionality**
@@ -197,5 +199,3 @@ There are design principles to help with the scalability of the applcation, for 
 
 [Solid Principles](https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/)
 > Link for SOLID is here, it's about figuring out superior ways to use our Models, properties and methods with the appropriate naming conventions.
-
-
