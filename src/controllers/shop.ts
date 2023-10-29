@@ -125,16 +125,19 @@ const getProductDetails = async ( request : ExtendedRequestInterface, response :
 };
 
 // Get the cart and all the products inside of it
-const getCart = async (request : ExtendedRequestInterface, response : Response ) => {
+const getCart = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Instantiate the User that we have
     const user = request.session.user;
+
+    // Get the cart from the session, we store it in the session with the userId so that 
+    const cart = request.session.cart;
 
     // Get our CSRF token if we don't have one already
     const csrfToken = request.session.csrfToken;
 
     // Check if we have products that we can render on the tempalate
-    const hasProducts = user !== undefined ? user.cart.items.length > 0 : false;
+    const hasProducts = cart.items.length > 0 ? true : false;
 
     // Check if we have any users that work with the session
     const hasUser = user !== undefined;
@@ -142,9 +145,9 @@ const getCart = async (request : ExtendedRequestInterface, response : Response )
     // Render the admin products ejs template
     response.render("pages/shop/cart", { 
         hasProducts : hasProducts, 
-        products : hasUser === true ? user.cart.items : [],
+        products : hasUser === true ? cart.items : [],
         pageTitle : "Your Cart",
-        totalPrice : request.User.cart.totalPrice,
+        totalPrice : cart.totalPrice,
         isAuthenticated : true,
         csrfToken : csrfToken
     });
@@ -183,10 +186,14 @@ const postCart = async (request : ExtendedRequestInterface, response : Response 
         userInstance.addToCart(productDetails);
 
         // Update the document in Mongoose as the save method when we instantiate it isn't flexible enough
-        await User.updateOne({_id : new ObjectId(user._id)},{ cart : userInstance.cart });
+        await User.updateOne({_id : new ObjectId(user._id)},{cart : userInstance.cart});
 
         // Update the user in the session
-        request.session.user = userInstance;
+        request.session.cart = {
+            items : userInstance.cart.items,
+            totalPrice : userInstance.cart.totalPrice,
+            userId : userInstance.cart?.userId
+        };
     }
 
     // If our csrf check fails then output a separate response, otherwise, go to the cart page

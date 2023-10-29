@@ -4,6 +4,8 @@
 
 ## Here is a screenshot of the application :)
 
+## License : MIT _(You can use what you wish, it's a toy app)_
+
 ![image](https://github.com/Nothile-Moyo-Git/express-routing-demo/assets/15236959/5baf903b-55d6-4ce2-abbd-b2e224f66a33)
 
 ## This app is a shop app written in JavaScript, TypeScript, Express, SCSS, EJS, Node.js, MongoDB & Mongoose

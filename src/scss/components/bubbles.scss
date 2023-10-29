@@ -22,7 +22,7 @@ $sway-type: "sway-left-to-right", "sway-right-to-left";
 .bubble {
     position: absolute;
     left: var(--bubble-left-offset);
-    bottom: -30%;
+    bottom: -40%;
     display: block;
     width: var(--bubble-radius);
     height: var(--bubble-radius);

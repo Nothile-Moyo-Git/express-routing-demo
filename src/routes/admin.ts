@@ -1,3 +1,12 @@
+/**
+ * Author : Nothile Moyo
+ * Date : 25/04/2023
+ * License : MIT
+ * 
+ * Admin routing page, handles routing with the controller by the same name in the "src/controllers" folder
+ * The isAuthenticated route used here checks if the user is logged in, and redirects the user if they aren't
+ */
+
 // Import express router for the admin and shop pages
 // This file is for the product routes
 import express from "express";

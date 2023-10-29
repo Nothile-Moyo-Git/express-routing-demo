@@ -1,4 +1,9 @@
 /**
+ * 
+ * Author : Nothile Moyo
+ * Date Written : 29/10/2023
+ * License : MIT
+ * 
  * This is the utility methods file
  * This creates re-usable functions for different functionality which can be queried from here instead of in each file
  * 
