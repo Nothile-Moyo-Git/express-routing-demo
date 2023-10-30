@@ -1,16 +1,22 @@
 /**
+ * Author : Nothile Moyo
+ * Date Created : 30/10/2023 ( Happy Halloween! )
+ * License : MIT 
  * 
  * Shop controller.
  * This controller handles the routing for the cart and shop functionality.
  * It also hooks up the "shop" model which can be used to manage our data
  * This controller also handles the "order" model which is used during cart submissons
  * 
- * @method getIndex : ( request : Request, response : Response, next : NextFunction ) => void
- * @method getShop : ( request : Request, response : Response, next : NextFunction ) => void
- * @method getCart : ( request : Request, response : Response, next : NextFunction ) => void
- * @method getCheckout : ( request : Request, response : Response, next : NextFunction ) => void
- * @method getOrders : ( request : Request, response : Response, next : NextFunction ) => void
- * @method getProductDetails : ( request : Request, response : Response, next : NextFunction ) => void
+ * @method getIndex : (request : Request, response : Response, next : NextFunction) => void
+ * @method getShop : (request : Request, response : Response, next : NextFunction) => void
+ * @method getCart : (request : Request, response : Response, next : NextFunction) => void
+ * @method getCheckout : (request : Request, response : Response, next : NextFunction) => void
+ * @method getOrders : (request : Request, response : Response, next : NextFunction) => void
+ * @method getProductDetails : (request : Request, response : Response, next : NextFunction) => void
+ * @method postCart : (request : Request, response : Response, next : NextFunction) => void
+ * @method postOrderCreate : (request : Request, response : Response, next : NextFunction) => void
+ * @method postCartDelete : (request : Request, response : Response, next : NextFunction) => void
  */
 
 // import our express types for TypeScript use
@@ -188,6 +194,9 @@ const postCart = async (request : ExtendedRequestInterface, response : Response 
         // Update the document in Mongoose as the save method when we instantiate it isn't flexible enough
         await User.updateOne({_id : new ObjectId(user._id)},{cart : userInstance.cart});
 
+        // Update the user in the session so we don't have to restart the server after adding an item to our cart
+        request.session.user = userInstance;
+
         // Update the user in the session
         request.session.cart = {
             items : userInstance.cart.items,
@@ -230,7 +239,13 @@ const postCartDelete = (request : ExtendedRequestInterface, response : Response 
         userInstance.deleteFromCart(productId);
 
         // Update the user in our session
+        // Also update our cart
         request.session.user = userInstance;
+        request.session.cart = {
+            items : userInstance.cart.items,
+            totalPrice : userInstance.cart.totalPrice,
+            userId : userInstance.cart?.userId
+        }
 
         // Reload the cart page so we can query the updated cart
         response.redirect('back');

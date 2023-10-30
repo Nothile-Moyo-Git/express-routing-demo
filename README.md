@@ -181,7 +181,7 @@ Note: **IF YOU ARE TRYING OUT THIS APPLICATON, DO NOT STORE SENSITIVE DATA ON TH
 
 ### Development Process
 
-1: Duplicate the development branch by creating a feature or bugfix branch
+1: Duplicate the development branch by creating a feature or bugfix branch [Click here to see how to create your branch](https://www.gitkraken.com/learn/git/git-flow)
 2: Complete your work
 3: Merge your branch into **develop** by creating a PR
 4: Once approved, I will deploy the **develop** branch into master when testing is completed
