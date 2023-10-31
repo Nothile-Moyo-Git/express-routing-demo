@@ -13,7 +13,6 @@
  * @method getAdminEditProduct = ( request : ExtendedRequestInterface, response : Response ) => void
  */
 
-
 // import our express types for TypeScript use
 import { Response } from 'express';
 import Product from '../models/products';
@@ -107,6 +106,8 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                 console.log("\n", "Error message below");
                 console.log(error);
 
+                // Create our error and route straight to a 500 page since this is an internal server error
+
                 response.redirect("/products");
             }
 
@@ -152,6 +153,12 @@ const getProducts = async ( request : ExtendedRequestInterface, response : Respo
 
     // Check if we have any users that work with the session
     const hasUser = user !== undefined;
+
+    try{
+
+    }catch(error : unknown){
+
+    }
 
     // Find the product. If we need to find a collection, we can pass the conditionals through in an object
     const products = await Product.find({userId : new ObjectId(hasUser === true ? user._id : null)})
