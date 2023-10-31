@@ -5,7 +5,7 @@
 
 .content{
     padding: 0rem;
-    color: rgba(0, 0, 0, 0.7);
+    color: white;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -14,7 +14,7 @@
     z-index: 1;
 
     &__title{
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         text-align: center;
         margin: 0 0 1rem 0;
     }
@@ -25,9 +25,13 @@
         transition: animations.$standard_transition;
 
         @include mixins.state(){
-            color: branding.$brand_color_two;
-            border-color: branding.$brand_color_two;
+            color: branding.$brand_color_three;
+            border-color: branding.$brand_color_three;
         }
+    }
+
+    &__svg{
+        
     }
 }
 
