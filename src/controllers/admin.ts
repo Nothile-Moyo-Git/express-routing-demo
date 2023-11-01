@@ -14,11 +14,12 @@
  */
 
 // import our express types for TypeScript use
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
+import CustomError from '../models/error';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -45,7 +46,7 @@ const getAddProduct = ( request : ExtendedRequestInterface, response : Response 
 };
 
 // Post add product controller
-const postAddProduct = async( request : ExtendedRequestInterface, response : Response ) => {
+const postAddProduct = async( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
     // Fields
     const title = request.body.title;
@@ -99,16 +100,15 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
                 response.redirect("/products");
 
-            }catch(error : unknown){
+            }catch(err){
 
                 console.clear();
                 console.log("Error occured in request in file 'admin.ts'");
                 console.log("\n", "Error message below");
-                console.log(error);
+                console.log(err);
 
-                // Create our error and route straight to a 500 page since this is an internal server error
-
-                response.redirect("/products");
+                const error = new CustomError(err.message, 500);
+                return next(error);
             }
 
         }else{
