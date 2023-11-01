@@ -1,3 +1,22 @@
+/**
+ * Author : Nothile Moyo
+ * Date Created : 01/11/2023
+ * License : MIT
+ * 
+ * The Auth controller, handles requests for anything related to the user such as signups and password resets
+ * 
+ * @method getLoginPageController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method getSignupPageController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method getPasswordResetPageController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method getPasswordResetRedirectController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method getNewPasswordForm = (request : ExtendedRequestInterface, response : Response) => void
+ * @method postNewPasswordController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method postPasswordResetPageController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method postSignupPageController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method postLoginAttemptController = (request : ExtendedRequestInterface, response : Response) => void
+ * @method postLogoutAttemptController = (request : ExtendedRequestInterface, response : Response) => void
+ */
+
 // import our express types for TypeScript use
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
@@ -15,7 +34,7 @@ import { ExtendedRequestInterface, UserInterface } from '../@types';
 const transporter = nodemailer.createTransport(sgTransport(sendgridOptions));
 
 // Get login page controller
-const getLoginPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getLoginPageController = async (request : ExtendedRequestInterface, response : Response) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -45,7 +64,7 @@ const getLoginPageController = async ( request : ExtendedRequestInterface, respo
 };
 
 // Get signup page controller
-const getSignupPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getSignupPageController = async (request : ExtendedRequestInterface, response : Response) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -130,7 +149,7 @@ const getNewPasswordForm = async ( request : ExtendedRequestInterface, response 
 };
 
 // Send the email which redirects to the password reset page
-const postNewPasswordController =  async ( request : ExtendedRequestInterface, response : Response ) => {
+const postNewPasswordController =  async (request : ExtendedRequestInterface, response : Response) => {
 
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;

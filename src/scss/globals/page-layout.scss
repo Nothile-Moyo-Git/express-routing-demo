@@ -32,6 +32,25 @@
 
     &__svg{
         
+        path{
+            fill : white;
+        }
+
+        circle{
+            fill : white;
+        }
+
+        &--error{
+            margin: 1rem 0 1.5rem 0;
+
+            path{
+                fill : branding.$brand_color_four;
+            }
+            
+            circle{
+                fill : branding.$brand_color_four;
+            }
+        }
     }
 }
 
