@@ -20,6 +20,7 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
+import mongoose from 'mongoose';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -84,6 +85,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
                 // Instantiate our product
                 const product = new Product({
+                    _id : new mongoose.Types.ObjectId("64e657ff2d12620d34e83a17"),
                     title : title,
                     image : imageUrl,
                     description : description,
@@ -95,20 +97,21 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                 // Note : This method is inherited from the Mongoose model
                 // Only save the product if we're logged in
                 if (hasUser === true) {
-                    product.save();
+                    await product.save();
                 }
 
                 response.redirect("/products");
 
             }catch(err){
-
+     
                 console.clear();
-                console.log("Error occured in request in file 'admin.ts'");
-                console.log("\n", "Error message below");
-                console.log(err);
+                console.log("There's been a server error, please view below");
+                console.log("\n");
 
+                // Custom error object
                 const error = new CustomError(err.message, 500);
-                return next(error);
+
+                console.log(error);
             }
 
         }else{
