@@ -21,7 +21,7 @@ import userRoutes from "./routes/user";
 import User from "./models/user";
 import errorRoutes from "./routes/error";
 import { createMongooseConnection, sessionUrl } from "./data/connection";
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ObjectId } from "mongodb";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -29,6 +29,7 @@ import { password } from "./data/connection";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
+import { CustomError } from "./@types";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -162,6 +163,12 @@ app.use( userRoutes );
 // Use the error page router
 // Place the error router last as it will override all of your other routes after it
 app.use( errorRoutes );
+
+// Hooking up the 500 error
+// Express will automatically be able to detect that this is an error middleware 
+app.use((error : CustomError, request : Request, response : Response, next : NextFunction) => {
+    response.redirect("/500");
+});
 
 // Start our server async
 const startServer = async () => {

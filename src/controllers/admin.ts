@@ -85,7 +85,6 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
                 // Instantiate our product
                 const product = new Product({
-                    _id : new mongoose.Types.ObjectId("64e657ff2d12620d34e83a17"),
                     title : title,
                     image : imageUrl,
                     description : description,
@@ -112,6 +111,8 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                 const error = new CustomError(err.message, 500);
 
                 console.log(error);
+
+                return next(error);
             }
 
         }else{

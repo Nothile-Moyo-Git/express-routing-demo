@@ -25,6 +25,7 @@
     position: relative;
     z-index: 1;
     overflow: hidden;
+    color:rgba(0, 0, 0, 0.9); 
 
     @include responsive.breakpoint(tablet){
         width: 100%;
