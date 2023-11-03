@@ -52,6 +52,10 @@ export interface UserInterface{
     resetTokenExpiration ?: Date
 }
 
+export interface CustomError extends Error{
+    httpStatusCode : number
+}
+
 export interface ExtendedSessionDataInterface extends SessionData {
     isLoggedIn : boolean,
     user : UserInterface,
