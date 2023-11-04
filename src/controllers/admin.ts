@@ -20,7 +20,6 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
-import mongoose from 'mongoose';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -144,7 +143,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 };
 
 // Get admin products controller
-const getProducts = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getProducts = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -160,27 +159,37 @@ const getProducts = async ( request : ExtendedRequestInterface, response : Respo
 
     try{
 
-    }catch(error : unknown){
+        // Find the product. If we need to find a collection, we can pass the conditionals through in an object
+        const products = await Product.find({userId : new ObjectId(hasUser === true ? user._id : null)})
+        .select("title price _id description image")
+        .populate("userId", "name");
 
+        // Render the view of the page
+        response.render("pages/admin/products", { 
+            prods : products, 
+            pageTitle : "Admin Products", 
+            hasProducts : products.length > 0,
+            isAuthenticated : isLoggedIn === undefined ? false : true,
+            csrfToken : csrfToken
+        });
+
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
     }
-
-    // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    const products = await Product.find({userId : new ObjectId(hasUser === true ? user._id : null)})
-    .select("title price _id description image")
-    .populate("userId", "name");
-
-    // Render the view of the page
-    response.render("pages/admin/products", { 
-        prods : products, 
-        pageTitle : "Admin Products", 
-        hasProducts : products.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true,
-        csrfToken : csrfToken
-    });
 };
 
 // Update product controller
-const updateProductController = async (request : ExtendedRequestInterface, response : Response ) => {
+const updateProductController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
     // Get the fields in order to update our product
     const title = request.body.title;
@@ -221,16 +230,32 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
             
             if (product.userId.toString() === request.session.user._id.toString()) {
 
-                // Update the product information using mongoose's updateOne method with the id provided previously
-                await Product.updateOne({ _id : productId },{ 
-                    title : title,
-                    price : price,
-                    description : description,
-                    image : imageUrl
-                });
+                try{
 
-                // Render the view of the page
-                response.redirect("/admin/products");
+                    // Update the product information using mongoose's updateOne method with the id provided previously
+                    await Product.updateOne({ _id : productId },{ 
+                        title : title,
+                        price : price,
+                        description : description,
+                        image : imageUrl
+                    });
+
+                    // Render the view of the page
+                    response.redirect("/admin/products");
+
+                }catch(err){
+
+                    console.clear();
+                    console.log("There's been a server error, please view below");
+                    console.log("\n");
+            
+                    // Custom error object
+                    const error = new CustomError(err.message, 500);
+            
+                    console.log(error);
+            
+                    return next(error);
+                }
             }
         }else{
 
@@ -267,7 +292,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
 };
 
 // Delete product controller
-const deleteProduct = async ( request : ExtendedRequestInterface, response : Response ) => {
+const deleteProduct = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -291,19 +316,35 @@ const deleteProduct = async ( request : ExtendedRequestInterface, response : Res
         // Create a new product Id and guard it
         const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
-        // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
-        const product = await Product.findById(productId);
+        try{
 
-        if (hasUser === true && product.userId.toString() === request.session.user._id.toString()) {
+            // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
+            const product = await Product.findById(productId);
 
-            await Product.deleteOne( {_id : productId} );
+            if (hasUser === true && product.userId.toString() === request.session.user._id.toString()) {
 
-            // Redirect to the admin products page since we executed admin functionality
-            response.redirect("/admin/products");
-        }else{
+                await Product.deleteOne( {_id : productId} );
 
-            // Redirect to the products page
-            response.redirect("back");
+                // Redirect to the admin products page since we executed admin functionality
+                response.redirect("/admin/products");
+            }else{
+
+                // Redirect to the products page
+                response.redirect("back");
+            }
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error); 
         }
 
     }else{
@@ -313,7 +354,7 @@ const deleteProduct = async ( request : ExtendedRequestInterface, response : Res
 };
 
 // Get admin edit product controller
-const getAdminEditProduct = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getAdminEditProduct = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -328,31 +369,47 @@ const getAdminEditProduct = async ( request : ExtendedRequestInterface, response
     // Create a new product Id and guard it
     const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
-    // Get single product details
-    const singleProduct = isObjectIdValid ? await Product.findById(productId) : null;
+    try{
 
-    // Check if we have products
-    const hasProduct = singleProduct !== null;
+        // Get single product details
+        const singleProduct = isObjectIdValid ? await Product.findById(productId) : null;
 
-    // Render the edit products template
-    response.render(      
-        "pages/admin/edit-product", 
-        { 
-            pageTitle : "Edit Products", 
-            id : productId, 
-            productInformation : singleProduct,
-            hasProducts : hasProduct,
-            isAuthenticated : isLoggedIn === undefined ? false : true,
-            csrfToken : csrfToken,
-            isSubmitted : false,
-            inputsValid : {
-                isTitleValid : true,
-                isImageValid : true,
-                isDescriptionValid : true,
-                isPriceValid : true
+        // Check if we have products
+        const hasProduct = singleProduct !== null;
+
+        // Render the edit products template
+        response.render(      
+            "pages/admin/edit-product", 
+            { 
+                pageTitle : "Edit Products", 
+                id : productId, 
+                productInformation : singleProduct,
+                hasProducts : hasProduct,
+                isAuthenticated : isLoggedIn === undefined ? false : true,
+                csrfToken : csrfToken,
+                isSubmitted : false,
+                inputsValid : {
+                    isTitleValid : true,
+                    isImageValid : true,
+                    isDescriptionValid : true,
+                    isPriceValid : true
+                }
             }
-        }
-    );
+        );
+
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error); 
+    }
 };
 
 export { getAddProduct, postAddProduct, getProducts, updateProductController, deleteProduct, getAdminEditProduct }; 

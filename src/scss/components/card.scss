@@ -95,7 +95,7 @@
         position: relative;
         z-index: 1;
         overflow: hidden;
-        color: white;
+        color: rgba(0,0,0,0.9);
         margin: 0;
 
         @include mixins.backgroundGradientEffect(){
@@ -103,8 +103,8 @@
         }
 
         @include mixins.state(){
-            filter: contrast(120%);
-            color: white;
+            filter: contrast(150%);
+            color: rgba(0,0,0,0.9);
         }
     }
 }

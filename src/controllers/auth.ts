@@ -18,7 +18,7 @@
  */
 
 // import our express types for TypeScript use
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import User from '../models/user';
 import bcrypt from "bcrypt";
@@ -29,6 +29,7 @@ import { sendgridOptions } from "../data/connection";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import crypto from "crypto";
 import { ExtendedRequestInterface, UserInterface } from '../@types';
+import CustomError from '../models/error';
 
 // Create a "transporter" object which allows you to send emails
 const transporter = nodemailer.createTransport(sgTransport(sendgridOptions));
@@ -94,7 +95,7 @@ const getSignupPageController = async (request : ExtendedRequestInterface, respo
 };
 
 // Render the password reset page
-const getPasswordResetPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getPasswordResetPageController = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
@@ -102,25 +103,41 @@ const getPasswordResetPageController = async ( request : ExtendedRequestInterfac
     // Set the reset token value
     const resetToken = request.params.resetToken;
 
-    // See if there is a user based on the reset token, if not, then we'll need to pass an error through
-    const tempUser : UserInterface = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
-    const hasUser = tempUser !== null;
+    try{
 
-    // Render the password reset page
-    response.render(
-        "pages/auth/password-reset", 
-        { 
-            pageTitle : "Reset your password",
-            csrfToken : csrfToken, 
-            isAuthenticated : false,
-            emailError : "",
-            previousPasswordError : "",
-            newPasswordError : "",
-            hasUser : hasUser,
-            resetToken : resetToken,
-            oldInput : {}
-        }
-    );
+        // See if there is a user based on the reset token, if not, then we'll need to pass an error through
+        const tempUser : UserInterface = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
+        const hasUser = tempUser !== null;
+
+        // Render the password reset page
+        response.render(
+            "pages/auth/password-reset", 
+            { 
+                pageTitle : "Reset your password",
+                csrfToken : csrfToken, 
+                isAuthenticated : false,
+                emailError : "",
+                previousPasswordError : "",
+                newPasswordError : "",
+                hasUser : hasUser,
+                resetToken : resetToken,
+                oldInput : {}
+            }
+        );
+
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
+    }
 };
 
 // Redirect if we don't have the appropriate paramaters to the new password page
@@ -149,7 +166,7 @@ const getNewPasswordForm = async ( request : ExtendedRequestInterface, response 
 };
 
 // Send the email which redirects to the password reset page
-const postNewPasswordController =  async (request : ExtendedRequestInterface, response : Response) => {
+const postNewPasswordController =  async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;
@@ -167,80 +184,94 @@ const postNewPasswordController =  async (request : ExtendedRequestInterface, re
     // CSRF protection
     if (isCSRFValid === true) {
 
-        // See if we have a user in our database with the email address
-        const tempUser = await User.findOne({email : emailAddress});
+        try{
 
-        // If we have a user, then save a reset token we're going to use later
-        // If we don't have a user, then reload the page
-        if ( tempUser !== null ) {
+            // See if we have a user in our database with the email address
+            const tempUser = await User.findOne({email : emailAddress});
 
-            // Create our token
-            const token = crypto.randomBytes(32).toString("hex");
+            // If we have a user, then save a reset token we're going to use later
+            // If we don't have a user, then reload the page
+            if ( tempUser !== null ) {
 
-            // Set the variables we're going to save to the User object
-            // Our expiration date is 1 day after we set the token
-            tempUser.resetToken = token;
-            tempUser.resetTokenExpiration = new Date(Date.now() + 86400000);
+                // Create our token
+                const token = crypto.randomBytes(32).toString("hex");
 
-            // Update the user with the reset tokens so we can update their password later
-            await tempUser.save();
+                // Set the variables we're going to save to the User object
+                // Our expiration date is 1 day after we set the token
+                tempUser.resetToken = token;
+                tempUser.resetTokenExpiration = new Date(Date.now() + 86400000);
 
-            // Testing and debugging code
-            const options = {
-                to : [emailAddress],
-                from: "nothile1@gmail.com",
-                subject : "Password Reset",
-                text : "Congratulations, you successfully signed up",
-                html : `
-                    <h1>You have requested a password reset</h1>
-                    <p>Click this <a href="http://localhost:3000/reset/${token}">Link</a> to set a new password</p>
-                `
-            };
+                // Update the user with the reset tokens so we can update their password later
+                await tempUser.save();
 
-            // Send the email from sendgrid
-            transporter.sendMail(options, (error : Error, response : SMTPTransport.SentMessageInfo) => {
+                // Testing and debugging code
+                const options = {
+                    to : [emailAddress],
+                    from: "nothile1@gmail.com",
+                    subject : "Password Reset",
+                    text : "Congratulations, you successfully signed up",
+                    html : `
+                        <h1>You have requested a password reset</h1>
+                        <p>Click this <a href="http://localhost:3000/reset/${token}">Link</a> to set a new password</p>
+                    `
+                };
 
-                // Email handling
-                if (error) {
+                // Send the email from sendgrid
+                transporter.sendMail(options, (error : Error, response : SMTPTransport.SentMessageInfo) => {
 
-                    console.clear();
-                    console.log("There was an error sending your email");
-                    console.log(error);
-                }else{
-                    console.clear();
-                    console.log("Email successful, response below");
-                    console.log(response);
-                }
-            });
+                    // Email handling
+                    if (error) {
 
-            // Render the new password Form
-            response.render("pages/auth/new-password",{
-                pageTitle : "Request a new password",
-                csrfToken : sessionCSRFToken,
-                isAuthenticated : isLoggedIn,
-                userExists : "true",
-                isSubmitted : "true",
-                oldInput : {
-                    oldEmail : emailAddress
-                }
-            }); 
+                        console.clear();
+                        console.log("There was an error sending your email");
+                        console.log(error);
+                    }else{
+                        console.clear();
+                        console.log("Email successful, response below");
+                        console.log(response);
+                    }
+                });
 
-        }else{
+                // Render the new password Form
+                response.render("pages/auth/new-password",{
+                    pageTitle : "Request a new password",
+                    csrfToken : sessionCSRFToken,
+                    isAuthenticated : isLoggedIn,
+                    userExists : "true",
+                    isSubmitted : "true",
+                    oldInput : {
+                        oldEmail : emailAddress
+                    }
+                }); 
 
-            // Render the new password Form
-            response.render("pages/auth/new-password",{
-                pageTitle : "Request a new password",
-                csrfToken : sessionCSRFToken,
-                isAuthenticated : isLoggedIn,
-                userExists : "",
-                isSubmitted : "true",
-                oldInput : {
-                    oldEmail : emailAddress
-                }
-            }); 
+            }else{
 
+                // Render the new password Form
+                response.render("pages/auth/new-password",{
+                    pageTitle : "Request a new password",
+                    csrfToken : sessionCSRFToken,
+                    isAuthenticated : isLoggedIn,
+                    userExists : "",
+                    isSubmitted : "true",
+                    oldInput : {
+                        oldEmail : emailAddress
+                    }
+                }); 
+            }
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
         }
-
     }else{
 
         response.status(403).send("CSRF protection failed!");
@@ -248,89 +279,105 @@ const postNewPasswordController =  async (request : ExtendedRequestInterface, re
 };
 
 // Handle the password reset functionality
-const postPasswordResetPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const postPasswordResetPageController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // csrfToken from our session
     const sessionCSRFToken : string = request.session.csrfToken;
     const requestCSRFToken : string = String(request.body.csrfToken).replace(/\/$/, "");
     const resetToken : string = request.body.resetToken;
     
-    // Check if our csrf values are correct
+    // Check if our csrf values are corre ct
     const isCSRFValid : boolean = sessionCSRFToken === requestCSRFToken;
 
     if (isCSRFValid === true) {
 
-        // We define these variables here as we need to scope them correctly as we validate the user
-        let isPasswordValid = false;
-        let passwordUpdated = false;
-        let hasUser = false;
-        
-        // Get our inputs so we can verify and check them
-        const previousPassword : string = request.body.previousPasswordInput;
-        const newPassword : string = request.body.newPasswordInput;
-        const confirmNewPassword : string = request.body.confirmNewPasswordInput;
-        const passwordsMatch : boolean = newPassword === confirmNewPassword;
+        try{
 
-        // See if we have a user in our database with the email address
-        const tempUser = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
+            // We define these variables here as we need to scope them correctly as we validate the user
+            let isPasswordValid = false;
+            let passwordUpdated = false;
+            let hasUser = false;
+            
+            // Get our inputs so we can verify and check them
+            const previousPassword : string = request.body.previousPasswordInput;
+            const newPassword : string = request.body.newPasswordInput;
+            const confirmNewPassword : string = request.body.confirmNewPasswordInput;
+            const passwordsMatch : boolean = newPassword === confirmNewPassword;
 
-        // Check if the password works
-        if (tempUser !== null) {
+            // See if we have a user in our database with the email address
+            const tempUser = await User.findOne({resetToken : resetToken, resetTokenExpiration : {$gt: Date.now()}});
 
-            hasUser = true;
+            // Check if the password works
+            if (tempUser !== null) {
 
-            // Compare the submitted password to the hashed password
-            if (bcrypt.compareSync(previousPassword, tempUser.password) === true) {
+                hasUser = true;
 
-                // Set the password to valid for our error handling on the view
-                isPasswordValid = true;
+                // Compare the submitted password to the hashed password
+                if (bcrypt.compareSync(previousPassword, tempUser.password) === true) {
 
-                // The final check, the reset tokens are valid, csrf protection is valid, passwords have been checked with bcrypt encryption and they're the same
-                if (passwordsMatch === true) {
+                    // Set the password to valid for our error handling on the view
+                    isPasswordValid = true;
 
-                    // Create a new password and update it in the user
-                    // Also, reset our token and expiration date
-                    const updatedPassword = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(8));
-                    tempUser.password = updatedPassword;
-                    tempUser.resetToken = undefined;
-                    tempUser.resetTokenExpiration = undefined;
+                    // The final check, the reset tokens are valid, csrf protection is valid, passwords have been checked with bcrypt encryption and they're the same
+                    if (passwordsMatch === true) {
 
-                    await tempUser.save();
+                        // Create a new password and update it in the user
+                        // Also, reset our token and expiration date
+                        const updatedPassword = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(8));
+                        tempUser.password = updatedPassword;
+                        tempUser.resetToken = undefined;
+                        tempUser.resetTokenExpiration = undefined;
 
-                    // Redirect to the login page once we've updated the password
-                    passwordUpdated = true;
+                        await tempUser.save();
+
+                        // Redirect to the login page once we've updated the password
+                        passwordUpdated = true;
+                    }
                 }
+
+            }else{
+
+                isPasswordValid = true;
             }
 
-        }else{
+            if (passwordUpdated === true) {
 
-            isPasswordValid = true;
+                // Redirect to the login page if we successfully reset our password
+                response.redirect("login");
+                
+            }else{
+
+                // Render the password reset page
+                response.render( "pages/auth/password-reset", { 
+                    pageTitle : "Reset your password",
+                    csrfToken : sessionCSRFToken, 
+                    isAuthenticated : false,
+                    emailError : hasUser ? "" : "Error : Email address not found in the database",
+                    previousPasswordError : isPasswordValid ? "" : "Error : Previous password is wrong",
+                    newPasswordError : passwordsMatch ? "" : "Error : Passwords don't match",
+                    hasUser : hasUser,
+                    resetToken : resetToken,
+                    oldInput : {
+                        oldPreviousPassword : previousPassword,
+                        oldNewPassword : newPassword,
+                        oldConfirmNewPassword : confirmNewPassword
+                    }
+                });
+            }
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
         }
-
-        if (passwordUpdated === true) {
-
-            // Redirect to the login page if we successfully reset our password
-            response.redirect("login");
-            
-        }else{
-
-            // Render the password reset page
-            response.render( "pages/auth/password-reset", { 
-                pageTitle : "Reset your password",
-                csrfToken : sessionCSRFToken, 
-                isAuthenticated : false,
-                emailError : hasUser ? "" : "Error : Email address not found in the database",
-                previousPasswordError : isPasswordValid ? "" : "Error : Previous password is wrong",
-                newPasswordError : passwordsMatch ? "" : "Error : Passwords don't match",
-                hasUser : hasUser,
-                resetToken : resetToken,
-                oldInput : {
-                    oldPreviousPassword : previousPassword,
-                    oldNewPassword : newPassword,
-                    oldConfirmNewPassword : confirmNewPassword
-                }
-            });
-    }
 
     }else{
         
@@ -339,7 +386,7 @@ const postPasswordResetPageController = async ( request : ExtendedRequestInterfa
 };
 
 // Post signup page controller, handles the signup form submission
-const postSignupPageController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const postSignupPageController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get the fields from the form submission
     const tempUser = await User.findOne({email : request.body.emailInput});
@@ -359,47 +406,63 @@ const postSignupPageController = async ( request : ExtendedRequestInterface, res
         // If our validation checks are valid, then we redirect to the login page since we've created a new user
         if (isEmailValid === true && passwordsMatch === true && isPasswordLengthValid === true && tempUser === null) {
 
-            // Create a new user since our checks are valid
-            const newUser = new User({
-                name : request.body.nameInput,
-                email : request.body.emailInput,
-                password : bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
-                cart : {
-                    items : [],
-                    totalPrice : 0
-                }
-            });
+            try{
 
-            // Save the new user to the database
-            await newUser.save();
+                // Create a new user since our checks are valid
+                const newUser = new User({
+                    name : request.body.nameInput,
+                    email : request.body.emailInput,
+                    password : bcrypt.hashSync(request.body.passwordInput, bcrypt.genSaltSync(8)),
+                    cart : {
+                        items : [],
+                        totalPrice : 0
+                    }
+                });
 
-            // Testing and debugging code
-            const options = {
-                to : [request.body.emailInput],
-                from: "nothile1@gmail.com",
-                subject : "Signup successful",
-                text : "Congratulations, you successfully signed up",
-                html : "<h1>Good job on your successful signup :)</h1>"
-            };
+                // Save the new user to the database
+                await newUser.save();
 
-            // Send the email from sendgrid
-            transporter.sendMail(options, (error : Error, response : SMTPTransport.SentMessageInfo) => {
+                // Testing and debugging code
+                const options = {
+                    to : [request.body.emailInput],
+                    from: "nothile1@gmail.com",
+                    subject : "Signup successful",
+                    text : "Congratulations, you successfully signed up",
+                    html : "<h1>Good job on your successful signup :)</h1>"
+                };
 
-                // Email handling
-                if (error) {
+                // Send the email from sendgrid
+                transporter.sendMail(options, (error : Error, response : SMTPTransport.SentMessageInfo) => {
 
-                    console.clear();
-                    console.log("There was an error sending your email");
-                    console.log(error);
-                }else{
-                    console.clear();
-                    console.log("Email successful, response below");
-                    console.log(response);
-                }
-            });
-            
-            // Go the login page since we now have a valid check
-            response.redirect("/login");
+                    // Email handling
+                    if (error) {
+
+                        console.clear();
+                        console.log("There was an error sending your email");
+                        console.log(error);
+                    }else{
+                        console.clear();
+                        console.log("Email successful, response below");
+                        console.log(response);
+                    }
+                });
+                
+                // Go the login page since we now have a valid check
+                response.redirect("/login");
+
+            }catch(err){
+
+                console.clear();
+                console.log("There's been a server error, please view below");
+                console.log("\n");
+        
+                // Custom error object
+                const error = new CustomError(err.message, 500);
+        
+                console.log(error);
+        
+                return next(error);
+            }
 
         }else{
 
@@ -436,7 +499,7 @@ const postSignupPageController = async ( request : ExtendedRequestInterface, res
 };
 
 // Post login page controller
-const postLoginAttemptController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const postLoginAttemptController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get email address and password
     const email = request.body.emailInput;
@@ -451,84 +514,99 @@ const postLoginAttemptController = async ( request : ExtendedRequestInterface, r
 
     if (isCSRFValid === true) {
 
-        // Get our current User from the backend
-        const user = await User.findOne({email : email.toLowerCase()});
+        try{
 
-        // Make sure that we have a user before we reference their properties
-        if (user !== null) {
+            // Get our current User from the backend
+            const user = await User.findOne({email : email.toLowerCase()});
 
-            // We define these variables here as we need to scope them correctly as we validate the user
-            let isPasswordValid = false;
-            let isEmailValid = false;
-            let currentUser : UserInterface | undefined = undefined;
+            // Make sure that we have a user before we reference their properties
+            if (user !== null) {
 
-            // Compare the submitted password to the hashed password
-            if (bcrypt.compareSync(password, user.password)) {
-                isPasswordValid = true;
-            }
+                // We define these variables here as we need to scope them correctly as we validate the user
+                let isPasswordValid = false;
+                let isEmailValid = false;
+                let currentUser : UserInterface | undefined = undefined;
 
-            // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
-            if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
-                isEmailValid = true;
-            }
-
-            // If our password and emails are valid
-            if (isPasswordValid === true && isEmailValid === true) {
-                currentUser = {
-                    _id : new ObjectId(user._id),
-                    name : user.name,
-                    email : user.email,
-                    cart : user.cart
+                // Compare the submitted password to the hashed password
+                if (bcrypt.compareSync(password, user.password)) {
+                    isPasswordValid = true;
                 }
-            }
 
-            // Set is logged in to true and pass the user id through as well to the session
-            if (isPasswordValid === true && isEmailValid === true) {
-
-                // Set the user in the current session
-                request.session.user = currentUser;
-                request.session.isLoggedIn = true;
-                request.session.cart = {
-                    userId : new ObjectId(currentUser._id),
-                    totalPrice : currentUser.cart.totalPrice,
-                    items : currentUser.cart.items
+                // Compare the email address without being case sensitive, if the result is 0, then the comparison is true
+                if (email.localeCompare(email, undefined, { sensitivity: 'base' }) === 0) {
+                    isEmailValid = true;
                 }
-                response.redirect("products");
 
-            } else {
+                // If our password and emails are valid
+                if (isPasswordValid === true && isEmailValid === true) {
+                    currentUser = {
+                        _id : new ObjectId(user._id),
+                        name : user.name,
+                        email : user.email,
+                        cart : user.cart
+                    }
+                }
+
+                // Set is logged in to true and pass the user id through as well to the session
+                if (isPasswordValid === true && isEmailValid === true) {
+
+                    // Set the user in the current session
+                    request.session.user = currentUser;
+                    request.session.isLoggedIn = true;
+                    request.session.cart = {
+                        userId : new ObjectId(currentUser._id),
+                        totalPrice : currentUser.cart.totalPrice,
+                        items : currentUser.cart.items
+                    }
+                    response.redirect("products");
+
+                } else {
+
+                    // Reload the login page
+                    // We do it like this in order to pass the previous input through without using a flash message
+                    response.render("pages/auth/login", { 
+                        pageTitle : "Login", 
+                        isAuthenticated : false, 
+                        csrfToken : sessionCSRFToken, 
+                        emailError : !isEmailValid ? "Error : Email address isn't a valid format" : "",
+                        passwordError : !isPasswordValid ? "Error : Password isn't valid" : "",
+                        oldInput : {
+                            oldEmail : email,
+                            oldPassword : password
+                        }
+                    });
+                }
+
+            }else{
+
+                // Set the flash messages for our email address and password
+                request.flash("emailError", "Error : User doesn't exist in the database");
 
                 // Reload the login page
-                // We do it like this in order to pass the previous input through without using a flash message
                 response.render("pages/auth/login", { 
                     pageTitle : "Login", 
                     isAuthenticated : false, 
                     csrfToken : sessionCSRFToken, 
-                    emailError : !isEmailValid ? "Error : Email address isn't a valid format" : "",
-                    passwordError : !isPasswordValid ? "Error : Password isn't valid" : "",
+                    emailError : "Error : User doesn't exist in the database",
+                    passwordError : "",
                     oldInput : {
                         oldEmail : email,
                         oldPassword : password
                     }
                 });
             }
+        }catch(err){
 
-        }else{
-
-            // Set the flash messages for our email address and password
-            request.flash("emailError", "Error : User doesn't exist in the database");
-
-            // Reload the login page
-            response.render("pages/auth/login", { 
-                pageTitle : "Login", 
-                isAuthenticated : false, 
-                csrfToken : sessionCSRFToken, 
-                emailError : "Error : User doesn't exist in the database",
-                passwordError : "",
-                oldInput : {
-                    oldEmail : email,
-                    oldPassword : password
-                }
-            });
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
         }
 
     }else{
@@ -538,7 +616,7 @@ const postLoginAttemptController = async ( request : ExtendedRequestInterface, r
 };
 
 // Logout page controller
-const postLogoutAttemptController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const postLogoutAttemptController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
@@ -564,13 +642,18 @@ const postLogoutAttemptController = async ( request : ExtendedRequestInterface, 
                 }
             });
             
-        }catch(error : unknown){
+        }catch(err){
 
             console.clear();
-            console.error("Error : Logout functionality failed, please contact the development team");
-
-            // Go back to the page we were previously on
-            response.redirect("back");
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
         }
 
     }else{

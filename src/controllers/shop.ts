@@ -20,12 +20,13 @@
  */
 
 // import our express types for TypeScript use
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
 import { ExtendedRequestInterface } from '../@types';
+import CustomError from '../models/error';
 
 // Get the shop index page
 const getIndex = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -35,7 +36,7 @@ const getIndex = ( request : ExtendedRequestInterface, response : Response ) => 
 };
 
 // Get products controller
-const getProducts = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getProducts = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
@@ -43,24 +44,40 @@ const getProducts = async ( request : ExtendedRequestInterface, response : Respo
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
     const csrfToken = request.session.csrfToken;
 
-    // Find the product. If we need to find a collection, we can pass the conditionals through in an object
-    const products = await Product.find()
-    .select("title price _id description image")
-    .populate("userId", "name");
+    try{
 
-    // Render the products view
-    response.render("pages/shop/product-list", { 
-        prods : products, 
-        pageTitle: "My Products", 
-        path: "/", 
-        hasProducts : products.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true,
-        csrfToken : csrfToken
-    });
+        // Find the product. If we need to find a collection, we can pass the conditionals through in an object
+        const products = await Product.find()
+        .select("title price _id description image")
+        .populate("userId", "name");
+
+        // Render the products view
+        response.render("pages/shop/product-list", { 
+            prods : products, 
+            pageTitle: "My Products", 
+            path: "/", 
+            hasProducts : products.length > 0,
+            isAuthenticated : isLoggedIn === undefined ? false : true,
+            csrfToken : csrfToken
+        });
+
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
+    }
 };
 
 // Get the orders
-const getOrders = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getOrders = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -71,18 +88,34 @@ const getOrders = async ( request : ExtendedRequestInterface, response : Respons
     // Get the user from the request session
     const user = request.session.user;
 
-    // Query the orders in the backend
-    const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
-    .select("totalPrice orderItems createdAt user");
+    try{
 
-    // Render the view page
-    response.render("pages/shop/orders", { 
-        pageTitle : "Orders", 
-        orders : orders, 
-        hasOrders : orders.length > 0,
-        isAuthenticated : isLoggedIn === undefined ? false : true,
-        csrfToken : csrfToken
-    });
+        // Query the orders in the backend
+        const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
+        .select("totalPrice orderItems createdAt user");
+
+        // Render the view page
+        response.render("pages/shop/orders", { 
+            pageTitle : "Orders", 
+            orders : orders, 
+            hasOrders : orders.length > 0,
+            isAuthenticated : isLoggedIn === undefined ? false : true,
+            csrfToken : csrfToken
+        });
+
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
+    }
 };
 
 // Get the checkout page from the cart
@@ -99,7 +132,7 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
 };
 
 // Get product detail controller
-const getProductDetails = async ( request : ExtendedRequestInterface, response : Response ) => {
+const getProductDetails = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -114,20 +147,35 @@ const getProductDetails = async ( request : ExtendedRequestInterface, response :
     // Create a new product Id and guard it
     const productId = isObjectIdValid ? new ObjectId(request.params.id) : null;
 
-    // Get single product details
-    const singleProduct = isObjectIdValid ? await Product.findById(productId) : null;
+    try{
 
-    // Check if we have products
-    const hasProduct = singleProduct !== null;
+        // Get single product details
+        const singleProduct = isObjectIdValid ? await Product.findById(productId) : null;
 
-    // Render the admin products ejs template, make sure it's for the first object we get since Mongoose returns an array of BSON objects
-    response.render("pages/shop/product-detail", { 
-        hasProduct : hasProduct, 
-        productDetails : singleProduct,
-        pageTitle : "Product details",
-        isAuthenticated : isLoggedIn === undefined ? false : true,
-        csrfToken : csrfToken
-    });
+        // Check if we have products
+        const hasProduct = singleProduct !== null;
+
+        // Render the admin products ejs template, make sure it's for the first object we get since Mongoose returns an array of BSON objects
+        response.render("pages/shop/product-detail", { 
+            hasProduct : hasProduct, 
+            productDetails : singleProduct,
+            pageTitle : "Product details",
+            isAuthenticated : isLoggedIn === undefined ? false : true,
+            csrfToken : csrfToken
+        });
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
+    }
 };
 
 // Get the cart and all the products inside of it
@@ -161,7 +209,7 @@ const getCart = async ( request : ExtendedRequestInterface, response : Response 
 
 // Add a new product to the cart using a post request
 // Acts as an add product handler
-const postCart = async (request : ExtendedRequestInterface, response : Response ) => {
+const postCart = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Instantiate the user that we have
     const user = request.session.user;
@@ -176,33 +224,49 @@ const postCart = async (request : ExtendedRequestInterface, response : Response 
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    // Get product details
-    const product = await Product.findOne({_id : productId})
-    .select("title price _id");
+    try{
 
-    if (user !== undefined && isCSRFValid === true) {
+        // Get product details
+        const product = await Product.findOne({_id : productId})
+        .select("title price _id");
 
-        // Create a new instance of our user to gain access to mongoose static methods
-        const userInstance = new User(user);
-    
-        // Set the product details into a new object
-        const productDetails = { title : product.title, price : product.price, _id : product._id };
+        if (user !== undefined && isCSRFValid === true) {
 
-        // This is our new cart
-        userInstance.addToCart(productDetails);
+            // Create a new instance of our user to gain access to mongoose static methods
+            const userInstance = new User(user);
+        
+            // Set the product details into a new object
+            const productDetails = { title : product.title, price : product.price, _id : product._id };
 
-        // Update the document in Mongoose as the save method when we instantiate it isn't flexible enough
-        await User.updateOne({_id : new ObjectId(user._id)},{cart : userInstance.cart});
+            // This is our new cart
+            userInstance.addToCart(productDetails);
 
-        // Update the user in the session so we don't have to restart the server after adding an item to our cart
-        request.session.user = userInstance;
+            // Update the document in Mongoose as the save method when we instantiate it isn't flexible enough
+            await User.updateOne({_id : new ObjectId(user._id)},{cart : userInstance.cart});
 
-        // Update the user in the session
-        request.session.cart = {
-            items : userInstance.cart.items,
-            totalPrice : userInstance.cart.totalPrice,
-            userId : userInstance.cart?.userId
-        };
+            // Update the user in the session so we don't have to restart the server after adding an item to our cart
+            request.session.user = userInstance;
+
+            // Update the user in the session
+            request.session.cart = {
+                items : userInstance.cart.items,
+                totalPrice : userInstance.cart.totalPrice,
+                userId : userInstance.cart?.userId
+            };
+        }
+
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
     }
 
     // If our csrf check fails then output a separate response, otherwise, go to the cart page
@@ -218,7 +282,7 @@ const postCart = async (request : ExtendedRequestInterface, response : Response 
 }
 
 // Delete an item from the cart using cart item
-const postCartDelete = (request : ExtendedRequestInterface, response : Response ) => {
+const postCartDelete = (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get product ID string
     const productId = request.body.productId.toString().slice(0, -1);
@@ -232,24 +296,40 @@ const postCartDelete = (request : ExtendedRequestInterface, response : Response 
 
     if (isCSRFValid === true) {
 
-        // Create a new user instance so we can access the appropriate methods
-        const userInstance = new User(request.User);
+        try{
 
-        // Delete the item from the cart
-        userInstance.deleteFromCart(productId);
+            // Create a new user instance so we can access the appropriate methods
+            const userInstance = new User(request.User);
 
-        // Update the user in our session
-        // Also update our cart
-        request.session.user = userInstance;
-        request.session.cart = {
-            items : userInstance.cart.items,
-            totalPrice : userInstance.cart.totalPrice,
-            userId : userInstance.cart?.userId
+            // Delete the item from the cart
+            userInstance.deleteFromCart(productId);
+
+            // Update the user in our session
+            // Also update our cart
+            request.session.user = userInstance;
+            request.session.cart = {
+                items : userInstance.cart.items,
+                totalPrice : userInstance.cart.totalPrice,
+                userId : userInstance.cart?.userId
+            }
+
+            // Reload the cart page so we can query the updated cart
+            response.redirect('back');
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
         }
-
-        // Reload the cart page so we can query the updated cart
-        response.redirect('back');
-        
+ 
     }else{
 
         response.status(403).send("CSRF protection failed!");
@@ -257,7 +337,7 @@ const postCartDelete = (request : ExtendedRequestInterface, response : Response 
 };
 
 // Create an order in the SQL backend
-const postOrderCreate = async (request : ExtendedRequestInterface, response : Response ) => {
+const postOrderCreate = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
@@ -268,35 +348,51 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
     if (isCSRFValid === true) {
 
-        // Create our order from the cart we pass through from the User singleton found in index.ts
-        const orderInstance = new Order({
-            totalPrice : request.User.cart.totalPrice,
-            orderItems : request.User.cart.items,
-            user : {
-                _id : request.User._id,
-                name : request.User.name
-            }
-        });
+        try{
 
-        // Store the order in the database
-        await orderInstance.save();
+            // Create our order from the cart we pass through from the User singleton found in index.ts
+            const orderInstance = new Order({
+                totalPrice : request.User.cart.totalPrice,
+                orderItems : request.User.cart.items,
+                user : {
+                    _id : request.User._id,
+                    name : request.User.name
+                }
+            });
 
-        // We now need to empty our cart
-        // We will create a User instance and we will delete the cart from the instance
-        // Then we'll execute the save method to update the database user
-        const userInstance = new User(request.User);
+            // Store the order in the database
+            await orderInstance.save();
 
-        // Empty the cart now that we've saved it as an order
-        userInstance.emptyCart();
+            // We now need to empty our cart
+            // We will create a User instance and we will delete the cart from the instance
+            // Then we'll execute the save method to update the database user
+            const userInstance = new User(request.User);
 
-        // Update the user details in MongoDB
-        await userInstance.save();
+            // Empty the cart now that we've saved it as an order
+            userInstance.emptyCart();
 
-        // Update the user in the session and empty their cart too
-        request.session.user = userInstance;
-        
-        // Move to the orders page
-        response.redirect("/orders");
+            // Update the user details in MongoDB
+            await userInstance.save();
+
+            // Update the user in the session and empty their cart too
+            request.session.user = userInstance;
+            
+            // Move to the orders page
+            response.redirect("/orders");
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
+        }
 
     }else{
 
