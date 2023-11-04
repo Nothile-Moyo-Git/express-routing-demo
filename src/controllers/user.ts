@@ -9,10 +9,11 @@
  */
 
 // import our express types for TypeScript use
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import User from '../models/user';
 import { ExtendedRequestInterface, UserInterface } from '../@types';
 import { validate } from 'email-validator';
+import CustomError from '../models/error';
 
 // Handle our get profile page
 const getProfilePageController = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -57,7 +58,7 @@ const getEditProfilePageController = ( request : ExtendedRequestInterface, respo
 };
 
 // Handle out edit profile post request
-const postEditProfileRequestController = async ( request : ExtendedRequestInterface, response : Response ) => {
+const postEditProfileRequestController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Get inputs
     const name = request.body.nameInput;
@@ -83,29 +84,44 @@ const postEditProfileRequestController = async ( request : ExtendedRequestInterf
 
         if (isNameValid === true && isEmailValid === true) {
 
-            // Update the user
-            await User.updateOne({ _id : request.session.user._id }, {
-                name : request.body.nameInput,
-                email : request.body.emailInput  
-            });
+            try{
 
-            // Update the user session
-            request.session.user.name = request.body.nameInput;
-            request.session.user.email = request.body.emailInput;
+                // Update the user
+                await User.updateOne({ _id : request.session.user._id }, {
+                    name : request.body.nameInput,
+                    email : request.body.emailInput  
+                });
 
-            response.render("pages/user/edit-profile-page", {
-                pageTitle : "Edit Profile",
-                csrfToken : sessionCSRFToken,
-                userData : userData,
-                isNameValid : isNameValid,
-                isEmailValid : isEmailValid,
-                isFormSubmitted : true,
-                isAuthenticated : isLoggedIn,
-                oldInput : {
-                    oldName : name,
-                    oldEmail : email
-                }
-            });
+                // Update the user session
+                request.session.user.name = request.body.nameInput;
+                request.session.user.email = request.body.emailInput;
+
+                response.render("pages/user/edit-profile-page", {
+                    pageTitle : "Edit Profile",
+                    csrfToken : sessionCSRFToken,
+                    userData : userData,
+                    isNameValid : isNameValid,
+                    isEmailValid : isEmailValid,
+                    isFormSubmitted : true,
+                    isAuthenticated : isLoggedIn,
+                    oldInput : {
+                        oldName : name,
+                        oldEmail : email
+                    }
+                });
+            }catch(err){
+
+                console.clear();
+                console.log("There's been a server error, please view below");
+                console.log("\n");
+        
+                // Custom error object
+                const error = new CustomError(err.message, 500);
+        
+                console.log(error);
+        
+                return next(error);
+            }
 
         }else{
 
