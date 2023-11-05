@@ -1,0 +1,23 @@
+@use "../scss/partials/branding" as branding;
+@use "../scss/partials/mixins" as mixins;
+@use "../scss/partials/responsive" as responsive;
+@use "../scss/partials/animations" as animations;
+
+.modal{
+
+    max-width: 400px;
+    width: calc(100% - 2rem);
+    background: branding.$brand_color_five__alt_6;
+    text-align: center;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid branding.$brand_color_five__alt_2;
+    border-radius: 3px;
+
+    &__text{
+        color: branding.$brand_color_five__alt_2;
+    }
+
+    &--error{
+
+    }
+}
