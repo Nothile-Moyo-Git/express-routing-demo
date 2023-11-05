@@ -8,11 +8,11 @@
 
             <h1 class="content__title"><%= pageTitle %></h1>
 
-            <form class="form" method="POST" action="/edit-profile">
+            <% if (isFormSubmitted === true) { %> 
+                <%- include("../../components/modal"); %>
+            <% } %>
 
-                <% if (isFormSubmitted === true && isNameValid === true && isEmailValid === true) { %> 
-                    <h2 class="form__submission-text">Success, profile updated</h2>    
-                <% } %>
+            <form class="form" method="POST" action="/edit-profile">
 
                 <div class="form__field">
                     <label 

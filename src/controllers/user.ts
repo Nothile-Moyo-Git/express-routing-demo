@@ -104,6 +104,8 @@ const postEditProfileRequestController = async (request : ExtendedRequestInterfa
                     isEmailValid : isEmailValid,
                     isFormSubmitted : true,
                     isAuthenticated : isLoggedIn,
+                    modalText : "Success, your profile has been updated!",
+                    modalClassNames : "modal",
                     oldInput : {
                         oldName : name,
                         oldEmail : email
@@ -133,6 +135,8 @@ const postEditProfileRequestController = async (request : ExtendedRequestInterfa
                 isEmailValid : isEmailValid,
                 isFormSubmitted : true,
                 isAuthenticated : isLoggedIn,
+                modalText : "Error : Invalid input",
+                modalClassNames : "modal modal--error",
                 oldInput : {
                     oldName : name, 
                     oldEmail : email
