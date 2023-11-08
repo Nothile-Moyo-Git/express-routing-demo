@@ -209,7 +209,7 @@ const postNewPasswordController =  async (request : ExtendedRequestInterface, re
                     to : [emailAddress],
                     from: "nothile1@gmail.com",
                     subject : "Password Reset",
-                    text : "Congratulations, you successfully signed up",
+                    text : "Password reset request",
                     html : `
                         <h1>You have requested a password reset</h1>
                         <p>Click this <a href="http://localhost:3000/reset/${token}">Link</a> to set a new password</p>
@@ -239,6 +239,8 @@ const postNewPasswordController =  async (request : ExtendedRequestInterface, re
                     isAuthenticated : isLoggedIn,
                     userExists : "true",
                     isSubmitted : "true",
+                    modalClassNames : "modal",
+                    modalText : "Success : Email has been sent to the user",
                     oldInput : {
                         oldEmail : emailAddress
                     }
@@ -253,6 +255,8 @@ const postNewPasswordController =  async (request : ExtendedRequestInterface, re
                     isAuthenticated : isLoggedIn,
                     userExists : "",
                     isSubmitted : "true",
+                    modalClassNames : "modal modal--error",
+                    modalText : "Error : User doesn't exist with that email address",
                     oldInput : {
                         oldEmail : emailAddress
                     }
@@ -428,7 +432,11 @@ const postSignupPageController = async (request : ExtendedRequestInterface, resp
                     from: "nothile1@gmail.com",
                     subject : "Signup successful",
                     text : "Congratulations, you successfully signed up",
-                    html : "<h1>Good job on your successful signup :)</h1>"
+                    html : `<div>
+                                <h1>Good job on your successful signup :)</h1>
+                                </br>
+                                <p>Proceed to the login page to use your new account</p>
+                            <div>`
                 };
 
                 // Send the email from sendgrid
