@@ -10,14 +10,13 @@
     background: branding.$brand_color_five__alt_6;
     text-align: center;
     padding: 0.5rem 0.5rem;
-    border: 1px solid branding.$brand_color_five__alt_2;
     border-radius: 3px;
-
-    &__text{
-        color: branding.$brand_color_five__alt_2;
-    }
+    box-shadow: branding.$button_shadow;
+    margin: 0 auto 1rem auto;
+    color: branding.$brand_color_five__alt_2;
 
     &--error{
-
+        color: branding.$brand_color_seven__alt_2;
+        background: branding.$brand_color_eight;
     }
 }

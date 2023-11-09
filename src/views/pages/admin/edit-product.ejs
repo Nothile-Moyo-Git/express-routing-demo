@@ -35,17 +35,27 @@
 
                         <div class="form__field">
                             <label 
-                                for="image" 
-                                id="image-label" 
+                                for="imageUrl" 
+                                id="imageUrl-label" 
                                 class="<%= `form__label ${ inputsValid.isImageUrlValid === false && 'form__label--error' }` %>"
                             ><%= inputsValid.isImageUrlValid === true ? 'Image Url*' : "Error :  Image Url isn't valid" %></label>
                             <input
                                 required
                                 type="text"
-                                name="image"
+                                name="imageUrl"
                                 class="<%= `form__input ${ inputsValid.isImageUrlValid === false && 'form__input--error' }` %>"
-                                aria-labelledby="image-label"
+                                aria-labelledby="imageUrl-label"
                                 value="<%= productInformation.image %>"
+                            />
+                        </div>
+
+                        <div class="form__field">
+                            <label for="image" id="image-label" class="form__label">Image*</label>
+                            <input
+                                type="file"
+                                name="image"
+                                class='form__file-upload'
+                                aria-labelledby="image-label"
                             />
                         </div>
 

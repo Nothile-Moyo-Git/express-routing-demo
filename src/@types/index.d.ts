@@ -68,6 +68,7 @@ export interface ExtendedRequestInterface extends Request{
     body : {
         title : string,
         image : string,
+        imageUrl : string,
         price : number,
         description : string,
         csrfToken : string,
