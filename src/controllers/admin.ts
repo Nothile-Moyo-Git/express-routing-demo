@@ -195,7 +195,8 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const title = request.body.title;
     const price = request.body.price;
     const description = request.body.description;
-    const imageUrl = request.body.image;
+    const imageUrl = request.body.imageUrl;
+    const image = request.body.image;
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
@@ -390,7 +391,7 @@ const getAdminEditProduct = async (request : ExtendedRequestInterface, response 
                 isSubmitted : false,
                 inputsValid : {
                     isTitleValid : true,
-                    isImageValid : true,
+                    isImageUrlValid : true,
                     isDescriptionValid : true,
                     isPriceValid : true
                 }

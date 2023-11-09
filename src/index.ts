@@ -61,6 +61,7 @@ app.set('views', 'src/views');
 
 // Run the urlEncoded bodyParser to get the body of our objects
 // This allows us to get request.body
+// Note, this doesn't work with images, you'll need multer in order to deal with file uploads since it can't urlencode images to text
 app.use( bodyParser.urlencoded({ extended : true }) );
 
 // Serve the css files statically

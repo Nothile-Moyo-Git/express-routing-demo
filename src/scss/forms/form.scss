@@ -41,6 +41,7 @@
 
     &__label{
         color: white;
+        margin-bottom: 0.15rem;
 
         &--error{
             color: pink;
@@ -59,6 +60,26 @@
         &--error{
             border-color: pink;
             background-color: pink !important;
+        }
+    }
+
+    &__file-upload{
+        border-radius: 4px;
+        color: white;
+        font-size: 1rem;
+
+        &::file-selector-button{
+            border-radius: 3px;
+            border: 0px solid white;
+            padding: 0.4rem 0.5rem;
+            margin-right: 0.5rem;
+            box-shadow: branding.$button_shadow;
+            cursor: pointer;
+            transition: animations.$standard_transition;
+
+            @include mixins.state(){
+                background: branding.$brand_color_six;
+            }
         }
     }
 
