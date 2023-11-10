@@ -44,7 +44,7 @@
                 </li>
 
                 <li class="menu__item">
-                    <form action="/logout" method="POST" class="menu__form">
+                    <form action="/logout" method="POST" class="menu__form" enctype="multipart/form-data">
                         <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
                         <input type="submit" class="menu__logout-text" value="Logout"/>
                     </form>

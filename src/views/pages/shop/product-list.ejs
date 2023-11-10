@@ -26,7 +26,7 @@
                                 <a class="card__button" href="<%= `/product-detail/${product._id.toString()}` %>">Details</a>
                                 
                                 <% if (isAuthenticated === true) { %>
-                                    <form action="/cart" method="POST" class="card__form">
+                                    <form action="/cart" method="POST" class="card__form" enctype="multipart/form-data">
                                         <button class="card__button">Add To Cart</button>
                                         <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
                                         <input type="hidden" name="productId" value=<%= product._id.toString() %>/>
