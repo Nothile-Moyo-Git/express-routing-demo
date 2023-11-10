@@ -20,6 +20,7 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
+import upload from 'multer';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -197,6 +198,10 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const description = request.body.description;
     const imageUrl = request.body.imageUrl;
     const image = request.body.image;
+    
+
+    console.clear();
+    console.log(request.body);
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds

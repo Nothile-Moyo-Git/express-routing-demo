@@ -34,7 +34,7 @@
                                         <p class="cart__modal-column"><%= title %></p>
                                         <p class="cart__modal-column"><%= quantity %></p>
                                         <p class="cart__modal-column">£<%= price * quantity %></p>
-                                        <form class="cart__modal-column" action="/cart-delete-item" method="POST">
+                                        <form class="cart__modal-column" action="/cart-delete-item" method="POST" enctype="multipart/form-data">
                                             <button class="cart__modal-button" type="submit">X</button>
                                             <input type="hidden" name="productId" value=<%= `${id}` %>/>
                                             <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
@@ -43,7 +43,7 @@
                                 <%  }); %>
                             </ul>
 
-                            <form  class="cart__checkout" method="POST" action="/cart-order-create">
+                            <form class="cart__checkout" method="POST" action="/cart-order-create" enctype="multipart/form-data">
                                 <p class="cart__checkout-text">Total : £<%= totalPrice %></p>
                                 <input type="hidden" name="totalPrice" value=<%= totalPrice %>/>
                                 <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>

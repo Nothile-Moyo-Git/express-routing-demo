@@ -8,7 +8,7 @@
 
             <h1 class="content__title"><%= pageTitle %></h1>
 
-            <form class="form" method="POST" action="/login">
+            <form class="form" method="POST" action="/login" enctype="multipart/form-data">
 
                 <div class="form__field">
                     <label for="emailInput" id="emailLabel" class="<%= emailError.length === 0 ? 'form__label' : 'form__label form__label--error' %>"><%= emailError.length === 0 ? `Email Address*` : emailError %></label>

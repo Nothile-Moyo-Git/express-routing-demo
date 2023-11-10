@@ -30,6 +30,7 @@ import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import { CustomError } from "./@types";
+import multer from "multer";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -63,6 +64,11 @@ app.set('views', 'src/views');
 // This allows us to get request.body
 // Note, this doesn't work with images, you'll need multer in order to deal with file uploads since it can't urlencode images to text
 app.use( bodyParser.urlencoded({ extended : true }) );
+
+// In order to handle file uploads, we must instantly call our multer method
+// The trailing method defines how many files we expect to upload, in this case its one
+// We then need to name the name of the field we're going to upload files from, in this case, it's image
+app.use(multer({dest : "uploads/"}).single("image"));
 
 // Serve the css files statically
 app.use( express.static( path.join( __dirname, "/css" ) ));
