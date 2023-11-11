@@ -201,7 +201,12 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     
 
     console.clear();
+    console.log("Request body");
     console.log(request.body);
+    console.log("\n\n");
+
+    console.log("Request file");
+    console.log(request.file);
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds

@@ -629,6 +629,10 @@ const postLogoutAttemptController = async (request : ExtendedRequestInterface, r
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
     const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+
+    console.clear();
+    console.log("Request body");
+    console.log(request.body);
     
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
