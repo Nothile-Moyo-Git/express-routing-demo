@@ -13,7 +13,6 @@
 import path from "path";
 import express from "express";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import authRoutes from "./routes/auth";
@@ -63,12 +62,22 @@ app.set('views', 'src/views');
 // Run the urlEncoded bodyParser to get the body of our objects
 // This allows us to get request.body
 // Note, this doesn't work with images, you'll need multer in order to deal with file uploads since it can't urlencode images to text
-app.use( bodyParser.urlencoded({ extended : true }) );
+// app.use( bodyParser.urlencoded({ extended : true }) );
+
+// Set up options for disk storage, we do this because we store the files as a hashcode and a manual extention needs to be added
+const fileStorage = multer.diskStorage({
+    destination : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
+        callback(null, 'uploads');
+    },
+    filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
+        callback(null, new Date().toISOString() + '-' + file.originalname);
+    }
+});
 
 // In order to handle file uploads, we must instantly call our multer method
 // The trailing method defines how many files we expect to upload, in this case its one
 // We then need to name the name of the field we're going to upload files from, in this case, it's image
-app.use(multer({dest : "uploads/"}).single("image"));
+app.use(multer({storage : fileStorage}).single("image"));
 
 // Serve the css files statically
 app.use( express.static( path.join( __dirname, "/css" ) ));
