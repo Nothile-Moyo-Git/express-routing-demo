@@ -29,3 +29,21 @@ export const isValidUrl = (url : string) => {
     '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
     return !!urlPattern.test(url);
 };
+
+export const getCurrentDate = () => {
+
+    const today = new Date();
+
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1; // Months start at 0!
+    let dd = today.getDate();
+
+    let stringDay : string = dd.toString();
+    let stringMonth : string = mm.toString();
+
+    if (dd < 10) { stringDay = '0' + dd.toString(); };
+    if (mm < 10) { stringMonth = '0' + mm.toString(); };
+
+    const ddmmyyyy : string = stringDay + '-' + stringMonth + '-' + yyyy;
+    return ddmmyyyy;
+};

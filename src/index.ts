@@ -30,6 +30,7 @@ import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import { CustomError } from "./@types";
 import multer from "multer";
+import { getCurrentDate } from "./util/utility-methods";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -70,14 +71,28 @@ const fileStorage = multer.diskStorage({
         callback(null, 'uploads');
     },
     filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
-        callback(null, new Date().toISOString() + '-' + file.originalname);
+        callback(null, getCurrentDate() + "-" + file.originalname);
     }
 });
+
+// Only store image files
+const fileFilter = (request : Request, file : Express.Multer.File, callback : multer.FileFilterCallback ) => {
+    
+    if (
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg"
+    ) {
+        callback(null, true);
+    }else{
+        callback(null, false);
+    }
+};
 
 // In order to handle file uploads, we must instantly call our multer method
 // The trailing method defines how many files we expect to upload, in this case its one
 // We then need to name the name of the field we're going to upload files from, in this case, it's image
-app.use(multer({storage : fileStorage}).single("image"));
+app.use(multer({storage : fileStorage, fileFilter : fileFilter }).single("image"));
 
 // Serve the css files statically
 app.use( express.static( path.join( __dirname, "/css" ) ));
