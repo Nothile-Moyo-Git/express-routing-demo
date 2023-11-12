@@ -21,6 +21,7 @@ import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
 import upload from 'multer';
+import { getCurrentDate } from '../util/utility-methods';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -199,7 +200,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const imageUrl = request.body.imageUrl;
     const image = request.body.image;
     
-
+    /*
     console.clear();
     console.log("Request body");
     console.log(request.body);
@@ -207,6 +208,11 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
 
     console.log("Request file");
     console.log(request.file);
+    console.log("\n\n");
+
+    console.log("Current date");
+    console.log(getCurrentDate());
+    */
 
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
