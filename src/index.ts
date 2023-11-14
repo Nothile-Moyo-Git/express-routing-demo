@@ -75,6 +75,7 @@ const fileStorage = multer.diskStorage({
     }
 });
 
+
 // Only store image files
 const fileFilter = (request : Request, file : Express.Multer.File, callback : multer.FileFilterCallback ) => {
     
@@ -87,7 +88,7 @@ const fileFilter = (request : Request, file : Express.Multer.File, callback : mu
     }else{
         callback(null, false);
     }
-};
+}; 
 
 // In order to handle file uploads, we must instantly call our multer method
 // The trailing method defines how many files we expect to upload, in this case its one
