@@ -20,8 +20,6 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
-import upload from 'multer';
-import { getCurrentDate } from '../util/utility-methods';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -42,7 +40,8 @@ const getAddProduct = ( request : ExtendedRequestInterface, response : Response 
             titleValid : true,
             imageUrlValid : true,
             priceValid : true,
-            descriptionValid : true
+            descriptionValid : true,
+            imageValid : true
         }
     });
 };
@@ -52,9 +51,10 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
     // Fields
     const title = request.body.title;
-    const imageUrl = request.body.image;
+    const imageUrl = request.body.imageUrl;
     const price = Number(request.body.price);
     const description = request.body.description;
+    const image = request.file;
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
@@ -74,10 +74,11 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
     const isImageUrlValid = isValidUrl(imageUrl);
     const isDescriptionValid = description.length >= 5 && description.length <= 400;
     const isPriceValid = isFloat(price) || isInt(price);
+    const isImageValid = image ? true : false;
 
     if (isCSRFValid === true) {
 
-        if (isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
+        if (isImageValid === true && isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
             
             try{
 
@@ -133,7 +134,8 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                     titleValid : isTitleValid,
                     imageUrlValid : isImageUrlValid,
                     priceValid : isPriceValid,
-                    descriptionValid : isDescriptionValid
+                    descriptionValid : isDescriptionValid,
+                    imageValid : isImageValid
                 }
             });  
         }
@@ -200,20 +202,6 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const imageUrl = request.body.imageUrl;
     const image = request.body.image;
     
-    /*
-    console.clear();
-    console.log("Request body");
-    console.log(request.body);
-    console.log("\n\n");
-
-    console.log("Request file");
-    console.log(request.file);
-    console.log("\n\n");
-
-    console.log("Current date");
-    console.log(getCurrentDate());
-    */
-
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
@@ -233,6 +221,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const isImageUrlValid = isValidUrl(imageUrl);
     const isDescriptionValid = description.length >= 5 && description.length <= 400;
     const isPriceValid = isFloat(Number(price)) || isInt(Number(price));
+    const isImageValid = image ? true : false;
 
     // Check if we're authorised to edit the product, if we are, then update it and go back to the products page
     const product = isObjectIdValid === true ? await Product.findById(productId) : null;
@@ -243,7 +232,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     
     if (isCSRFValid === true) {
 
-        if (isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
+        if (isImageValid === true && isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
             
             if (product.userId.toString() === request.session.user._id.toString()) {
 
@@ -296,7 +285,8 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
                         isTitleValid : isTitleValid,
                         isImageUrlValid : isImageUrlValid,
                         isPriceValid : isPriceValid,
-                        isDescriptionValid : isDescriptionValid
+                        isDescriptionValid : isDescriptionValid,
+                        isImageValid : isImageValid
                     }
                 }
             );
@@ -409,7 +399,8 @@ const getAdminEditProduct = async (request : ExtendedRequestInterface, response 
                     isTitleValid : true,
                     isImageUrlValid : true,
                     isDescriptionValid : true,
-                    isPriceValid : true
+                    isPriceValid : true,
+                    isImageValid : true
                 }
             }
         );

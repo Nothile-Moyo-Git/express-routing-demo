@@ -51,11 +51,15 @@
                         </div>
 
                         <div class="form__field">
-                            <label for="image" id="image-label" class="form__label">Image*</label>
+                            <label 
+                                for="image" 
+                                id="image-label" 
+                                class="<%= `form__label ${ inputsValid.isImageValid === false && 'form__label--error' }` %>"
+                            ><%= inputsValid.isImageValid === true ?  `Image*` : `Error: Upload isn't a valid image type` %></label>
                             <input
                                 type="file"
                                 name="image"
-                                class='form__file-upload'
+                                class="<%= `form__file-upload ${ inputsValid.isImageValid === false && 'form__file-upload--error' }` %>"
                                 aria-labelledby="image-label"
                             />
                         </div>

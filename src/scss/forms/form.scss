@@ -81,6 +81,21 @@
                 background: branding.$brand_color_six;
             }
         }
+
+        &--error{
+
+            color: branding.$brand_color_eight;
+            &::file-selector-button{ background: branding.$brand_color_eight; }
+
+            @include mixins.state(){
+                
+                background: transparent;
+                &::file-selector-button{ 
+                    transition: animations.$standard_transition;
+                    background: branding.$brand_color_eight; 
+                }
+            }
+        }
     }
 
     &__submission-text{

@@ -31,17 +31,31 @@
                     <div class="form__field">
                         <label 
                             for="product-image" 
-                            id="image-label" 
+                            id="imageUrl-label" 
                             class="<%= `form__label ${ inputsValid.imageUrlValid === false && 'form__label--error' }` %>"
                         ><%= inputsValid.imageUrlValid === true ? 'Image URL*' : "Error: Image URL isn't valid" %></label>
                         <input
                             type="text"
-                            name="image"
+                            name="imageUrl"
                             class="<%= `form__input ${ inputsValid.imageUrlValid === false && 'form__input--error' }` %>"
                             id="product-image"
-                            aria-labelledby="image-label"
+                            aria-labelledby="imageUrl-label"
                             value="<%= oldInput.oldImageUrl %>"
                             required
+                        />
+                    </div>
+
+                    <div class="form__field">
+                        <label 
+                            for="image" 
+                            id="image-label" 
+                            class="<%= `form__label ${ inputsValid.imageValid === false && 'form__label--error' }` %>"
+                        ><%= inputsValid.imageValid === true ? `Image*` : `Error: Upload isn't a valid image type` %></label>
+                        <input
+                            type="file"
+                            name="image"
+                            class="<%= `form__file-upload ${ inputsValid.imageValid === false && 'form__file-upload--error' }` %>"
+                            aria-labelledby="image-label"
                         />
                     </div>
 
