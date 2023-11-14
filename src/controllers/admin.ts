@@ -199,9 +199,12 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const title = request.body.title;
     const price = request.body.price;
     const description = request.body.description;
-    const imageUrl = request.body.imageUrl;
-    const image = request.body.image;
-    
+    const image = request.file;
+
+    console.clear();
+    console.log("Image information");
+    console.log(image);
+
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
@@ -218,7 +221,6 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
 
     // Validate our inputs
     const isTitleValid = title.length >= 3;
-    const isImageUrlValid = isValidUrl(imageUrl);
     const isDescriptionValid = description.length >= 5 && description.length <= 400;
     const isPriceValid = isFloat(Number(price)) || isInt(Number(price));
     const isImageValid = image ? true : false;
@@ -232,7 +234,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     
     if (isCSRFValid === true) {
 
-        if (isImageValid === true && isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
+        if (isTitleValid === true && isDescriptionValid === true && isPriceValid === true) {
             
             if (product.userId.toString() === request.session.user._id.toString()) {
 
@@ -243,7 +245,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
                         title : title,
                         price : price,
                         description : description,
-                        image : imageUrl
+                        image : isImageValid ? image.path : undefined
                     });
 
                     // Render the view of the page
@@ -274,8 +276,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
                     productInformation : {
                         title : title,
                         price : price,
-                        description : description,
-                        image : imageUrl
+                        description : description
                     },
                     hasProducts : hasProduct,
                     isAuthenticated : isLoggedIn === undefined ? false : true,
@@ -283,7 +284,6 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
                     isSubmitted : true,
                     inputsValid : {
                         isTitleValid : isTitleValid,
-                        isImageUrlValid : isImageUrlValid,
                         isPriceValid : isPriceValid,
                         isDescriptionValid : isDescriptionValid,
                         isImageValid : isImageValid
@@ -397,7 +397,6 @@ const getAdminEditProduct = async (request : ExtendedRequestInterface, response 
                 isSubmitted : false,
                 inputsValid : {
                     isTitleValid : true,
-                    isImageUrlValid : true,
                     isDescriptionValid : true,
                     isPriceValid : true,
                     isImageValid : true
