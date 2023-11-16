@@ -31,6 +31,7 @@ import flash from "connect-flash";
 import { CustomError } from "./@types";
 import multer from "multer";
 import { getFolderPathFromDate } from "./util/utility-methods";
+import fs from "fs";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -47,6 +48,10 @@ const app = express();
 
 // Get our port number from our environment file
 const port = process.env.DEV_PORT;
+
+console.clear(); 
+
+console.log(getFolderPathFromDate());
 
 // Extending the functionality of our express framework
 // We define our views, our bodyparser so we can get the request.body from request (forms)
@@ -68,9 +73,25 @@ app.set('views', 'src/views');
 // Set up options for disk storage, we do this because we store the files as a hashcode and a manual extention needs to be added
 const fileStorage = multer.diskStorage({
     destination : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
-        callback(null, "uploads");
+
+        const folderPath = `uploads/${ getFolderPathFromDate() }`;
+
+        // Check if our folder path already exists
+        const folderExists = fs.existsSync(folderPath);
+
+        // Create our folder path if it doesn't exist
+        if (folderExists === false) {
+            fs.mkdirSync(folderPath, {recursive : true});
+        }
+
+        callback(null, `uploads`);
     },
     filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
+        
+        const filePath = `uploads/${ getFolderPathFromDate() + file.originalname }`;
+
+        const fileExists = fs.existsSync(filePath);
+
         callback(null, file.originalname);
     }
 });

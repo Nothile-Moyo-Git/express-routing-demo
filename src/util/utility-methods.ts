@@ -63,39 +63,46 @@ export const getFolderPathFromDate = () => {
     const yyyy = today.getFullYear();
     const mm = today.getMonth() + 1;
     const dd = today.getDate();
-    const hh = today.getHours();
-    const ii = today.getMinutes();
 
     let stringDay = dd.toString();
     let stringMonth = mm.toString();
-    let stringHours = hh.toString();
-    let stringMinutes = ii.toString();
 
     // Formatting the date values to include 0 if it's less than 10
     if (dd < 10) { stringDay = '0' + dd.toString(); };
     if (mm < 10) { stringMonth = '0' + mm.toString(); };
-    if (hh < 12) { stringHours = '0' + hh.toString() };
-    if (ii < 10) { stringMinutes = '0' + ii.toString() };
-
-    console.clear();
-    console.log("Testing Date values");
-    console.log("Day");
-    console.log(stringDay);
-    console.log("\n");
-
-    console.log("Month");
-    console.log(stringMonth);
-    console.log("\n");
-
-    console.log("Hours");
-    console.log(stringHours);
-    console.log("\n");
-
-    console.log("Minutes");
-    console.log(stringMinutes);
 
     // Set the folder path structure
-    const folderPath = yyyy + "/" + stringMonth + "/" + stringHours + "-" + stringMinutes;
+    const folderPath = yyyy + "/" + stringMonth + "/";
+
+    return folderPath;
+};
+
+export const getFileNamePrefixWithDate = () => {
+    const today = new Date();
+
+    // Get date values
+    const yyyy = today.getFullYear();
+    const mm = today.getMonth() + 1;
+    const dd = today.getDate();
+    const hh = today.getHours();
+    const ii = today.getMinutes();
+    const ss = today.getSeconds();
+
+    let stringMonth = mm.toString();
+    let stringDay = dd.toString();
+    let stringHours = hh.toString();
+    let stringMinutes = ii.toString();
+    let stringSeconds = ss.toString();
+
+    // Formatting the date values to include 0 if it's less than 10
+    if (mm < 10) { stringMonth = '0' + mm.toString(); };
+    if (dd < 10) { stringDay = '0' + dd.toString(); };
+    if (hh < 12) { stringHours = '0' + hh.toString(); };
+    if (ii < 10) { stringMinutes = '0' + ii.toString(); };
+    if (ss < 10) { stringSeconds = '0' + ss.toString(); };
+
+    // Set the folder path structure
+    const folderPath = yyyy + "-" + stringMonth + "-" + stringDay + "_" + stringHours + "-" + stringMinutes + "-" + stringSeconds;
 
     return folderPath;
 };
