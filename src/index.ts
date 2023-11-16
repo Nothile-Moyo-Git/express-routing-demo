@@ -30,7 +30,7 @@ import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import { CustomError } from "./@types";
 import multer from "multer";
-import { getCurrentDate } from "./util/utility-methods";
+import { getFolderPathFromDate } from "./util/utility-methods";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -68,10 +68,10 @@ app.set('views', 'src/views');
 // Set up options for disk storage, we do this because we store the files as a hashcode and a manual extention needs to be added
 const fileStorage = multer.diskStorage({
     destination : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
-        callback(null, 'uploads');
+        callback(null, "uploads");
     },
     filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
-        callback(null, getCurrentDate() + "-" + file.originalname);
+        callback(null, file.originalname);
     }
 });
 
@@ -89,6 +89,8 @@ const fileFilter = (request : Request, file : Express.Multer.File, callback : mu
         callback(null, false);
     }
 }; 
+
+
 
 // In order to handle file uploads, we must instantly call our multer method
 // The trailing method defines how many files we expect to upload, in this case its one
