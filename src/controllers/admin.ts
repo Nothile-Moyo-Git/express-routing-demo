@@ -201,10 +201,6 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const description = request.body.description;
     const image = request.file;
 
-    console.clear();
-    console.log("Image information");
-    console.log(image);
-
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
