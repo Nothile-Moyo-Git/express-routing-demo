@@ -20,6 +20,7 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
+import { getFileNamePrefixWithDate, getFolderPathFromDate } from '../util/utility-methods';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -201,6 +202,15 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const description = request.body.description;
     const image = request.file;
 
+    // Set the folder path
+    const folderPath = `uploads/${ getFolderPathFromDate() }`;
+    const fileName = getFileNamePrefixWithDate() + '_' + image.originalname;
+    const destination = folderPath + fileName;
+
+    console.clear();
+    console.log("Destination")
+    console.log(destination);
+
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
@@ -241,7 +251,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
                         title : title,
                         price : price,
                         description : description,
-                        image : isImageValid ? image.path : undefined
+                        image : isImageValid ? destination : undefined
                     });
 
                     // Render the view of the page

@@ -30,7 +30,7 @@ import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import { CustomError } from "./@types";
 import multer from "multer";
-import { getFolderPathFromDate } from "./util/utility-methods";
+import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility-methods";
 import fs from "fs";
 
 // Set the interface for the current user
@@ -48,10 +48,6 @@ const app = express();
 
 // Get our port number from our environment file
 const port = process.env.DEV_PORT;
-
-console.clear(); 
-
-console.log(getFolderPathFromDate());
 
 // Extending the functionality of our express framework
 // We define our views, our bodyparser so we can get the request.body from request (forms)
@@ -74,6 +70,7 @@ app.set('views', 'src/views');
 const fileStorage = multer.diskStorage({
     destination : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
 
+        // Set the folder path
         const folderPath = `uploads/${ getFolderPathFromDate() }`;
 
         // Check if our folder path already exists
@@ -84,15 +81,14 @@ const fileStorage = multer.diskStorage({
             fs.mkdirSync(folderPath, {recursive : true});
         }
 
-        callback(null, `uploads`);
+        callback(null, folderPath);
     },
     filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
         
-        const filePath = `uploads/${ getFolderPathFromDate() + file.originalname }`;
+        // Set the filepath with the name
+        const fileName = getFileNamePrefixWithDate() + '_' + file.originalname;
 
-        const fileExists = fs.existsSync(filePath);
-
-        callback(null, file.originalname);
+        callback(null, fileName);
     }
 });
 

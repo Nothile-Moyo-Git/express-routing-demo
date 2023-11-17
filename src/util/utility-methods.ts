@@ -102,7 +102,7 @@ export const getFileNamePrefixWithDate = () => {
     if (ss < 10) { stringSeconds = '0' + ss.toString(); };
 
     // Set the folder path structure
-    const folderPath = yyyy + "-" + stringMonth + "-" + stringDay + "_" + stringHours + "-" + stringMinutes + "-" + stringSeconds;
+    const fullPath = yyyy + "-" + stringMonth + "-" + stringDay + "_" + stringHours + "-" + stringMinutes + "-" + stringSeconds;
 
-    return folderPath;
+    return fullPath;
 };
