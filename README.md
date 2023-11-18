@@ -57,7 +57,7 @@ npm run deploy
 npm run start
 ```
 
-> Start styling processing (you need to run this alongside the server)
+> Start styling processing (you need to run this alongside the server in a different terminal)
 ```
 npm run watch
 ```
