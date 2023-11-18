@@ -12,6 +12,7 @@
  * @method isValidUrl = (number : any) => boolean
  * @method getCurrentDate = () => string
  * @method getFolderPathFromDate = () => string
+ * @method getFileNamePrefixWithDate = () => string
  */
 
 export const isInt = (number : any) => {
@@ -78,6 +79,7 @@ export const getFolderPathFromDate = () => {
 };
 
 export const getFileNamePrefixWithDate = () => {
+
     const today = new Date();
 
     // Get date values

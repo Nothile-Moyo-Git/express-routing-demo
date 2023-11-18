@@ -71,7 +71,7 @@ const fileStorage = multer.diskStorage({
     destination : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
 
         // Set the folder path
-        const folderPath = `uploads/${ getFolderPathFromDate() }`;
+        const folderPath = `src/uploads/${ getFolderPathFromDate() }`;
 
         // Check if our folder path already exists
         const folderExists = fs.existsSync(folderPath);
@@ -107,8 +107,6 @@ const fileFilter = (request : Request, file : Express.Multer.File, callback : mu
     }
 }; 
 
-
-
 // In order to handle file uploads, we must instantly call our multer method
 // The trailing method defines how many files we expect to upload, in this case its one
 // We then need to name the name of the field we're going to upload files from, in this case, it's image
@@ -119,6 +117,9 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 
 // Serve our image files statically
 app.use( express.static( path.join( __dirname, "/images" ) ));
+
+// Serve our uploaded images statically
+app.use( '/uploads', express.static( path.join( __dirname, "/uploads" ) ));
 
 // Enable cookie parsing middleware
 app.use( cookieParser() );
