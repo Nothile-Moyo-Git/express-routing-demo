@@ -30,7 +30,8 @@ import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import { CustomError } from "./@types";
 import multer from "multer";
-import { getFolderPathFromDate } from "./util/utility-methods";
+import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility-methods";
+import fs from "fs";
 
 // Set the interface for the current user
 interface UserInterface {
@@ -68,10 +69,26 @@ app.set('views', 'src/views');
 // Set up options for disk storage, we do this because we store the files as a hashcode and a manual extention needs to be added
 const fileStorage = multer.diskStorage({
     destination : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
-        callback(null, "uploads");
+
+        // Set the folder path
+        const folderPath = `src/uploads/${ getFolderPathFromDate() }`;
+
+        // Check if our folder path already exists
+        const folderExists = fs.existsSync(folderPath);
+
+        // Create our folder path if it doesn't exist
+        if (folderExists === false) {
+            fs.mkdirSync(folderPath, {recursive : true});
+        }
+
+        callback(null, folderPath);
     },
     filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
-        callback(null, file.originalname);
+        
+        // Set the filepath with the name
+        const fileName = getFileNamePrefixWithDate() + '_' + file.originalname;
+
+        callback(null, fileName);
     }
 });
 
@@ -90,8 +107,6 @@ const fileFilter = (request : Request, file : Express.Multer.File, callback : mu
     }
 }; 
 
-
-
 // In order to handle file uploads, we must instantly call our multer method
 // The trailing method defines how many files we expect to upload, in this case its one
 // We then need to name the name of the field we're going to upload files from, in this case, it's image
@@ -102,6 +117,9 @@ app.use( express.static( path.join( __dirname, "/css" ) ));
 
 // Serve our image files statically
 app.use( express.static( path.join( __dirname, "/images" ) ));
+
+// Serve our uploaded images statically
+app.use( '/uploads', express.static( path.join( __dirname, "/uploads" ) ));
 
 // Enable cookie parsing middleware
 app.use( cookieParser() );

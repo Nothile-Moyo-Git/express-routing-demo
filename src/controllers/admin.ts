@@ -20,6 +20,7 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
 import CustomError from '../models/error';
+import { getFileNamePrefixWithDate, getFolderPathFromDate } from '../util/utility-methods';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -51,10 +52,18 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
     // Fields
     const title = request.body.title;
-    const imageUrl = request.body.imageUrl;
     const price = Number(request.body.price);
     const description = request.body.description;
     const image = request.file;
+
+    // Set the folder path
+    const folderPath = `/uploads/${ getFolderPathFromDate() }`;
+    const fileName = getFileNamePrefixWithDate() + '_' + image.originalname;
+    const destination = folderPath + fileName;
+
+    console.clear();
+    console.log("Our destination");
+    console.log(destination);
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
@@ -71,14 +80,13 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
     // Validate our inputs
     const isTitleValid = title.length >= 3;
-    const isImageUrlValid = isValidUrl(imageUrl);
     const isDescriptionValid = description.length >= 5 && description.length <= 400;
     const isPriceValid = isFloat(price) || isInt(price);
     const isImageValid = image ? true : false;
 
     if (isCSRFValid === true) {
 
-        if (isImageValid === true && isTitleValid === true && isImageUrlValid === true && isDescriptionValid === true && isPriceValid === true) {
+        if (isTitleValid === true && isDescriptionValid === true && isPriceValid === true) {
             
             try{
 
@@ -88,8 +96,8 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                 // Instantiate our product
                 const product = new Product({
                     title : title,
-                    image : imageUrl,
                     description : description,
+                    image : destination,
                     price : price,
                     userId : hasUser === true ? request.session.user._id : new ObjectId(null) 
                 });
@@ -126,13 +134,11 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
                 csrfToken : sessionCSRFToken,
                 oldInput : {
                     oldTitle : title,
-                    oldImageUrl : imageUrl,
                     oldPrice : price,
                     oldDescription : description
                 },
                 inputsValid : {
                     titleValid : isTitleValid,
-                    imageUrlValid : isImageUrlValid,
                     priceValid : isPriceValid,
                     descriptionValid : isDescriptionValid,
                     imageValid : isImageValid
@@ -201,6 +207,11 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
     const description = request.body.description;
     const image = request.file;
 
+    // Set the folder path
+    const folderPath = `/uploads/${ getFolderPathFromDate() }`;
+    const fileName = getFileNamePrefixWithDate() + '_' + image.originalname;
+    const destination = folderPath + fileName;
+
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
@@ -241,7 +252,7 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
                         title : title,
                         price : price,
                         description : description,
-                        image : isImageValid ? image.path : undefined
+                        image : isImageValid ? destination : undefined
                     });
 
                     // Render the view of the page
