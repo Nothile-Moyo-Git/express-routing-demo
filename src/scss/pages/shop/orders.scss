@@ -73,6 +73,11 @@
             flex-direction: row;
             justify-content: space-between;
         }
+
+        &--download{
+            color: white;
+            border-bottom: 2px solid transparent;
+        }
     }
 
     &__empty{

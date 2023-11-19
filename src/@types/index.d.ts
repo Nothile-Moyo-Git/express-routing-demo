@@ -82,6 +82,7 @@ export interface ExtendedRequestInterface extends Request{
         passwordInput ?: string,
         secondPasswordInput ?: string,
     }
+    fileName : string,
     isAuthenticated : boolean,
     session : Session & Partial<ExtendedSessionDataInterface>
 }

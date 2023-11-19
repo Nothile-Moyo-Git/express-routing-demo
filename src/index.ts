@@ -28,7 +28,7 @@ import { password } from "./data/connection";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
-import { CustomError } from "./@types";
+import { CustomError, ExtendedRequestInterface } from "./@types";
 import multer from "multer";
 import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility-methods";
 import fs from "fs";
@@ -83,10 +83,13 @@ const fileStorage = multer.diskStorage({
 
         callback(null, folderPath);
     },
-    filename : (request : Request, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
+    filename : (request : ExtendedRequestInterface, file : Express.Multer.File, callback : (error: Error | null, destination: string) => void) => {
         
         // Set the filepath with the name
         const fileName = getFileNamePrefixWithDate() + '_' + file.originalname;
+
+        // Passing the fileName through so that when we create our random suffix, we don't create a second one
+        request.fileName = fileName;
 
         callback(null, fileName);
     }
