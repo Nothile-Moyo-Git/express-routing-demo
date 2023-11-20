@@ -58,12 +58,7 @@ const postAddProduct = async( request : ExtendedRequestInterface, response : Res
 
     // Set the folder path
     const folderPath = `/uploads/${ getFolderPathFromDate() }`;
-    const fileName = getFileNamePrefixWithDate() + '_' + image.originalname;
-    const destination = folderPath + fileName;
-
-    console.clear();
-    console.log("Our destination");
-    console.log(destination);
+    const destination = folderPath + request.fileName;
 
     // csrfToken from our session
     const sessionCSRFToken = request.session.csrfToken;
@@ -209,9 +204,8 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
 
     // Set the folder path
     const folderPath = `/uploads/${ getFolderPathFromDate() }`;
-    const fileName = getFileNamePrefixWithDate() + '_' + image.originalname;
-    const destination = folderPath + fileName;
-
+    const destination = folderPath + request.fileName;
+    
     // Check if our Object id is valid in case we do onto a bad link
     // This is more of a pre-emptive fix for production builds
     const isObjectIdValid = ObjectId.isValid(request.params.id);
