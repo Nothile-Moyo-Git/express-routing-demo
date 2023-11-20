@@ -9,6 +9,7 @@
  * This controller also handles the "order" model which is used during cart submissons
  * 
  * @method getIndex : (request : Request, response : Response, next : NextFunction) => void
+ * @method getProducts : () => void
  * @method getShop : (request : Request, response : Response, next : NextFunction) => void
  * @method getCart : (request : Request, response : Response, next : NextFunction) => void
  * @method getCheckout : (request : Request, response : Response, next : NextFunction) => void
@@ -27,6 +28,7 @@ import User from "../models/user";
 import Order from "../models/order";
 import { ExtendedRequestInterface } from '../@types';
 import CustomError from '../models/error';
+import path from 'path';
 
 // Get the shop index page
 const getIndex = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -74,6 +76,29 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
 
         return next(error);
     }
+};
+
+const getInvoiceController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
+
+    console.clear();
+    console.log("Download button clicked");
+
+    const params = request.params;
+    const invoiceId = params.invoiceId;
+
+    // Generate appropriate pathname    
+    const filePath = path.join(__dirname, `../data/invoices/invoice-${invoiceId}.pdf`);
+
+    console.log("Dir name");
+    console.log(filePath);
+
+    // Download the pdf
+    response.download(filePath, (err : unknown) => {
+        console.log(err);
+    });
+    console.log("Your file has been downloaded");
+    
+    // response.redirect("back");
 };
 
 // Get the orders
@@ -401,4 +426,4 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
 };
 
-export { getCart, postCart, postOrderCreate, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };

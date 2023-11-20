@@ -75,8 +75,27 @@
         }
 
         &--download{
-            color: white;
+            color: branding.$brand_color_five__alt_2;
             border-bottom: 2px solid transparent;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: max-content;
+            grid-gap: 0.25rem;
+            margin-bottom: 0.1rem;
+
+            @include mixins.state(){
+                color: branding.$brand_color_five;
+                border-color: branding.$brand_color_five;
+            }
+
+            path{
+                stroke: branding.$brand_color_five;
+
+                @include mixins.state(){
+                    stroke : branding.$brand_color_five;
+                }
+            }
         }
     }
 
