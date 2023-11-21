@@ -29,6 +29,7 @@ import Order from "../models/order";
 import { ExtendedRequestInterface } from '../@types';
 import CustomError from '../models/error';
 import path from 'path';
+import fs from 'fs';
 
 // Get the shop index page
 const getIndex = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -80,25 +81,24 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
 
 const getInvoiceController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
-    console.clear();
-    console.log("Download button clicked");
-
     const params = request.params;
     const invoiceId = params.invoiceId;
 
-    // Generate appropriate pathname    
+    // Generate appropriate pathname
+    const fileName = "invoice-" + invoiceId + ".pdf";
     const filePath = path.join(__dirname, `../data/invoices/invoice-${invoiceId}.pdf`);
 
-    console.log("Dir name");
-    console.log(filePath);
-
-    // Download the pdf
-    response.download(filePath, (err : unknown) => {
-        console.log(err);
-    });
-    console.log("Your file has been downloaded");
+    // Get filedata
+    const pdfData = fs.readFileSync(filePath);
     
-    // response.redirect("back");
+    // Send the PDF to the browser
+    response.setHeader("Content-Type", "application/pdf");
+
+    // Content-Disposition allows us to decide how we want to render it in the browser
+    // Note: If you change "inline" to "attachment" then instead of opening in a new browser, the file is downloaded
+    response.setHeader("Content-Disposition", `inline; filename="${fileName}"`);
+
+    response.send(pdfData);
 };
 
 // Get the orders
@@ -117,7 +117,7 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 
         // Query the orders in the backend
         const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
-        .select("totalPrice orderItems createdAt user");
+        .select("_id totalPrice orderItems createdAt user");
 
         // Render the view page
         response.render("pages/shop/orders", { 
