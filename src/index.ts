@@ -21,24 +21,28 @@ import User from "./models/user";
 import errorRoutes from "./routes/error";
 import { createMongooseConnection, sessionUrl } from "./data/connection";
 import { Request, Response, NextFunction } from 'express';
-import { ObjectId } from "mongodb";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { password } from "./data/connection";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
-import { CustomError, ExtendedRequestInterface } from "./@types";
+import { CustomError, ExtendedRequestInterface, UserInterface, ExtendedSessionDataInterface } from "./@types";
 import multer from "multer";
 import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility-methods";
 import fs from "fs";
+import { Session } from "express-session";
 
-// Set the interface for the current user
-interface UserInterface {
-    name : string,
-    email : string,
-    _id : ObjectId
-}
+
+// Module augmentation for the request
+declare module 'express-serve-static-core' {
+    interface Request{
+        User : UserInterface | null,
+        fileName : string,
+        isAuthenticated : boolean,
+        session : Session & Partial<ExtendedSessionDataInterface>
+    }
+} 
 
 // Import the .env variables
 dotenv.config();
@@ -163,7 +167,7 @@ const generateCSRFToken = () => {
 // Create our middleware
 // Middleware refers to software or "code" that allows a connection and interaction with a database
 // Executes on every request
-app.use( async( request : any, response : Response, next : NextFunction ) => {
+app.use( async( request : Request, response : Response, next : NextFunction ) => {
 
     // Create a new CSRF token and save it on the server session
     if (!request.session.csrfToken) {
@@ -221,7 +225,12 @@ app.use( errorRoutes );
 
 // Hooking up the 500 error
 // Express will automatically be able to detect that this is an error middleware 
-app.use((error : CustomError, request : any, response : Response, next : NextFunction) => {
+app.use((error : CustomError, request : Request, response : Response, next : NextFunction) => {
+
+    // Render the 400 page if there's an authentication error although the request successfully goes through
+    response.status(400).render("errors/400",{
+
+    });
 
     // Only render the 500 page when there's a server, otherwise, render a 400 page with the reason the request failed
     response.status(500).render("errors/500", {
@@ -230,7 +239,6 @@ app.use((error : CustomError, request : any, response : Response, next : NextFun
             csrfToken : request.session.csrfToken
     });
 
-    
 });
 
 // Start our server async
