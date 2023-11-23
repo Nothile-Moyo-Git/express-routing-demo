@@ -15,7 +15,7 @@ shopRoutes.post("/cart", isAuthenticated, postCart);
 shopRoutes.get("/orders", isAuthenticated, getOrders);
 shopRoutes.get("/checkout", isAuthenticated, getCheckout);
 shopRoutes.get("/products", getProducts);
-shopRoutes.get("/order/:invoiceId", isAuthenticated, getInvoiceController);
+shopRoutes.get("/order/:orderId", isAuthenticated, getInvoiceController);
 shopRoutes.post("/cart-order-create", isAuthenticated, postOrderCreate);
 shopRoutes.post("/cart-delete-item", isAuthenticated, postCartDelete);
 shopRoutes.get("/product-detail/:id", getProductDetails);

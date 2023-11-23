@@ -221,8 +221,16 @@ app.use( errorRoutes );
 
 // Hooking up the 500 error
 // Express will automatically be able to detect that this is an error middleware 
-app.use((error : CustomError, request : Request, response : Response, next : NextFunction) => {
-    response.redirect("/500");
+app.use((error : CustomError, request : any, response : Response, next : NextFunction) => {
+
+    // Only render the 500 page when there's a server, otherwise, render a 400 page with the reason the request failed
+    response.status(500).render("errors/500", {
+            pageTitle: "Error", 
+            isAuthenticated : request.session.isLoggedIn === undefined ? false : true,
+            csrfToken : request.session.csrfToken
+    });
+
+    
 });
 
 // Start our server async
