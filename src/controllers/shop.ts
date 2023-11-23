@@ -82,23 +82,51 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
 const getInvoiceController = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     const params = request.params;
-    const invoiceId = params.invoiceId;
+    const orderId = params.orderId;
 
     // Generate appropriate pathname
-    const fileName = "invoice-" + invoiceId + ".pdf";
-    const filePath = path.join(__dirname, `../data/invoices/invoice-${invoiceId}.pdf`);
+    const fileName = "invoice-" + orderId + ".pdf";
+    const filePath = path.join(__dirname, `../data/invoices/invoice-${orderId}.pdf`);
 
-    // Get filedata
-    const pdfData = fs.readFileSync(filePath);
+    try{
+
+        // Get the order data so we can find the user and make a comparison
+        const order = await Order.findOne({_id : orderId});
+
+        const orderUser = order.user;
+        const sessionUser = request.session.user;
     
-    // Send the PDF to the browser
-    response.setHeader("Content-Type", "application/pdf");
+        // Is the user valid?
+        const isUserValid = orderUser._id.toString() === sessionUser._id.toString();
 
-    // Content-Disposition allows us to decide how we want to render it in the browser
-    // Note: If you change "inline" to "attachment" then instead of opening in a new browser, the file is downloaded
-    response.setHeader("Content-Disposition", `inline; filename="${fileName}"`);
+        if (isUserValid === true) {
 
-    response.send(pdfData);
+            // Get filedata
+            const pdfData = fs.readFileSync(filePath);
+            
+            // Send the PDF to the browser
+            response.setHeader("Content-Type", "application/pdf");
+
+            // Content-Disposition allows us to decide how we want to render it in the browser
+            // Note: If you change "inline" to "attachment" then instead of opening in a new browser, the file is downloaded
+            response.setHeader("Content-Disposition", `inline; filename=${fileName}`);
+
+            response.send(pdfData);
+        }
+    
+    }catch(err){
+
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
+
+        // Custom error object
+        const error = new CustomError(err.message, 400);
+
+        console.log(error);
+
+        return next(error);
+    }
 };
 
 // Get the orders
