@@ -1,0 +1,13 @@
+<%- include('../includes/header'); %>
+    <body class="menu-open">
+
+        <%- include('../includes/menu'); %>
+
+        <main class="content">
+            <h1 class="content__title"><%= errorMessage %></h1>
+            <p class="content__text">You'll be on this page if your request was unsuccessful and as a result, your request couldn't be completed</p>
+            <a href="<%= previousLink %>" class="content__link">You can go back to the previous page</a>
+        </main>
+
+    </body>
+<%- include('../includes/footer'); %>

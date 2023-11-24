@@ -227,17 +227,17 @@ app.use( errorRoutes );
 // Express will automatically be able to detect that this is an error middleware 
 app.use((error : CustomError, request : Request, response : Response, next : NextFunction) => {
 
-    // Render the 400 page if there's an authentication error although the request successfully goes through
-    response.status(400).render("errors/400",{
+    const isAuthenticated = request.session.isLoggedIn === undefined ? false : true;
 
-    });
+    if (request.statusCode === 500) {
 
-    // Only render the 500 page when there's a server, otherwise, render a 400 page with the reason the request failed
-    response.status(500).render("errors/500", {
+        // Only render the 500 page when there's a server, otherwise, render a 400 page with the reason the request failed
+        response.status(500).render("errors/500", {
             pageTitle: "Error", 
-            isAuthenticated : request.session.isLoggedIn === undefined ? false : true,
+            isAuthenticated : isAuthenticated,
             csrfToken : request.session.csrfToken
-    });
+        });
+    }
 
 });
 

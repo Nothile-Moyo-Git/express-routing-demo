@@ -84,6 +84,10 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
     const params = request.params;
     const orderId = params.orderId;
 
+    const isAuthenticated = request.session.isLoggedIn === undefined ? false : true;
+
+    // 656115c72bc1396f734b7d4f
+
     // Generate appropriate pathname
     const fileName = "invoice-" + orderId + ".pdf";
     const filePath = path.join(__dirname, `../data/invoices/invoice-${orderId}.pdf`);
@@ -93,30 +97,42 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
         // Get the order data so we can find the user and make a comparison
         const order = await Order.findOne({_id : orderId});
 
-        const orderUser = order.user;
-        const sessionUser = request.session.user;
+        if (order) {
+
+            const orderUser = order.user;
+            const sessionUser = request.session.user;
+        
+            // Is the user valid?
+            const isUserValid = orderUser._id.toString() === sessionUser._id.toString();
     
-        // Is the user valid?
-        const isUserValid = orderUser._id.toString() === sessionUser._id.toString();
+            if (isUserValid === true) {
+    
+                // Get filedata
+                const pdfData = fs.readFileSync(filePath);
+                
+                // Send the PDF to the browser
+                response.setHeader("Content-Type", "application/pdf");
+    
+                // Content-Disposition allows us to decide how we want to render it in the browser
+                // Note: If you change "inline" to "attachment" then instead of opening in a new browser, the file is downloaded
+                response.setHeader("Content-Disposition", `inline; filename=${fileName}`);
+    
+                response.send(pdfData);
+            }
+        }else{
 
-        if (isUserValid === true) {
-
-            // Get filedata
-            const pdfData = fs.readFileSync(filePath);
-            
-            // Send the PDF to the browser
-            response.setHeader("Content-Type", "application/pdf");
-
-            // Content-Disposition allows us to decide how we want to render it in the browser
-            // Note: If you change "inline" to "attachment" then instead of opening in a new browser, the file is downloaded
-            response.setHeader("Content-Disposition", `inline; filename=${fileName}`);
-
-            response.send(pdfData);
+            // Custom error object
+            response.status(400).render("errors/400",{
+                pageTitle : "400",
+                isAuthenticated : isAuthenticated,
+                csrfToken : request.session.csrfToken,
+                errorMessage : "Error: Order not found",
+                previousLink : "/orders"
+            });
         }
     
     }catch(err){
 
-        console.clear();
         console.log("There's been a server error, please view below");
         console.log("\n");
 
