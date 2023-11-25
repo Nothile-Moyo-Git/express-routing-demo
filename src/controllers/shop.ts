@@ -8,20 +8,21 @@
  * It also hooks up the "shop" model which can be used to manage our data
  * This controller also handles the "order" model which is used during cart submissons
  * 
- * @method getIndex : (request : Request, response : Response, next : NextFunction) => void
- * @method getProducts : () => void
- * @method getShop : (request : Request, response : Response, next : NextFunction) => void
- * @method getCart : (request : Request, response : Response, next : NextFunction) => void
- * @method getCheckout : (request : Request, response : Response, next : NextFunction) => void
- * @method getOrders : (request : Request, response : Response, next : NextFunction) => void
- * @method getProductDetails : (request : Request, response : Response, next : NextFunction) => void
- * @method postCart : (request : Request, response : Response, next : NextFunction) => void
- * @method postOrderCreate : (request : Request, response : Response, next : NextFunction) => void
- * @method postCartDelete : (request : Request, response : Response, next : NextFunction) => void
+ * @method getIndex : (request : Request, response : Response) => void
+ * @method getProducts : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getInvoiceController : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getOrders : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getCheckout : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getShop : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getProductDetails : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getCart : async ( request : ExtendedRequestInterface, response : Response ) => void
+ * @method postCart : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method postOrderCreate : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method postCartDelete : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
  */
 
 // import our express types for TypeScript use
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
@@ -32,7 +33,7 @@ import path from 'path';
 import fs from 'fs';
 
 // Get the shop index page
-const getIndex = ( request : ExtendedRequestInterface, response : Response ) => {
+const getIndex = ( request : Request, response : Response ) => {
 
     // For now, redirect to the products page
     response.redirect("/products");
@@ -106,9 +107,10 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
             const isUserValid = orderUser._id.toString() === sessionUser._id.toString();
     
             if (isUserValid === true) {
-    
-                // Get filedata
-                const pdfData = fs.readFileSync(filePath);
+
+                // Create data stream for the PDF, we do this to stagger the file load instead of loading it all at once
+                // This reduces delays with the server
+                const stream = fs.createReadStream(filePath, { start : 0 });
                 
                 // Send the PDF to the browser
                 response.setHeader("Content-Type", "application/pdf");
@@ -117,7 +119,8 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
                 // Note: If you change "inline" to "attachment" then instead of opening in a new browser, the file is downloaded
                 response.setHeader("Content-Disposition", `inline; filename=${fileName}`);
     
-                response.send(pdfData);
+                // Since response is a writable stream (it's a record), it can be used with readStream since it's a stream to be read
+                stream.pipe(response);
             }
         }else{
 
