@@ -23,6 +23,7 @@
 
 // import our express types for TypeScript use
 import { NextFunction, Response, Request } from 'express';
+import { createReadableDate } from '../util/utility-methods';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
@@ -30,6 +31,7 @@ import Order from "../models/order";
 import { ExtendedRequestInterface } from '../@types';
 import CustomError from '../models/error';
 import path from 'path';
+import PDFDocument from "pdfkit";
 import fs from 'fs';
 
 // Get the shop index page
@@ -98,7 +100,28 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
         // Get the order data so we can find the user and make a comparison
         const order = await Order.findOne({_id : orderId});
 
+        console.clear();
+        console.log("Order");
+        console.log(order);
+
         if (order) {
+
+            // Create an empty PDF
+            const pdfDocument = new PDFDocument();
+
+            // Pipe the output (combine multiple functions to make writing the code easier) to a file in our invoices folder
+            pdfDocument.pipe( fs.createWriteStream(filePath) );
+
+            // Add the page with our order details
+            pdfDocument
+                .fontSize(16)
+                .text(`Invoice for order #${order._id.toString()}`);
+
+            // Save our file to the server
+            // pdfDocument.save();
+
+            // Finalise the PDF file, this prevents memory leaks
+            pdfDocument.end();
 
             const orderUser = order.user;
             const sessionUser = request.session.user;
