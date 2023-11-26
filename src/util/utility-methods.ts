@@ -13,6 +13,7 @@
  * @method getCurrentDate = () => string
  * @method getFolderPathFromDate = () => string
  * @method getFileNamePrefixWithDate = () => string
+ * @method createReadableDate : (date : Date) => string
  */
 
 export const isInt = (number : any) => {
@@ -77,6 +78,12 @@ export const getFolderPathFromDate = () => {
 
     return folderPath;
 };
+/**
+ * Returns the folder path for uploads with the year and month of the upload
+ * This should be done recursively with a method for creating folders
+ * 
+ * @returns folderPath : string
+ */
 
 export const getFileNamePrefixWithDate = () => {
 
@@ -108,3 +115,18 @@ export const getFileNamePrefixWithDate = () => {
 
     return fullPath;
 };
+
+// Convert dates into a more readable format
+export const createReadableDate = (date : Date) => {
+
+    return "";
+};
+/**
+ * @params date : Date
+ * 
+ * Formats the date into the format dd-mm-yy hh:ii:ss
+ * 
+ * Input a date in any format you wish and it will be converted for you
+ * 
+ * @returns date : String
+ */
