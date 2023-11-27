@@ -57,6 +57,12 @@ export const getCurrentDate = () => {
     return ddmmyyyy;
 };
 
+/**
+ * Returns the folder path for uploads with the year and month of the upload
+ * This should be done recursively with a method for creating folders
+ * 
+ * @returns folderPath : string
+ */
 export const getFolderPathFromDate = () => {
 
     const today = new Date();
@@ -78,12 +84,6 @@ export const getFolderPathFromDate = () => {
 
     return folderPath;
 };
-/**
- * Returns the folder path for uploads with the year and month of the upload
- * This should be done recursively with a method for creating folders
- * 
- * @returns folderPath : string
- */
 
 export const getFileNamePrefixWithDate = () => {
 
@@ -116,11 +116,6 @@ export const getFileNamePrefixWithDate = () => {
     return fullPath;
 };
 
-// Convert dates into a more readable format
-export const createReadableDate = (date : Date) => {
-
-    return "";
-};
 /**
  * @params date : Date
  * 
@@ -130,3 +125,33 @@ export const createReadableDate = (date : Date) => {
  * 
  * @returns date : String
  */
+export const createReadableDate = (dateToFormat : Date) => {
+
+    // Create a new date
+    const date = new Date(dateToFormat);
+
+    // Get date values
+    const yyyy = date.getFullYear();
+    const mm = date.getMonth() + 1;
+    const dd = date.getDate();
+    const hh = date.getHours();
+    const ii = date.getMinutes();
+    const ss = date.getSeconds();
+
+    let stringMonth = mm.toString();
+    let stringDays = dd.toString();
+    let stringHours = hh.toString();
+    let stringMinutes = ii.toString();
+    let stringSeconds = ss.toString();
+
+    // Formatting the date values to include 0 if it's less than 10
+    if (mm < 10) { stringMonth = '0' + mm.toString(); };
+    if (dd < 10) { stringDays = '0' + dd.toString(); };
+    if (hh < 12) { stringHours = '0' + hh.toString(); };
+    if (ii < 10) { stringMinutes = '0' + ii.toString(); };
+    if (ss < 10) { stringSeconds = '0' + ss.toString(); };
+
+    const formattedDate = yyyy + "-" + stringMonth + "-" + stringDays + " " + stringHours + ":" + stringMinutes + ":" + stringSeconds; 
+
+    return formattedDate;
+};

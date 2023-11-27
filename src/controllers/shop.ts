@@ -28,7 +28,7 @@ import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
-import { ExtendedRequestInterface } from '../@types';
+import { ExtendedRequestInterface, OrderItemInterface } from '../@types';
 import CustomError from '../models/error';
 import path from 'path';
 import PDFDocument from "pdfkit";
@@ -106,6 +106,13 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
 
         if (order) {
 
+            // Create our date and convert the format
+            const dateCreated = createReadableDate(order.createdAt);
+
+            console.log("\n");
+            console.log("Date created");
+            console.log(dateCreated);
+
             // Create an empty PDF
             const pdfDocument = new PDFDocument();
 
@@ -115,10 +122,28 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
             // Add the page with our order details
             pdfDocument
                 .fontSize(16)
-                .text(`Invoice for order #${order._id.toString()}`);
+                .text(dateCreated,{ align : "center" });
 
             // Save our file to the server
-            // pdfDocument.save();
+            pdfDocument
+                .text(`Invoice for order #${order._id.toString()}`, { align : "center" })
+                .text(`Total : ${order.totalPrice}`)
+                .text(`Items purchased`);
+
+            // Add each order item to the invoice
+            order.orderItems.forEach((orderItem : OrderItemInterface) => {
+
+                // Add the item to the page
+                pdfDocument
+                    .text(`${orderItem.title} x ${orderItem.quantity}`,{
+                        lineBreak : false,
+                        align : "left"
+                    })
+                    .text(`£${orderItem.price}`,{
+                        lineBreak : true,
+                        align : "right"
+                    });
+            });
 
             // Finalise the PDF file, this prevents memory leaks
             pdfDocument.end();
