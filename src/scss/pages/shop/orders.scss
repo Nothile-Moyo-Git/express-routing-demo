@@ -82,7 +82,7 @@
             align-items: center;
             width: max-content;
             grid-gap: 0.25rem;
-            margin-bottom: 0.1rem;
+            margin: 0;
 
             @include mixins.state(){
                 color: branding.$brand_color_five;

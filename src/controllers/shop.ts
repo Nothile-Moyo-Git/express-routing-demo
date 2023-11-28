@@ -128,25 +128,24 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
             pdfDocument
                 .text(`Invoice for order #${order._id.toString()}`, { align : "center" })
                 .text(`Total : ${order.totalPrice}`)
-                .text(`Items purchased`);
+                .text(`Items purchased`)
+                .moveDown()
 
             // Add each order item to the invoice
             order.orderItems.forEach((orderItem : OrderItemInterface) => {
 
                 // Add the item to the page
                 pdfDocument
-                    .text(`${orderItem.title} x ${orderItem.quantity}`,{
-                        lineBreak : false,
-                        align : "left"
-                    })
+                    .text(`${orderItem.title} x ${orderItem.quantity}`)
+                    .moveUp()
                     .text(`£${orderItem.price}`,{
                         lineBreak : true,
-                        align : "right"
+                        align : "right",
                     });
             });
 
             // Finalise the PDF file, this prevents memory leaks
-            pdfDocument.end();
+            pdfDocument.moveDown().end();
 
             const orderUser = order.user;
             const sessionUser = request.session.user;
