@@ -100,52 +100,60 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
         // Get the order data so we can find the user and make a comparison
         const order = await Order.findOne({_id : orderId});
 
-        console.clear();
-        console.log("Order");
-        console.log(order);
-
         if (order) {
 
             // Create our date and convert the format
             const dateCreated = createReadableDate(order.createdAt);
 
-            console.log("\n");
-            console.log("Date created");
-            console.log(dateCreated);
+            let fileExists = false;
 
-            // Create an empty PDF
-            const pdfDocument = new PDFDocument();
+            // Check if the file with the name already exists
+            fs.access(filePath, fs.constants.F_OK, (err : Error) => {
 
-            // Pipe the output (combine multiple functions to make writing the code easier) to a file in our invoices folder
-            pdfDocument.pipe( fs.createWriteStream(filePath) );
-
-            // Add the page with our order details
-            pdfDocument
-                .fontSize(16)
-                .text(dateCreated,{ align : "center" });
-
-            // Save our file to the server
-            pdfDocument
-                .text(`Invoice for order #${order._id.toString()}`, { align : "center" })
-                .text(`Total : ${order.totalPrice}`)
-                .text(`Items purchased`)
-                .moveDown()
-
-            // Add each order item to the invoice
-            order.orderItems.forEach((orderItem : OrderItemInterface) => {
-
-                // Add the item to the page
-                pdfDocument
-                    .text(`${orderItem.title} x ${orderItem.quantity}`)
-                    .moveUp()
-                    .text(`£${orderItem.price}`,{
-                        lineBreak : true,
-                        align : "right",
-                    });
+                fileExists = err ? false : true; 
+                console.log(`${filePath} ${err ? 'does not exist' : 'exists :)'}`);
             });
 
-            // Finalise the PDF file, this prevents memory leaks
-            pdfDocument.moveDown().end();
+            if (fileExists === false) {
+
+                // Create an empty PDF
+                const pdfDocument = new PDFDocument();
+
+                // Pipe the output (combine multiple functions to make writing the code easier) to a file in our invoices folder
+                pdfDocument.pipe( fs.createWriteStream(filePath) );
+
+                // Return a response
+                pdfDocument.pipe(response);
+
+                // Add the page with our order details
+                pdfDocument.fontSize(16);
+
+                // Save our file to the server
+                pdfDocument
+                    .text(`Invoice for order #${order._id.toString()}`, { align : "center" })
+                    .moveDown()
+                    .text(`Purchased: ${dateCreated}`,{ align : "center" })
+                    .moveDown()
+                    .text(`Total : £${order.totalPrice}`)
+                    .moveDown()
+                    .text(`Items purchased:`)
+
+                // Add each order item to the invoice
+                order.orderItems.forEach((orderItem : OrderItemInterface) => {
+
+                    // Add the item to the page
+                    pdfDocument
+                        .text(`${orderItem.title} x ${orderItem.quantity}`)
+                        .moveUp(1)
+                        .text(`£${orderItem.price}`,{
+                            lineBreak : true,
+                            align : "right",
+                        });
+                });
+
+                // Finalise the PDF file, this prevents memory leaks
+                pdfDocument.moveDown().end();
+            }
 
             const orderUser = order.user;
             const sessionUser = request.session.user;
