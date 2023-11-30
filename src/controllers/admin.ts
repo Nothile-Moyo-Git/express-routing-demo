@@ -345,7 +345,9 @@ const deleteProduct = async ( request : ExtendedRequestInterface, response : Res
                     console.log(`${filePath} ${err ? 'does not exist' : 'exists :)'}`);
 
                     // Execute our file deletion here since this code runs asynchronously
-                    fileExists === true && fs.unlinkSync(filePath);
+                    fileExists === true && fs.unlink(filePath, (err) => {
+                        err ? console.log("Error: File was not deleted") : console.log("File was successfully deleted");
+                    });
                     
                 });
 
