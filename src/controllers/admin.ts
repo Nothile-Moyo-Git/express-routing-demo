@@ -18,9 +18,11 @@ import { NextFunction, Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
-import { isFloat, isInt, isValidUrl } from "../util/utility-methods";
+import { isFloat, isInt } from "../util/utility-methods";
 import CustomError from '../models/error';
-import { getFileNamePrefixWithDate, getFolderPathFromDate } from '../util/utility-methods';
+import { getFolderPathFromDate } from '../util/utility-methods';
+import fs from "fs";
+import path from 'path';
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -331,6 +333,26 @@ const deleteProduct = async ( request : ExtendedRequestInterface, response : Res
 
             if (hasUser === true && product.userId.toString() === request.session.user._id.toString()) {
 
+                // Create the filepath for the image
+                const filePath = path.join(__dirname, `..${product.image}`);
+
+                let fileExists : boolean;
+
+                // Check if the file with the name already exists
+                fs.access(filePath, fs.constants.F_OK, (err : Error) => {
+    
+                    fileExists = err ? false : true; 
+                    console.log(`${filePath} ${err ? 'does not exist' : 'exists :)'}`);
+
+                    // Execute our file deletion here since this code runs asynchronously
+                    fileExists === true && fs.unlink(filePath, (err) => {
+                        err ? console.log("Error: File was not deleted") : console.log("File was successfully deleted");
+                    });
+                    
+                });
+
+                // Delete the file if it exists by using unlinkSync
+                // Only do this if the file already exists on the server
                 await Product.deleteOne( {_id : productId} );
 
                 // Redirect to the admin products page since we executed admin functionality
