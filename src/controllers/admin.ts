@@ -4,6 +4,7 @@
  * License : MIT
  *
  * Admin Controller, handles the requests to do with administration ( adding products etc... )
+ * This file allows the user to do more than just 
  *
  * @method getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => void
  * @method postAddProduct = ( request : ExtendedRequestInterface, response : Response ) => void | response : Response
@@ -21,8 +22,8 @@ import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt } from "../util/utility-methods";
 import CustomError from '../models/error';
 import { getFolderPathFromDate } from '../util/utility-methods';
-import fs from "fs";
 import path from 'path';
+import { deleteFile } from "../util/file";
 
 // Add product controller
 const getAddProduct = ( request : ExtendedRequestInterface, response : Response ) => {
@@ -234,6 +235,8 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
+
+    const filePath = path.join(__dirname, `..${product.image}`);
     
     if (isCSRFValid === true) {
 
@@ -242,6 +245,9 @@ const updateProductController = async (request : ExtendedRequestInterface, respo
             if (product.userId.toString() === request.session.user._id.toString()) {
 
                 try{
+
+                    // Delete the previous file since we've already added the new one using multer
+                    deleteFile(filePath);
 
                     // Update the product information using mongoose's updateOne method with the id provided previously
                     await Product.updateOne({ _id : productId },{ 
@@ -336,20 +342,8 @@ const deleteProduct = async ( request : ExtendedRequestInterface, response : Res
                 // Create the filepath for the image
                 const filePath = path.join(__dirname, `..${product.image}`);
 
-                let fileExists : boolean;
-
-                // Check if the file with the name already exists
-                fs.access(filePath, fs.constants.F_OK, (err : Error) => {
-    
-                    fileExists = err ? false : true; 
-                    console.log(`${filePath} ${err ? 'does not exist' : 'exists :)'}`);
-
-                    // Execute our file deletion here since this code runs asynchronously
-                    fileExists === true && fs.unlink(filePath, (err) => {
-                        err ? console.log("Error: File was not deleted") : console.log("File was successfully deleted");
-                    });
-                    
-                });
+                // Delete the file from the server
+                deleteFile(filePath);
 
                 // Delete the file if it exists by using unlinkSync
                 // Only do this if the file already exists on the server
