@@ -44,6 +44,11 @@ const getIndex = ( request : Request, response : Response ) => {
 // Get products controller
 const getProducts = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
+    // Get the page number
+    console.clear();
+    console.log("Request parameters");
+    console.log(request.query);
+
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
 

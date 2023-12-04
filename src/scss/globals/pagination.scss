@@ -1,0 +1,16 @@
+@use "../scss/partials/branding" as branding;
+@use "../scss/partials/responsive" as responsive;
+@use "../scss/partials/mixins" as mixins;
+@use "../partials/animations" as animations;
+
+
+.pagination{
+
+    width: 100%;
+
+    &__link{
+        color: branding.$brand_color_six;
+        padding: 0.25rem 0.5rem;
+        border: 1px solid branding.$brand_color_six;
+    }
+}
