@@ -41,6 +41,12 @@
 
             <% } %>
 
+            <section class="pagination">
+                <% for (let i = 0; i < pages; i++) { %>
+                    <a class="pagination__link" href="<%= `products?page=${i+1}` %>"><%= i+1 %></a>
+                <% } %>
+            </section>  
+
         </main>
 
     </body>
