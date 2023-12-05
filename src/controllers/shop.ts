@@ -69,7 +69,8 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             path: "/", 
             hasProducts : products.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
-            csrfToken : csrfToken
+            csrfToken : csrfToken,
+            pages : 2
         });
 
     }catch(err){
