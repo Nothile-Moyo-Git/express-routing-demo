@@ -165,10 +165,19 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
     // Check if we have any users that work with the session
     const hasUser = user !== undefined;
 
+    // Count the total number of products we have for pagination
+    const count = await Product.count();
+
     try{
+
+        const { page, limit = 5 } = request.query;
 
         // Find the product. If we need to find a collection, we can pass the conditionals through in an object
         const products = await Product.find({userId : new ObjectId(hasUser === true ? user._id : null)})
+        // Convert limit to a number, we're using 5 per page
+        .limit(Number(limit) * 1)
+        // Pick the page we want, we start at 0 because programming
+        .skip((Number(page) - 1) * Number(limit))
         .select("title price _id description image")
         .populate("userId", "name");
 
@@ -178,7 +187,8 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             pageTitle : "Admin Products", 
             hasProducts : products.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
-            csrfToken : csrfToken
+            csrfToken : csrfToken,
+            pages : Math.ceil(count / Number(limit))
         });
 
     }catch(err){
