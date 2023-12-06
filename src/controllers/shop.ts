@@ -44,22 +44,28 @@ const getIndex = ( request : Request, response : Response ) => {
 // Get products controller
 const getProducts = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
-    // Get the page number
-    console.clear();
-    console.log("Request parameters");
-    console.log(request.query);
+    // Count the total number of products we have for pagination
+    const count = await Product.count();
 
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
 
     // Get the CSRF token from the session, it's automatically defined before we perform any queries
-    const csrfToken = request.session.csrfToken;
+    const csrfToken : string = request.session.csrfToken;
 
     try{
 
+        const { page, limit = 5 } = request.query;
+
         // Find the product. If we need to find a collection, we can pass the conditionals through in an object
         const products = await Product.find()
+        // Convert limit to a number, we're using 5 per page
+        .limit(Number(limit) * 1)
+        // Pick the page we want, we start at 0 because programming
+        .skip((Number(page) - 1) * Number(limit))
+        // Select the fields we want
         .select("title price _id description image")
+        // Get the user ID and name from the users collection
         .populate("userId", "name");
 
         // Render the products view
@@ -70,7 +76,7 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             hasProducts : products.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
-            pages : 2
+            pages : Math.ceil(count / Number(limit))
         });
 
     }catch(err){
