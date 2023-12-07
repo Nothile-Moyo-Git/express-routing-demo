@@ -53,12 +53,18 @@
 
                         <% }) %>
                     </ul>
+
+                    <section class="pagination">
+                        <% for (let i = 0; i < pages; i++) { %>
+                            <a class="<%= `pagination__link ${currentPage === (i+1) ? 'pagination__link--active' : 'pagination__link--inactive'}` %>" href="<%= `orders?page=${i+1}` %>"><%= i+1 %></a>
+                        <% } %>
+                    </section> 
                     
                 <% } else { %>
 
                     <h1 class="orders__empty">No orders found</h1>
 
-                <% } %>
+                <% } %> 
 
             <% } else { %>
 
