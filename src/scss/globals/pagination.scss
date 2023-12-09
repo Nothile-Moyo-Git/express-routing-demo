@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     grid-gap: 1rem;
+    position: relative;
 
     &__link{
         color: branding.$brand_color_six;
@@ -17,10 +18,20 @@
         border: 1px solid branding.$brand_color_six;
         transition: animations.$standard_transition;
 
-        @include mixins.state(){
-            color: rgba(0, 0, 0, 0.9); 
+        &--active{
             background: branding.$brand_color_six;
-            box-shadow: branding.$box_shadow_cyan;
+            color: rgba(0,0,0,0.9);
+
+            @include mixins.state(){
+                box-shadow: none;
+                color: rgba(0,0,0,0.9);
+            }
+        }
+
+        &--inactive{
+            @include mixins.state(){
+                box-shadow: branding.$box_shadow_cyan;
+            }
         }
     }
 }

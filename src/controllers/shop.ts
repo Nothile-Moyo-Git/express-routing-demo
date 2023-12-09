@@ -45,7 +45,7 @@ const getIndex = ( request : Request, response : Response ) => {
 const getProducts = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
 
     // Count the total number of products we have for pagination
-    const count = await Product.count();
+    const count = await Product.count({ userId : request.session.user._id });
 
     // Check if the user is logged in so we determine which menu we want to show, if we don't do this we always show the logged in menu even if we're not
     const isLoggedIn = request.session.isLoggedIn;
@@ -56,6 +56,8 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
     try{
 
         const { page, limit = 5 } = request.query;
+
+        const currentPage = page ? Number(page) : 1;
 
         // Find the product. If we need to find a collection, we can pass the conditionals through in an object
         const products = await Product.find()
@@ -76,7 +78,8 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             hasProducts : products.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
-            pages : Math.ceil(count / Number(limit))
+            pages : Math.ceil(count / Number(limit)),
+            currentPage : currentPage
         });
 
     }catch(err){
@@ -100,8 +103,6 @@ const getInvoiceController = async (request : ExtendedRequestInterface, response
     const orderId = params.orderId;
 
     const isAuthenticated = request.session.isLoggedIn === undefined ? false : true;
-
-    // 656115c72bc1396f734b7d4f
 
     // Generate appropriate pathname
     const fileName = "invoice-" + orderId + ".pdf";
@@ -227,10 +228,61 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
     // Get the user from the request session
     const user = request.session.user;
 
+    // Count the number of orders based on users
+    const count = await Order.count({ "user._id" : request.session.user._id });
+
     try{
+
+        const { page, limit = 2 } = request.query;
+
+        const currentPage = page ? Number(page) : 1;
+
+        // Test details
+        const testCount = 50;
+        const testCurrentPage = 15;
+        const testNumberOfPages = Math.ceil(testCount / Number(limit));
+
+        const previousPageCount = testCurrentPage - 1;
+        const upcomingPageCount = testNumberOfPages - testCurrentPage;
+
+        let paginationPrevPagesCount = 0, paginationNextPagesCount = 0;
+
+        // Full pagination
+        if (previousPageCount > 2 && upcomingPageCount > 2) { 
+            paginationPrevPagesCount = 2;
+            paginationNextPagesCount = 2;
+        }
+
+        console.clear();
+        console.log("Test number of pages");
+        console.log(testNumberOfPages);
+        console.log("\n");
+
+        console.log("Current page");
+        console.log(testCurrentPage);
+        console.log("\n");
+
+        console.log("Previous pages");
+        console.log(previousPageCount);
+        console.log("\n");
+
+        console.log("Upcoming pages");
+        console.log(upcomingPageCount);
+        console.log("\n");
+
+        console.log("Pagination previous link");
+        console.log(paginationPrevPagesCount);
+        console.log("\n");
+
+        console.log("Pagination next link");
+        console.log(paginationNextPagesCount);
+        console.log("\n");
 
         // Query the orders in the backend
         const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
+        .limit(Number(limit) * 1)
+        // Pick the page we want, we start at 0 because programming
+        .skip((Number(page) - 1) * Number(limit))
         .select("_id totalPrice orderItems createdAt user");
 
         // Render the view page
@@ -239,7 +291,9 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
             orders : orders, 
             hasOrders : orders.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
-            csrfToken : csrfToken
+            csrfToken : csrfToken,
+            pages : Math.ceil(count / Number(limit)),
+            currentPage : currentPage
         });
 
     }catch(err){

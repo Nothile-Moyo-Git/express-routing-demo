@@ -34,7 +34,7 @@ a{
     font-size: 1rem;
 
     @include mixins.state(){
-        color: branding.$brand_color_three;
+        color: branding.$brand_color_six;
     }
 }
 
