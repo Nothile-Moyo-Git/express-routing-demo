@@ -5,9 +5,9 @@
 
         <main class="content">
 
-            <h1 class="content__title"><%= pageTitle %></h1>
-
             <% if (hasProducts) {%>
+
+                <h1 class="content__title"><%= pageTitle %></h1>
 
                 <ul class="card-list">
 
@@ -39,13 +39,16 @@
 
                 </ul>
 
-            <% } %>
+                <section class="pagination">
+                    <% for (let i = 0; i < pages; i++) { %>
+                        <a class="<%= `pagination__link ${currentPage === (i+1) ? 'pagination__link--active' : 'pagination__link--inactive'}` %>" href="<%= `/products?page=${i+1}` %>"><%= i+1 %></a>
+                    <% } %>
+                </section>   
 
-            <section class="pagination">
-                <% for (let i = 0; i < pages; i++) { %>
-                    <a class="<%= `pagination__link ${currentPage === (i+1) ? 'pagination__link--active' : 'pagination__link--inactive'}` %>" href="<%= `/products?page=${i+1}` %>"><%= i+1 %></a>
-                <% } %>
-            </section>   
+            <% }else{ %>
+                <h1>No products found! Consider adding a new product</h1>
+                <a class="button" href="/admin/add-product">Add New Product</a>
+            <% } %>
 
         </main>
 
