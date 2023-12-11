@@ -23,7 +23,7 @@
 
 // import our express types for TypeScript use
 import { NextFunction, Response, Request } from 'express';
-import { createReadableDate } from '../util/utility-methods';
+import { createReadableDate, getPaginationValues } from '../util/utility-methods';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
@@ -237,46 +237,9 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 
         const currentPage = page ? Number(page) : 1;
 
-        // Test details
-        const testCount = 50;
-        const testCurrentPage = 15;
-        const testNumberOfPages = Math.ceil(testCount / Number(limit));
+        const numberOfPages = Math.ceil(count / Number(limit));
 
-        const previousPageCount = testCurrentPage - 1;
-        const upcomingPageCount = testNumberOfPages - testCurrentPage;
-
-        let paginationPrevPagesCount = 0, paginationNextPagesCount = 0;
-
-        // Full pagination
-        if (previousPageCount > 2 && upcomingPageCount > 2) { 
-            paginationPrevPagesCount = 2;
-            paginationNextPagesCount = 2;
-        }
-
-        console.clear();
-        console.log("Test number of pages");
-        console.log(testNumberOfPages);
-        console.log("\n");
-
-        console.log("Current page");
-        console.log(testCurrentPage);
-        console.log("\n");
-
-        console.log("Previous pages");
-        console.log(previousPageCount);
-        console.log("\n");
-
-        console.log("Upcoming pages");
-        console.log(upcomingPageCount);
-        console.log("\n");
-
-        console.log("Pagination previous link");
-        console.log(paginationPrevPagesCount);
-        console.log("\n");
-
-        console.log("Pagination next link");
-        console.log(paginationNextPagesCount);
-        console.log("\n");
+        const paginationValues = getPaginationValues(currentPage, numberOfPages);
 
         // Query the orders in the backend
         const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
