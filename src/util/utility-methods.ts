@@ -160,7 +160,6 @@ export const createReadableDate = (dateToFormat : Date) => {
  * @method getPaginationValues
  * 
  * @param currentPage : number
- * @param itemsPerPage : number
  * @param numberOfPages : number
  * 
  * Function to handle pagination to figure out pages required for pagination

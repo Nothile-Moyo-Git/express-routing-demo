@@ -233,13 +233,18 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 
     try{
 
+        // Pagination
         const { page, limit = 2 } = request.query;
 
+        // Sort out the current page and number of pages
         const currentPage = page ? Number(page) : 1;
-
         const numberOfPages = Math.ceil(count / Number(limit));
 
         const paginationValues = getPaginationValues(currentPage, numberOfPages);
+
+        console.log("\n");
+        console.log("Pagination values");
+        console.log(paginationValues);
 
         // Query the orders in the backend
         const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
@@ -256,7 +261,9 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
             pages : Math.ceil(count / Number(limit)),
-            currentPage : currentPage
+            currentPage : currentPage,
+            numberOfPreviousPages : paginationValues.numberOfPreviousPages,
+            numberOfUpcomingPages : paginationValues.numberOfUpcomingPages
         });
 
     }catch(err){

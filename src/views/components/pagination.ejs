@@ -1,0 +1,22 @@
+<section class="pagination">
+
+    <% for (let i = 0; i < pages; i++) { %>
+        <a class="<%= `pagination__link ${currentPage === (i+1) ? 'pagination__link--active' : 'pagination__link--inactive'}` %>" href="<%= `/products?page=${i+1}` %>"><%= i+1 %></a>
+    <% } %>
+
+    <% for (let i = 0; i < numberOfPreviousPages; i++) { %>
+        <a class="pagination__link pagination__link--inactive" href="<%= `/products?page=${i+1}` %>"><%= i+1 %></a>
+    <% } %>
+
+
+    <p class="pagination__link pagination__link--active"><%= currentPage %></p>
+
+    <!--
+
+    <% for (let i = currentPage; i < currentPage + numberOfUpcomingPages ) { %>
+        <a class="pagination__link pagination__link--inactive" href="<%= `/products?page=${i+1}` %>"><%= i+1 %></a>
+    <% } %>
+
+    -->
+
+</section>

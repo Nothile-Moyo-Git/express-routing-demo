@@ -19,8 +19,14 @@
         transition: animations.$standard_transition;
 
         &--active{
-            background: branding.$brand_color_six;
-            color: rgba(0,0,0,0.9);
+            z-index: 2;
+            position: relative;
+            overflow: hidden;
+            color: rgba(0, 0, 0, 0.9);
+
+            @include mixins.backgroundGradientEffect(){
+                background: branding.$gradient_color_six;
+            }
 
             @include mixins.state(){
                 box-shadow: none;
