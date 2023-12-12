@@ -59,6 +59,10 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
 
         const currentPage = page ? Number(page) : 1;
 
+        const numberOfPages = Math.ceil(count / Number(limit));
+
+        const paginationValues = getPaginationValues(currentPage, numberOfPages);
+
         // Find the product. If we need to find a collection, we can pass the conditionals through in an object
         const products = await Product.find()
         // Convert limit to a number, we're using 5 per page
@@ -79,7 +83,9 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
             pages : Math.ceil(count / Number(limit)),
-            currentPage : currentPage
+            currentPage : currentPage,
+            numberOfPreviousPages : paginationValues.numberOfPreviousPages,
+            numberOfUpcomingPages : paginationValues.numberOfUpcomingPages,
         });
 
     }catch(err){
@@ -242,10 +248,6 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 
         const paginationValues = getPaginationValues(currentPage, numberOfPages);
 
-        console.log("\n");
-        console.log("Pagination values");
-        console.log(paginationValues);
-
         // Query the orders in the backend
         const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
         .limit(Number(limit) * 1)
@@ -260,7 +262,7 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
             hasOrders : orders.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
-            pages : Math.ceil(count / Number(limit)),
+            pages : numberOfPages,
             currentPage : currentPage,
             numberOfPreviousPages : paginationValues.numberOfPreviousPages,
             numberOfUpcomingPages : paginationValues.numberOfUpcomingPages

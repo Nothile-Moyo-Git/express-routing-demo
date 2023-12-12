@@ -204,34 +204,5 @@ export const getPaginationValues = (currentPage: number, numberOfPages : number)
         paginationNextPagesCount = upcomingPageCount;
     }
 
-    console.clear();
-    console.log("Test number of pages");
-    console.log(numberOfPages);
-    console.log("\n");
-
-    console.log("Current page");
-    console.log(currentPage);
-    console.log("\n");
-
-    console.log("Previous pages");
-    console.log(previousPageCount);
-    console.log("\n");
-
-    console.log("Upcoming pages");
-    console.log(upcomingPageCount);
-    console.log("\n");
-
-    console.log("Pagination previous link");
-    console.log(paginationPrevPagesCount);
-    console.log("\n");
-
-    console.log("Pagination next link");
-    console.log(paginationNextPagesCount);
-    console.log("\n");
-    
     return { currentPage, numberOfPreviousPages : paginationPrevPagesCount, numberOfUpcomingPages : paginationNextPagesCount };
 };
-
-
-
-
