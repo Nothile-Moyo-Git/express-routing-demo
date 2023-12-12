@@ -155,3 +155,54 @@ export const createReadableDate = (dateToFormat : Date) => {
 
     return formattedDate;
 };
+
+/**
+ * @method getPaginationValues
+ * 
+ * @param currentPage : number
+ * @param numberOfPages : number
+ * 
+ * Function to handle pagination to figure out pages required for pagination
+ * This method can be used in any controller
+ * 
+ * Pass through your current page, number of pages, limit, previous and next pages
+ * 
+ * This will return values which will determine your previous and upcoming pages
+ * 
+ * You should perform loops using these values, one with the previous values, one for your current page, and one for upcoming values
+ * 
+ * @returns { currentPage : number, numberOfPages : number }
+ */
+export const getPaginationValues = (currentPage: number, numberOfPages : number) => {
+
+    // Setting variables
+    let paginationPrevPagesCount = 0, paginationNextPagesCount = 0;
+    const previousPageCount = currentPage - 1;
+    const upcomingPageCount = numberOfPages - currentPage;
+
+    // Full pagination
+    if (previousPageCount > 2 && upcomingPageCount > 2) { 
+        paginationPrevPagesCount = 2; 
+        paginationNextPagesCount = 2; 
+    }
+
+    // More upcoming pages than previous
+    if (previousPageCount <= 2 && upcomingPageCount >= 2) {
+        paginationPrevPagesCount = previousPageCount;
+        paginationNextPagesCount = 4 - previousPageCount;
+    }
+
+    // More previous than upcoming pages
+    if (previousPageCount >= 2 && upcomingPageCount <= 2)  {
+        paginationPrevPagesCount = 4 - upcomingPageCount;
+        paginationNextPagesCount = upcomingPageCount;
+    }
+
+    // If they're both less than or equal to 2
+    if (previousPageCount <= 2 && upcomingPageCount <= 2) { 
+        paginationPrevPagesCount = previousPageCount;
+        paginationNextPagesCount = upcomingPageCount;
+    }
+
+    return { currentPage, numberOfPreviousPages : paginationPrevPagesCount, numberOfUpcomingPages : paginationNextPagesCount };
+};

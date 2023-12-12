@@ -39,11 +39,7 @@
 
                 </ul>
 
-                <section class="pagination">
-                    <% for (let i = 0; i < pages; i++) { %>
-                        <a class="<%= `pagination__link ${currentPage === (i+1) ? 'pagination__link--active' : 'pagination__link--inactive'}` %>" href="<%= `/products?page=${i+1}` %>"><%= i+1 %></a>
-                    <% } %>
-                </section>   
+                <%- include('../../components/pagination') %> 
 
             <% }else{ %>
                 <h1>No products found! Consider adding a new product</h1>

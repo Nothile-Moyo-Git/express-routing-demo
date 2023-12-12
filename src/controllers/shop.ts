@@ -23,7 +23,7 @@
 
 // import our express types for TypeScript use
 import { NextFunction, Response, Request } from 'express';
-import { createReadableDate } from '../util/utility-methods';
+import { createReadableDate, getPaginationValues } from '../util/utility-methods';
 import Product from "../models/products";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
@@ -59,6 +59,10 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
 
         const currentPage = page ? Number(page) : 1;
 
+        const numberOfPages = Math.ceil(count / Number(limit));
+
+        const paginationValues = getPaginationValues(currentPage, numberOfPages);
+
         // Find the product. If we need to find a collection, we can pass the conditionals through in an object
         const products = await Product.find()
         // Convert limit to a number, we're using 5 per page
@@ -79,7 +83,9 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
             pages : Math.ceil(count / Number(limit)),
-            currentPage : currentPage
+            currentPage : currentPage,
+            numberOfPreviousPages : paginationValues.numberOfPreviousPages,
+            numberOfUpcomingPages : paginationValues.numberOfUpcomingPages,
         });
 
     }catch(err){
@@ -233,50 +239,14 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 
     try{
 
+        // Pagination
         const { page, limit = 2 } = request.query;
 
+        // Sort out the current page and number of pages
         const currentPage = page ? Number(page) : 1;
+        const numberOfPages = Math.ceil(count / Number(limit));
 
-        // Test details
-        const testCount = 50;
-        const testCurrentPage = 15;
-        const testNumberOfPages = Math.ceil(testCount / Number(limit));
-
-        const previousPageCount = testCurrentPage - 1;
-        const upcomingPageCount = testNumberOfPages - testCurrentPage;
-
-        let paginationPrevPagesCount = 0, paginationNextPagesCount = 0;
-
-        // Full pagination
-        if (previousPageCount > 2 && upcomingPageCount > 2) { 
-            paginationPrevPagesCount = 2;
-            paginationNextPagesCount = 2;
-        }
-
-        console.clear();
-        console.log("Test number of pages");
-        console.log(testNumberOfPages);
-        console.log("\n");
-
-        console.log("Current page");
-        console.log(testCurrentPage);
-        console.log("\n");
-
-        console.log("Previous pages");
-        console.log(previousPageCount);
-        console.log("\n");
-
-        console.log("Upcoming pages");
-        console.log(upcomingPageCount);
-        console.log("\n");
-
-        console.log("Pagination previous link");
-        console.log(paginationPrevPagesCount);
-        console.log("\n");
-
-        console.log("Pagination next link");
-        console.log(paginationNextPagesCount);
-        console.log("\n");
+        const paginationValues = getPaginationValues(currentPage, numberOfPages);
 
         // Query the orders in the backend
         const orders = await Order.find({"user._id" : user === undefined ? null : user._id})
@@ -292,8 +262,10 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
             hasOrders : orders.length > 0,
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
-            pages : Math.ceil(count / Number(limit)),
-            currentPage : currentPage
+            pages : numberOfPages,
+            currentPage : currentPage,
+            numberOfPreviousPages : paginationValues.numberOfPreviousPages,
+            numberOfUpcomingPages : paginationValues.numberOfUpcomingPages
         });
 
     }catch(err){

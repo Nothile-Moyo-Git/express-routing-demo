@@ -21,7 +21,7 @@ import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
 import { isFloat, isInt } from "../util/utility-methods";
 import CustomError from '../models/error';
-import { getFolderPathFromDate } from '../util/utility-methods';
+import { getFolderPathFromDate, getPaginationValues } from '../util/utility-methods';
 import path from 'path';
 import { deleteFile } from "../util/file";
 
@@ -176,6 +176,10 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
 
         const currentPage = page ? Number(page) : 1;
 
+        const numberOfPages = Math.ceil(count / Number(limit));
+
+        const paginationValues = getPaginationValues(currentPage, numberOfPages);
+
         // Find the product. If we need to find a collection, we can pass the conditionals through in an object
         const products = await Product.find({userId : new ObjectId(hasUser === true ? user._id : null)})
         // Convert limit to a number, we're using 5 per page
@@ -193,7 +197,9 @@ const getProducts = async (request : ExtendedRequestInterface, response : Respon
             isAuthenticated : isLoggedIn === undefined ? false : true,
             csrfToken : csrfToken,
             pages : Math.ceil(count / Number(limit)),
-            currentPage : currentPage
+            currentPage : currentPage,
+            numberOfPreviousPages : paginationValues.numberOfPreviousPages,
+            numberOfUpcomingPages : paginationValues.numberOfUpcomingPages,
         });
 
     }catch(err){
