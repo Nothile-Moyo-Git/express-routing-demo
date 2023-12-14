@@ -85,10 +85,29 @@ Our views are found in the _/src/views_ folder. We use EJS for this. We pass the
 The includes folders contains our most re-usable components, including our header and footer template files.
 As we're using EJS, you can find the syntax of how to use it [here](https://ejs.co/#install). Look at the "tags" section to know how to better write your ejs.
 
+## File uploads
+File uploads can be found in the _"/src/uploads"_. Currently, only images can be uploads.
+Permitted file types include.
+
+- JPEG
+- JPG
+- PNG
+
+When a file is uploaded, it allocates it to the appropriate folder. These come in the format YYYY/MM. If the folder doesn't exist, it will automatically be created for you.
+
+**Note: You can find these file types in the index file when defining fileFormats for _multer_**
+
+## PDF Generation
+You can generate PDF's for each order in your order list. This will create a PDF using the _"pdfkit"_ package. The file will be automatically saved on the server and will render in the browser in a new tab.
+
+If a PDF already exists, then it is updated and the previous one is deleted.
+
+You can find PDF's in the _"/src/invoices"_ folder.
+
 ## Databases
 **Note: Sequelize and MySQL were used previously, and have now been replaced with Mongoose. Mongoose is an ORM for MongoDB used with Node.js**
 
-You can find the connection details in the _"src/data/connection.ts"_ file.
+You can find the connection details in the _"/src/data/connection.ts"_ file.
 
 If you ever decide to use MongoDB yourself, you can use [MongoDB Atlas](https://www.mongodb.com/atlas/database) with a free tier which gives you AWS cloud instances for a de-coupled web application.
 
