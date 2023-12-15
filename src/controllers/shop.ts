@@ -286,13 +286,32 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 // Get the checkout page from the cart
 const getCheckout = ( request : ExtendedRequestInterface, response : Response ) => {
 
+    // Instantiate the User that we have
+    const user = request.session.user;
+
     // Get our CSRF token if we don't have one already
     const csrfToken = request.session.csrfToken;
+
+    // Get the cart from the session, we store it in the session with the userId so that they can be used anywhere
+    const cart = request.session.cart;
+
+    // Check if we have products that we can render on the tempalate
+    const hasProducts = cart.items.length > 0 ? true : false;
+
+    // Check if we have any users that work with the session
+    const hasUser = user !== undefined;
+
+    console.clear();
+    console.log("Cart");
+    console.log(cart);
 
     response.render("pages/shop/checkout", { 
         pageTitle : "Checkout",
         isAuthenticated : true,
-        csrfToken : csrfToken
+        csrfToken : csrfToken,
+        cart : cart,
+        hasProducts : hasProducts, 
+        products : hasUser === true ? cart.items : [],
     });
 };
 
@@ -349,7 +368,7 @@ const getCart = async ( request : ExtendedRequestInterface, response : Response 
     // Instantiate the User that we have
     const user = request.session.user;
 
-    // Get the cart from the session, we store it in the session with the userId so that 
+    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
     const cart = request.session.cart;
 
     // Get our CSRF token if we don't have one already

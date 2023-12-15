@@ -4,7 +4,20 @@
         <%- include('../../includes/menu'); %>
 
         <main class="content">
-            <h1 class="content__title">Checkout</h1>
+
+            <% if (hasProducts !== true) { %>
+
+                <h1 class="content__title">Checkout</h1>
+
+            <% }else{ %>
+
+                <div>
+                    <h1>Your cart is empty, consider purchasing some?</h1>
+                    <a href="/products?page=1" target="_blank" class="content__link">Go to Products</a>
+                </div>
+
+            <% } %>
+
         </main>
 
     </body>
