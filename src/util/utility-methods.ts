@@ -1,5 +1,4 @@
 /**
- * 
  * Author : Nothile Moyo
  * Date Written : 29/10/2023
  * License : MIT
@@ -58,6 +57,8 @@ export const getCurrentDate = () => {
 };
 
 /**
+ * @method getFolderPathFromDate
+ * 
  * Returns the folder path for uploads with the year and month of the upload
  * This should be done recursively with a method for creating folders
  * 

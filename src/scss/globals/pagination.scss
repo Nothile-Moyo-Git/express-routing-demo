@@ -3,7 +3,6 @@
 @use "../scss/partials/mixins" as mixins;
 @use "../partials/animations" as animations;
 
-
 .pagination{
 
     width: 100%;
@@ -14,7 +13,7 @@
 
     &__link{
         color: branding.$brand_color_six;
-        padding: 0.2rem 0.6rem;
+        padding: 0.2rem 0.8rem;
         border: 1px solid branding.$brand_color_six;
         transition: animations.$standard_transition;
 

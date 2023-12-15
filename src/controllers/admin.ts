@@ -1,6 +1,6 @@
 /**
  * Author : Nothile Moyo
- * Date Written : 25/04 /2023
+ * Date Written : 25/04/2023
  * License : MIT
  *
  * Admin Controller, handles the requests to do with administration ( adding products etc... )
@@ -19,9 +19,8 @@ import { NextFunction, Response } from 'express';
 import Product from '../models/products';
 import { ObjectId } from 'mongodb';
 import { ExtendedRequestInterface } from '../@types';
-import { isFloat, isInt } from "../util/utility-methods";
 import CustomError from '../models/error';
-import { getFolderPathFromDate, getPaginationValues } from '../util/utility-methods';
+import { getFolderPathFromDate, getPaginationValues, isFloat, isInt } from '../util/utility-methods';
 import path from 'path';
 import { deleteFile } from "../util/file";
 
