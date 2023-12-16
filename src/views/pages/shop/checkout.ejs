@@ -3,11 +3,34 @@
 
         <%- include('../../includes/menu'); %>
 
-        <main class="content">
+        <main class="checkout">
 
-            <% if (hasProducts !== true) { %>
+            <% if (hasProducts === true) { %>
 
-                <h1 class="content__title">Checkout</h1>
+                <h1 class="checkout__title">Checkout</h1>
+
+                <ul class="checkout__grid">
+                    <% cart.items.map((item) => { %>
+                        <li class="checkout__row">
+                            <p><%= item.title %> x <%= item.quantity %></p>
+                            <p>Price: £<%= item.price %></p>
+                        </li>
+                    <% }) %>
+                </ul>
+
+                <p>Total: £<%= cart.totalPrice %></p>
+
+                <form method="POST" class="form" action="/checkout" enctype="multipart/form-data">
+
+                    <input
+                        type="hidden"
+                        name="csrfToken"
+                        value="<%= csrfToken %>"
+                    />
+
+                    <button class="button">Buy Now</button>
+
+                </form>
 
             <% }else{ %>
 
