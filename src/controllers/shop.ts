@@ -25,6 +25,8 @@
 import { NextFunction, Response, Request } from 'express';
 import { createReadableDate, getPaginationValues } from '../util/utility-methods';
 import Product from "../models/products";
+import { stripeKey } from '../data/connection';
+import Stripe from "stripe";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
@@ -304,6 +306,13 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
     console.clear();
     console.log("Cart");
     console.log(cart);
+
+    // Instantiate stripe
+    const stripe = new Stripe(stripeKey);
+
+    console.log("\n");
+    console.log("Stripe");
+    console.log(stripe);
 
     response.render("pages/shop/checkout", { 
         pageTitle : "Checkout",

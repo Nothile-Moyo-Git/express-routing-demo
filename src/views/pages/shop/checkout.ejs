@@ -12,8 +12,13 @@
                 <ul class="checkout__grid">
                     <% cart.items.map((item) => { %>
                         <li class="checkout__row">
-                            <p><%= item.title %> x <%= item.quantity %></p>
-                            <p>Price: £<%= item.price %></p>
+                            <p class="checkout__column"><%= item.title %> x <%= item.quantity %></p>
+                            <p class="checkout__column">Price: £<%= item.price %></p>
+                            <form class="checkout__column" action="/cart-delete-item" method="POST" enctype="multipart/form-data">
+                                <button class="checkout__button" type="submit">X</button>
+                                <input type="hidden" name="productId" value=<%= `${item.productId.toString()}` %>/>
+                                <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
+                            </form>
                         </li>
                     <% }) %>
                 </ul>
@@ -21,15 +26,12 @@
                 <p>Total: £<%= cart.totalPrice %></p>
 
                 <form method="POST" class="form" action="/checkout" enctype="multipart/form-data">
-
                     <input
                         type="hidden"
                         name="csrfToken"
                         value="<%= csrfToken %>"
                     />
-
                     <button class="button">Buy Now</button>
-
                 </form>
 
             <% }else{ %>
