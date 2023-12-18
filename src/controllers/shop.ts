@@ -303,16 +303,17 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
     // Check if we have any users that work with the session
     const hasUser = user !== undefined;
 
-    console.clear();
-    console.log("Cart");
-    console.log(cart);
-
     // Instantiate stripe
     const stripe = new Stripe(stripeKey);
 
-    console.log("\n");
-    console.log("Stripe");
-    console.log(stripe);
+    const handlePayment = () => {
+
+        console.clear();
+        console.log("Button clicked");
+        console.log("\n");
+        console.log("This works!");
+        console.log(Math.random() * 100);
+    };
 
     response.render("pages/shop/checkout", { 
         pageTitle : "Checkout",
@@ -321,6 +322,7 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
         cart : cart,
         hasProducts : hasProducts, 
         products : hasUser === true ? cart.items : [],
+        clickHandler : "handlePayment()"
     });
 };
 

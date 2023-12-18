@@ -25,14 +25,18 @@
 
                 <p>Total: £<%= cart.totalPrice %></p>
 
-                <form method="POST" class="form" action="/checkout" enctype="multipart/form-data">
-                    <input
-                        type="hidden"
-                        name="csrfToken"
-                        value="<%= csrfToken %>"
-                    />
-                    <button class="button">Buy Now</button>
-                </form>
+                <button class="button button--center" id="orderBtn" onClick=<%= clickHandler %>>Buy Now</button>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script>
+                    const handlePayment = () => {
+                        console.clear();
+                        console.log("Clicked");
+                        console.log("Random number");
+                        console.log(Math.random() * 100);
+                        
+                        
+                    };
+                </script>
 
             <% }else{ %>
 
