@@ -12,25 +12,31 @@
                 <ul class="checkout__grid">
                     <% cart.items.map((item) => { %>
                         <li class="checkout__row">
-                            <p><%= item.title %> x <%= item.quantity %></p>
-                            <p>Price: £<%= item.price %></p>
+                            <p class="checkout__column"><%= item.title %> x <%= item.quantity %></p>
+                            <p class="checkout__column">Price: £<%= item.price %></p>
+                            <form class="checkout__column" action="/cart-delete-item" method="POST" enctype="multipart/form-data">
+                                <button class="checkout__button" type="submit">X</button>
+                                <input type="hidden" name="productId" value=<%= `${item.productId.toString()}` %>/>
+                                <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
+                            </form>
                         </li>
                     <% }) %>
                 </ul>
 
                 <p>Total: £<%= cart.totalPrice %></p>
 
-                <form method="POST" class="form" action="/checkout" enctype="multipart/form-data">
-
-                    <input
-                        type="hidden"
-                        name="csrfToken"
-                        value="<%= csrfToken %>"
-                    />
-
-                    <button class="button">Buy Now</button>
-
-                </form>
+                <button class="button button--center" id="orderBtn" onClick=<%= clickHandler %>>Buy Now</button>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script>
+                    const handlePayment = () => {
+                        console.clear();
+                        console.log("Clicked");
+                        console.log("Random number");
+                        console.log(Math.random() * 100);
+                        
+                        
+                    };
+                </script>
 
             <% }else{ %>
 

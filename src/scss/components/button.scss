@@ -18,11 +18,16 @@
     transition: animations.$standard_transition;
     background: transparent;
     filter: contrast(90%);
+    display: flex;
 
     &--yellow{
         @include mixins.backgroundGradientEffect(){
             background : branding.$gradient_color_one;
         }
+    }
+
+    &--center{
+        margin: auto;
     }
 
     @include mixins.state(){

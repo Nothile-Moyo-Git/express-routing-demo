@@ -1,3 +1,7 @@
+@use "../../../scss/partials/branding" as branding;
+@use "../../../scss/partials/responsive" as responsive;
+@use "../../../scss/partials/mixins" as mixins;
+
 .checkout{
 
     max-width: 600px;
@@ -5,6 +9,7 @@
     margin: auto;
     padding: 1rem 1rem;
     color: white;
+    box-shadow: branding.$box_shadow_blue;
 
     &__title{
         font-size: 1.75rem;
@@ -12,12 +17,36 @@
         margin: 0 0 1rem;
     }
 
-    &__grid{
+    &__button{
+        font-size: 1rem;
+        box-shadow: 0px 0px 7px 0px branding.$brand_color_three;
+        border: 1px solid branding.$brand_color_three;
+        border-radius: 3px;
+        padding: 0.2rem 0.5rem 0.1rem 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s linear;
+        filter: contrast(95%);
+        overflow: hidden;
 
+        @include mixins.backgroundGradientEffect(){
+            background : branding.$gradient_color_three;
+        }
+
+        @include mixins.state(){
+            filter: contrast(150%);
+        } 
+    }
+
+    &__column{
+        width: calc(100% / 3);
+        &:nth-child(2){ text-align: center; }
+        &:nth-child(3){ text-align: center; }
     }
 
     &__row{
         display: flex;
+        margin-bottom: 0.5rem;
         justify-content: space-between;
+        align-items: center;
     }
 }
