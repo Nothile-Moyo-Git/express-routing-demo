@@ -25,7 +25,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { createReadableDate, getPaginationValues } from '../util/utility-methods';
 import Product from "../models/products";
-import { stripeKey } from '../data/connection';
+import { stripeKey, stripeSecretKey } from '../data/connection';
 import Stripe from "stripe";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
@@ -304,16 +304,21 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
     const hasUser = user !== undefined;
 
     // Instantiate stripe
-    const stripe = new Stripe(stripeKey);
+    const stripe = new Stripe(stripeSecretKey);
 
-    const handlePayment = () => {
+    console.clear();
+    console.log("Stripe");
+    console.log(stripe);
 
-        console.clear();
-        console.log("Button clicked");
-        console.log("\n");
-        console.log("This works!");
-        console.log(Math.random() * 100);
-    };
+    // 
+    let products = cart.items;
+    let total = cart.totalPrice;
+
+    // Creating the stripe session for checkout
+    /*
+    stripe.checkout.sessions.create({
+
+    }); */
 
     response.render("pages/shop/checkout", { 
         pageTitle : "Checkout",
@@ -321,7 +326,7 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
         csrfToken : csrfToken,
         cart : cart,
         hasProducts : hasProducts, 
-        products : hasUser === true ? cart.items : [],
+        products : hasUser === true ? products : [],
         clickHandler : "handlePayment()"
     });
 };
