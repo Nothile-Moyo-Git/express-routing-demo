@@ -25,12 +25,12 @@
 import { NextFunction, Response, Request } from 'express';
 import { createReadableDate, getPaginationValues } from '../util/utility-methods';
 import Product from "../models/products";
-import { stripeKey, stripeSecretKey } from '../data/connection';
+import { stripeSecretKey } from '../data/connection';
 import Stripe from "stripe";
 import { ObjectId } from 'mongodb';
 import User from "../models/user";
 import Order from "../models/order";
-import { ExtendedRequestInterface, OrderItemInterface } from '../@types';
+import { CartItemInterface, ExtendedRequestInterface, OrderItemInterface } from '../@types';
 import CustomError from '../models/error';
 import path from 'path';
 import PDFDocument from "pdfkit";
@@ -286,7 +286,7 @@ const getOrders = async (request : ExtendedRequestInterface, response : Response
 };
 
 // Get the checkout page from the cart
-const getCheckout = ( request : ExtendedRequestInterface, response : Response ) => {
+const getCheckout = async ( request : ExtendedRequestInterface, response : Response ) => {
 
     // Instantiate the User that we have
     const user = request.session.user;
@@ -307,29 +307,38 @@ const getCheckout = ( request : ExtendedRequestInterface, response : Response ) 
     const stripe = new Stripe(stripeSecretKey);
 
     console.clear();
-    console.log("Stripe");
-    console.log(stripe);
 
     // 
     let products = cart.items;
     let total = cart.totalPrice;
 
     // Creating the stripe session for checkout
-    /*
-    stripe.checkout.sessions.create({
-
-    }); */
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types : ['card'],
+        mode : 'payment',
+        line_items : products.map((product : CartItemInterface) => {
+            return {
+                name : product.title,
+                amount : product.price,
+                currency : 'gbp',
+                quantity : product.quantity
+            }
+        }),
+        success_url : request.protocol + "://" + request.get('host') + "/checkout/success",
+        cancel_url : request.protocol + "://" + request.get('host') + "/checkout/cancel",
+    });
 
     response.render("pages/shop/checkout", { 
         pageTitle : "Checkout",
         isAuthenticated : true,
         csrfToken : csrfToken,
         cart : cart,
+        sessionId : session.id,
         hasProducts : hasProducts, 
         products : hasUser === true ? products : [],
         clickHandler : "handlePayment()"
     });
-};
+}; 
 
 // Get product detail controller
 const getProductDetails = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
