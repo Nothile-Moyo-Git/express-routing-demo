@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema<UserInterface>({
             title : String,
             quantity : Number,
             price : Number,
+            image : String,
+            description : String,
             _id : false
         }],
         totalPrice : { type : Number, required : true }
@@ -75,9 +77,11 @@ userSchema.method('addToCart', function addToCart (product : ProductInterface) {
 
         // Add a new cart item
         this.cart.items.push({
-            title : product.title, 
+            description : product.description,
             productId : product._id,
+            title : product.title, 
             price : product.price,
+            image : product.image,
             quantity : 1
         });
 

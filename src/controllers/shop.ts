@@ -312,17 +312,24 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     let products = cart.items;
     let total = cart.totalPrice;
 
+    console.log("Products");
+    console.log(products);
+
     // Creating the stripe session for checkout
     const session = await stripe.checkout.sessions.create({
         payment_method_types : ['card'],
         mode : 'payment',
         line_items : products.map((product : CartItemInterface) => {
             return {
-                name : product.title,
-                amount : product.price,
-                currency : 'gbp',
-                quantity : product.quantity
-            }
+                price_data : {
+                    currency : 'gbp',
+                    unit_amount : Number(product.price),
+                    product_data : {
+                        name : product.title,
+
+                    }
+                }
+            };
         }),
         success_url : request.protocol + "://" + request.get('host') + "/checkout/success",
         cancel_url : request.protocol + "://" + request.get('host') + "/checkout/cancel",
@@ -333,7 +340,6 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
         isAuthenticated : true,
         csrfToken : csrfToken,
         cart : cart,
-        sessionId : session.id,
         hasProducts : hasProducts, 
         products : hasUser === true ? products : [],
         clickHandler : "handlePayment()"
@@ -437,7 +443,7 @@ const postCart = async (request : ExtendedRequestInterface, response : Response,
 
         // Get product details
         const product = await Product.findOne({_id : productId})
-        .select("title price _id");
+        .select("title price _id image description");
 
         if (user !== undefined && isCSRFValid === true) {
 
@@ -445,7 +451,7 @@ const postCart = async (request : ExtendedRequestInterface, response : Response,
             const userInstance = new User(user);
         
             // Set the product details into a new object
-            const productDetails = { title : product.title, price : product.price, _id : product._id };
+            const productDetails = { title : product.title, price : product.price, _id : product._id, image : product.image, description : product.description };
 
             // This is our new cart
             userInstance.addToCart(productDetails);
