@@ -306,14 +306,9 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     // Instantiate stripe
     const stripe = new Stripe(stripeSecretKey);
 
-    console.clear();
-
-    // 
-    let products = cart.items;
+    // Get the products
+    const products = cart.items;
     let total = cart.totalPrice;
-
-    console.log("Products");
-    console.log(products);
 
     // Creating the stripe session for checkout
     const session = await stripe.checkout.sessions.create({
@@ -328,14 +323,15 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
                         name : product.title,
 
                     }
-                }
+                },
+                quantity : product.quantity
             };
         }),
         success_url : request.protocol + "://" + request.get('host') + "/checkout/success",
         cancel_url : request.protocol + "://" + request.get('host') + "/checkout/cancel",
     });
 
-    response.render("pages/shop/checkout", { 
+    response.render("pages/shop/checkout/checkout", { 
         pageTitle : "Checkout",
         isAuthenticated : true,
         csrfToken : csrfToken,
@@ -344,10 +340,76 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
         products : hasUser === true ? products : [],
         clickHandler : "handlePayment()"
     });
-}; 
+};
+
+// Render the checkout success page
+const postCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
+          
+    // Instantiate the User that we have
+    const user = request.session.user;
+
+    // Get our CSRF token if we don't have one already
+    const csrfToken = request.session.csrfToken;
+
+    // Get the cart from the session, we store it in the session with the userId so that they can be used anywhere
+    const cart = request.session.cart;
+
+    // Check if we have products that we can render on the tempalate
+    const hasProducts = cart.items.length > 0 ? true : false;
+
+    // Check if we have any users that work with the session
+    const hasUser = user !== undefined;
+
+    // Get the products
+    const products = cart.items;
+
+    response.render("pages/shop/checkout/checkout", { 
+        pageTitle : "Checkout",
+        isAuthenticated : true,
+        csrfToken : csrfToken,
+        cart : cart,
+        hasProducts : hasProducts, 
+        products : hasUser === true ? products : [],
+        clickHandler : "handlePayment()"
+    });
+    
+};
+
+// Render the checkout failure page
+const postCheckoutFailure = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
+
+    // Instantiate the User that we have
+    const user = request.session.user;
+
+    // Get our CSRF token if we don't have one already
+    const csrfToken = request.session.csrfToken;
+
+    // Get the cart from the session, we store it in the session with the userId so that they can be used anywhere
+    const cart = request.session.cart;
+
+    // Check if we have products that we can render on the tempalate
+    const hasProducts = cart.items.length > 0 ? true : false;
+
+    // Check if we have any users that work with the session
+    const hasUser = user !== undefined;
+
+    // Get the products
+    const products = cart.items;
+
+    response.render("pages/shop/checkout/checkout", { 
+        pageTitle : "Checkout",
+        isAuthenticated : true,
+        csrfToken : csrfToken,
+        cart : cart,
+        hasProducts : hasProducts, 
+        products : hasUser === true ? products : [],
+        clickHandler : "handlePayment()"
+    });
+    
+};
 
 // Get product detail controller
-const getProductDetails = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
+const getProductDetails = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
     // Get our request session from our Mongoose database and check if we're logged in
     const isLoggedIn = request.session.isLoggedIn;
@@ -616,4 +678,4 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
 };
 
-export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, postCheckoutSuccess, postCheckoutFailure, getIndex, getOrders, getProductDetails };
