@@ -308,7 +308,6 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
 
     // Get the products
     const products = cart.items;
-    let total = cart.totalPrice;
 
     // Creating the stripe session for checkout
     const session = await stripe.checkout.sessions.create({
@@ -331,10 +330,14 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
         cancel_url : request.protocol + "://" + request.get('host') + "/checkout/cancel",
     });
 
+    // Set session id
+    const sessionId = session.id;
+
     response.render("pages/shop/checkout/checkout", { 
         pageTitle : "Checkout",
         isAuthenticated : true,
         csrfToken : csrfToken,
+        sessionId : sessionId,
         cart : cart,
         hasProducts : hasProducts, 
         products : hasUser === true ? products : [],
@@ -343,69 +346,67 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
 };
 
 // Render the checkout success page
-const postCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
+const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
           
-    // Instantiate the User that we have
-    const user = request.session.user;
+    // csrfToken from our session
+    const sessionCSRFToken = request.session.csrfToken;
+    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
 
-    // Get our CSRF token if we don't have one already
-    const csrfToken = request.session.csrfToken;
+    // Check if our csrf values are correct
+    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
-    // Get the cart from the session, we store it in the session with the userId so that they can be used anywhere
-    const cart = request.session.cart;
+    if (isCSRFValid === true) {
 
-    // Check if we have products that we can render on the tempalate
-    const hasProducts = cart.items.length > 0 ? true : false;
+        try{
 
-    // Check if we have any users that work with the session
-    const hasUser = user !== undefined;
+            // Create our order from the cart we pass through from the User singleton found in index.ts
+            const orderInstance = new Order({
+                totalPrice : request.User.cart.totalPrice,
+                orderItems : request.User.cart.items,
+                user : {
+                    _id : request.User._id,
+                    name : request.User.name
+                }
+            });
 
-    // Get the products
-    const products = cart.items;
+            // Store the order in the database
+            await orderInstance.save();
 
-    response.render("pages/shop/checkout/checkout", { 
-        pageTitle : "Checkout",
-        isAuthenticated : true,
-        csrfToken : csrfToken,
-        cart : cart,
-        hasProducts : hasProducts, 
-        products : hasUser === true ? products : [],
-        clickHandler : "handlePayment()"
-    });
+            // We now need to empty our cart
+            // We will create a User instance and we will delete the cart from the instance
+            // Then we'll execute the save method to update the database user
+            const userInstance = new User(request.User);
+
+            // Empty the cart now that we've saved it as an order
+            userInstance.emptyCart();
+
+            // Update the user details in MongoDB
+            await userInstance.save();
+
+            // Update the user in the session and empty their cart too
+            request.session.user = userInstance;
+            
+            // Move to the orders page
+            response.redirect("/orders");
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
     
-};
-
-// Render the checkout failure page
-const postCheckoutFailure = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
-
-    // Instantiate the User that we have
-    const user = request.session.user;
-
-    // Get our CSRF token if we don't have one already
-    const csrfToken = request.session.csrfToken;
-
-    // Get the cart from the session, we store it in the session with the userId so that they can be used anywhere
-    const cart = request.session.cart;
-
-    // Check if we have products that we can render on the tempalate
-    const hasProducts = cart.items.length > 0 ? true : false;
-
-    // Check if we have any users that work with the session
-    const hasUser = user !== undefined;
-
-    // Get the products
-    const products = cart.items;
-
-    response.render("pages/shop/checkout/checkout", { 
-        pageTitle : "Checkout",
-        isAuthenticated : true,
-        csrfToken : csrfToken,
-        cart : cart,
-        hasProducts : hasProducts, 
-        products : hasUser === true ? products : [],
-        clickHandler : "handlePayment()"
-    });
+            // Custom error object
+            const error = new CustomError(err.message, 500);
     
+            console.log(error);
+    
+            return next(error);
+        }
+
+    }else{
+
+        response.status(403).send("CSRF protection failed!");
+    }
 };
 
 // Get product detail controller
@@ -678,4 +679,4 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
 };
 
-export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, postCheckoutSuccess, postCheckoutFailure, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, getCheckoutSuccess, getIndex, getOrders, getProductDetails };
