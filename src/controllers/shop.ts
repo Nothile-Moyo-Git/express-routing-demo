@@ -317,7 +317,7 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
             return {
                 price_data : {
                     currency : 'gbp',
-                    unit_amount : Number(product.price),
+                    unit_amount : product.price * 100,
                     product_data : {
                         name : product.title,
 
@@ -326,12 +326,16 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
                 quantity : product.quantity
             };
         }),
-        success_url : request.protocol + "://" + request.get('host') + "/checkout/success",
-        cancel_url : request.protocol + "://" + request.get('host') + "/checkout/cancel",
+        success_url : request.protocol + "://" + request.get('host') + `/checkout/success?{CHECKOUT_SESSION_ID}`,
+        cancel_url : request.protocol + "://" + request.get('host') + `/checkout/cancel`
     });
 
     // Set session id
     const sessionId = session.id;
+
+    console.clear();
+    console.log("Session");
+    console.log(session);
 
     response.render("pages/shop/checkout/checkout", { 
         pageTitle : "Checkout",
@@ -347,65 +351,68 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
 
 // Render the checkout success page
 const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
-          
-    // csrfToken from our session
-    const sessionCSRFToken = request.session.csrfToken;
-    const requestCSRFToken = String(request.body.csrfToken).replace(/\/$/, "");
+     
+    console.log("\n\n");
+    console.log("Request query");
+    console.log(request.query);
 
-    // Check if our csrf values are correct
-    const isCSRFValid = sessionCSRFToken === requestCSRFToken;
+    try{
 
-    if (isCSRFValid === true) {
+        // Create our order from the cart we pass through from the User singleton found in index.ts
+        const orderInstance = new Order({
+            totalPrice : request.User.cart.totalPrice,
+            orderItems : request.User.cart.items,
+            user : {
+                _id : request.User._id,
+                name : request.User.name
+            }
+        });
 
-        try{
+        // Store the order in the database
+        // await orderInstance.save();
 
-            // Create our order from the cart we pass through from the User singleton found in index.ts
-            const orderInstance = new Order({
-                totalPrice : request.User.cart.totalPrice,
-                orderItems : request.User.cart.items,
-                user : {
-                    _id : request.User._id,
-                    name : request.User.name
-                }
-            });
+        // We now need to empty our cart
+        // We will create a User instance and we will delete the cart from the instance
+        // Then we'll execute the save method to update the database user
+        const userInstance = new User(request.User);
 
-            // Store the order in the database
-            await orderInstance.save();
+        // Empty the cart now that we've saved it as an order
+        // userInstance.emptyCart();
 
-            // We now need to empty our cart
-            // We will create a User instance and we will delete the cart from the instance
-            // Then we'll execute the save method to update the database user
-            const userInstance = new User(request.User);
+        // Update the user details in MongoDB
+        // await userInstance.save();
 
-            // Empty the cart now that we've saved it as an order
-            userInstance.emptyCart();
+        // Update the user in the session and empty their cart too
+        request.session.user = userInstance;
+        
+        // Move to the orders page
+        // response.redirect("/orders");
 
-            // Update the user details in MongoDB
-            await userInstance.save();
+            // Get our request session from our Mongoose database and check if we're logged in
+        const isLoggedIn = request.session.isLoggedIn;
 
-            // Update the user in the session and empty their cart too
-            request.session.user = userInstance;
-            
-            // Move to the orders page
-            response.redirect("/orders");
+        // Get the CSRF token from the session and attach it (although it's not really necessary unless we're logged in)
+        const csrfToken = request.session.csrfToken;
 
-        }catch(err){
+        // If the page has a 404 error, then output an error page instead of crashing the server
+        response.render('errors/404', { 
+            pageTitle: "Error", 
+            isAuthenticated : isLoggedIn === undefined ? false : true,
+            csrfToken : csrfToken
+        }); 
 
-            console.clear();
-            console.log("There's been a server error, please view below");
-            console.log("\n");
-    
-            // Custom error object
-            const error = new CustomError(err.message, 500);
-    
-            console.log(error);
-    
-            return next(error);
-        }
+    }catch(err){
 
-    }else{
+        console.clear();
+        console.log("There's been a server error, please view below");
+        console.log("\n");
 
-        response.status(403).send("CSRF protection failed!");
+        // Custom error object
+        const error = new CustomError(err.message, 500);
+
+        console.log(error);
+
+        return next(error);
     }
 };
 
