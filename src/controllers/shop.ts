@@ -333,10 +333,6 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     // Set session id
     const sessionId = session.id;
 
-    console.clear();
-    console.log("Session");
-    console.log(session);
-
     response.render("pages/shop/checkout/checkout", { 
         pageTitle : "Checkout",
         isAuthenticated : true,
@@ -351,10 +347,10 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
 
 // Render the checkout success page
 const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
-     
-    console.log("\n\n");
-    console.log("Request query");
-    console.log(request.query);
+
+    console.clear();
+    console.log("User details");
+    console.log(request.User);
 
     try{
 
@@ -369,7 +365,7 @@ const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response 
         });
 
         // Store the order in the database
-        // await orderInstance.save();
+        await orderInstance.save();
 
         // We now need to empty our cart
         // We will create a User instance and we will delete the cart from the instance
@@ -377,16 +373,16 @@ const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response 
         const userInstance = new User(request.User);
 
         // Empty the cart now that we've saved it as an order
-        // userInstance.emptyCart();
+        userInstance.emptyCart();
 
         // Update the user details in MongoDB
-        // await userInstance.save();
+        await userInstance.save();
 
         // Update the user in the session and empty their cart too
         request.session.user = userInstance;
         
         // Move to the orders page
-        // response.redirect("/orders");
+        response.redirect("/orders");
 
             // Get our request session from our Mongoose database and check if we're logged in
         const isLoggedIn = request.session.isLoggedIn;
