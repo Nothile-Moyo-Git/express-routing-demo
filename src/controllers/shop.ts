@@ -348,19 +348,21 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
 // Render the checkout success page
 const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
-    console.clear();
-    console.log("User details");
-    console.log(request.User);
+    // Get the user and the session
+    const user = request.session.user;
 
+    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
+    const cart = request.session.cart;
+    
     try{
 
         // Create our order from the cart we pass through from the User singleton found in index.ts
         const orderInstance = new Order({
-            totalPrice : request.User.cart.totalPrice,
-            orderItems : request.User.cart.items,
+            totalPrice : cart.totalPrice,
+            orderItems : cart.items,
             user : {
-                _id : request.User._id,
-                name : request.User.name
+                _id : user._id,
+                name : user.name
             }
         });
 
@@ -370,7 +372,9 @@ const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response 
         // We now need to empty our cart
         // We will create a User instance and we will delete the cart from the instance
         // Then we'll execute the save method to update the database user
-        const userInstance = new User(request.User);
+        const userInstance = new User(user);
+
+        console.log(userInstance);
 
         // Empty the cart now that we've saved it as an order
         userInstance.emptyCart();
