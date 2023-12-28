@@ -372,34 +372,40 @@ const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response 
         // We now need to empty our cart
         // We will create a User instance and we will delete the cart from the instance
         // Then we'll execute the save method to update the database user
-        const userInstance = new User(user);
-
-        console.log(userInstance);
+        const userInstance = new User({
+            _id : user._id,
+            name : user.name,
+            email : user.email,
+            password : user.password,
+            cart : cart,
+            resetToken : user.resetToken,
+            resetTokenExpiration : user.resetTokenExpiration
+        });
 
         // Empty the cart now that we've saved it as an order
         userInstance.emptyCart();
 
         // Update the user details in MongoDB
-        await userInstance.save();
+        await User.updateOne({ _id : user._id}, {
+            cart : {
+                items : [],
+                totalPrice : 0
+            }
+        });
 
         // Update the user in the session and empty their cart too
         request.session.user = userInstance;
-        
+
+        // Update the cart in the session since it's the cart that gets referenced when we visit the cart
+        // Update the cart which we store separately in our session
+        request.session.cart = {
+            items : userInstance.cart.items,
+            totalPrice : userInstance.cart.totalPrice,
+            userId : cart.userId
+        };
+
         // Move to the orders page
         response.redirect("/orders");
-
-            // Get our request session from our Mongoose database and check if we're logged in
-        const isLoggedIn = request.session.isLoggedIn;
-
-        // Get the CSRF token from the session and attach it (although it's not really necessary unless we're logged in)
-        const csrfToken = request.session.csrfToken;
-
-        // If the page has a 404 error, then output an error page instead of crashing the server
-        response.render('errors/404', { 
-            pageTitle: "Error", 
-            isAuthenticated : isLoggedIn === undefined ? false : true,
-            csrfToken : csrfToken
-        }); 
 
     }catch(err){
 
@@ -532,7 +538,7 @@ const postCart = async (request : ExtendedRequestInterface, response : Response,
             // Update the user in the session so we don't have to restart the server after adding an item to our cart
             request.session.user = userInstance;
 
-            // Update the user in the session
+            // Update the cart which we store separately in our session
             request.session.cart = {
                 items : userInstance.cart.items,
                 totalPrice : userInstance.cart.totalPrice,
