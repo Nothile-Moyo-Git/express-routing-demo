@@ -43,13 +43,11 @@
                                 <%  }); %>
                             </ul>
 
-                            <form class="cart__checkout" method="POST" action="/cart-order-create" enctype="multipart/form-data">
+                            <div class="cart__checkout">
                                 <p class="cart__checkout-text">Total : £<%= totalPrice %></p>
-                                <input type="hidden" name="totalPrice" value=<%= totalPrice %>/>
-                                <input type="hidden" name="csrfToken" value=<%= csrfToken %>/>
-                                <button class="cart__checkout-button">Checkout</button>
-                            </form>
-                            
+                                <a href="/checkout" class="cart__checkout-button">Checkout</a>
+                            </div>
+
                         </div>
 
                     <% } else { %>

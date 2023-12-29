@@ -31,6 +31,7 @@
     }
 
     @include mixins.state(){
+        color: inherit;
         cursor: pointer;
         filter: contrast(150%);
         box-shadow: branding.$box_shadow_blue;

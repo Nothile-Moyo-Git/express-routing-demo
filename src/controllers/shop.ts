@@ -637,6 +637,9 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
+    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
+    const cart = request.session.cart;
+
     if (isCSRFValid === true) {
 
         try{
@@ -663,10 +666,24 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
             userInstance.emptyCart();
 
             // Update the user details in MongoDB
-            await userInstance.save();
+            // await userInstance.save();
+            await User.updateOne({ _id : request.User._id },{
+                cart : {
+                    items : [],
+                    totalPrice : 0
+                }
+            });
 
             // Update the user in the session and empty their cart too
             request.session.user = userInstance;
+
+            // Update the cart in the session since it's the cart that gets referenced when we visit the cart
+            // Update the cart which we store separately in our session
+            request.session.cart = {
+                items : userInstance.cart.items,
+                totalPrice : userInstance.cart.totalPrice,
+                userId : cart.userId
+            };
             
             // Move to the orders page
             response.redirect("/orders");
