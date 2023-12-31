@@ -15,6 +15,9 @@
  * @method getCheckout : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
  * @method getShop : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
  * @method getProductDetails : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method postHandlePayment : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getCheckoutSuccess : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
+ * @method getCreateWebhookEndpoint : : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
  * @method getCart : async ( request : ExtendedRequestInterface, response : Response ) => void
  * @method postCart : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
  * @method postOrderCreate : async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => void | next
@@ -345,6 +348,24 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     });
 };
 
+// Create a webhook endpoint for stripe.
+// NOTE: THIS IS FOR LOCAL TESTING, go to https://stripe.com/docs/webhooks in order to find out how to create live endpoints
+const getCreateWebhookEndpoint = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
+
+    // Instantiate Stripe
+    const stripe = new Stripe(stripeSecretKey);
+
+    // Create a webhook endpoint
+    const webhookEndpoint = await stripe.webhookEndpoints.create({
+        enabled_events : ["checkout.session.completed", "checkout.session.expired"],
+        url : "http://localhost:3000/webhook"
+    });
+
+    // Output content
+    console.clear();
+    console.log("Stripe");
+};
+
 // Handle the checkout.session.completed event by stripe so that we don't automatically delete our orders
 const postHandlePayment = ( request : any, response : any ) => {
 
@@ -353,7 +374,6 @@ const postHandlePayment = ( request : any, response : any ) => {
     console.clear();
     console.log("Handle payment endpoint for stripe");
     console.log(event);
-
 
     // Handle the event
     switch (event.type) {
