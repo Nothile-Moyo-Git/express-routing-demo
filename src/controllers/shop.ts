@@ -345,6 +345,39 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     });
 };
 
+// Handle the checkout.session.completed event by stripe so that we don't automatically delete our orders
+const postHandlePayment = ( request : any, response : any ) => {
+
+    const event = request.body;
+
+    console.clear();
+    console.log("Handle payment endpoint for stripe");
+    console.log(event);
+
+
+    // Handle the event
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntent = event.data.object;
+        // Then define and call a method to handle the successful payment intent.
+        // handlePaymentIntentSucceeded(paymentIntent);
+        break;
+      case 'payment_method.attached':
+        const paymentMethod = event.data.object;
+        // Then define and call a method to handle the successful attachment of a PaymentMethod.
+        // handlePaymentMethodAttached(paymentMethod);
+        break;
+      // ... handle other event types
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+  
+    // Return a response to acknowledge receipt of the event
+    response.json({received: true});
+
+    response.redirect("/orders");
+};
+
 // Render the checkout success page
 const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
@@ -637,6 +670,9 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
     // Check if our csrf values are correct
     const isCSRFValid = sessionCSRFToken === requestCSRFToken;
 
+    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
+    const cart = request.session.cart;
+
     if (isCSRFValid === true) {
 
         try{
@@ -663,10 +699,24 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
             userInstance.emptyCart();
 
             // Update the user details in MongoDB
-            await userInstance.save();
+            // await userInstance.save();
+            await User.updateOne({ _id : request.User._id },{
+                cart : {
+                    items : [],
+                    totalPrice : 0
+                }
+            });
 
             // Update the user in the session and empty their cart too
             request.session.user = userInstance;
+
+            // Update the cart in the session since it's the cart that gets referenced when we visit the cart
+            // Update the cart which we store separately in our session
+            request.session.cart = {
+                items : userInstance.cart.items,
+                totalPrice : userInstance.cart.totalPrice,
+                userId : cart.userId
+            };
             
             // Move to the orders page
             response.redirect("/orders");
@@ -692,4 +742,4 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
 };
 
-export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, getCheckoutSuccess, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, postHandlePayment, getCheckoutSuccess, getIndex, getOrders, getProductDetails };
