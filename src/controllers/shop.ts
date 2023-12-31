@@ -345,6 +345,39 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     });
 };
 
+// Handle the checkout.session.completed event by stripe so that we don't automatically delete our orders
+const postHandlePayment = ( request : any, response : any ) => {
+
+    const event = request.body;
+
+    console.clear();
+    console.log("Handle payment endpoint for stripe");
+    console.log(event);
+
+
+    // Handle the event
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntent = event.data.object;
+        // Then define and call a method to handle the successful payment intent.
+        // handlePaymentIntentSucceeded(paymentIntent);
+        break;
+      case 'payment_method.attached':
+        const paymentMethod = event.data.object;
+        // Then define and call a method to handle the successful attachment of a PaymentMethod.
+        // handlePaymentMethodAttached(paymentMethod);
+        break;
+      // ... handle other event types
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+  
+    // Return a response to acknowledge receipt of the event
+    response.json({received: true});
+
+    response.redirect("/orders");
+};
+
 // Render the checkout success page
 const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
 
@@ -709,4 +742,4 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
 };
 
-export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, getCheckoutSuccess, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, postHandlePayment, getCheckoutSuccess, getIndex, getOrders, getProductDetails };
