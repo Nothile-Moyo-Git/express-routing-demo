@@ -4,7 +4,7 @@ import express from "express";
 import isAuthenticated from "../middleware/is-auth";
 
 // Import our router renderers
-import { getCart, postCart, postOrderCreate, postHandlePayment, getInvoiceController, postCartDelete, getProducts, getCheckout, getCheckoutSuccess, getIndex, getOrders, getProductDetails } from "../controllers/shop";
+import { getCart, postCart, postOrderCreate, postHandleStripeEvents, getInvoiceController, postCartDelete, getProducts, getCheckout, getCheckoutSuccess, getIndex, getOrders, getProductDetails } from "../controllers/shop";
 
 const shopRoutes = express.Router({ strict : true });
 
@@ -16,7 +16,7 @@ shopRoutes.get("/orders", isAuthenticated, getOrders);
 shopRoutes.get("/checkout", isAuthenticated, getCheckout);
 shopRoutes.get("/checkout/success", isAuthenticated, getCheckoutSuccess);
 shopRoutes.get("/checkout/cancel", isAuthenticated, getCheckout);
-shopRoutes.post("/stripe_checkout", postHandlePayment);
+shopRoutes.post("/webhook", postHandleStripeEvents);
 shopRoutes.get("/products", getProducts);
 shopRoutes.get("/order/:orderId", isAuthenticated, getInvoiceController);
 shopRoutes.post("/cart-order-create", isAuthenticated, postOrderCreate);
