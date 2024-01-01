@@ -367,7 +367,7 @@ const getCreateWebhookEndpoint = async (request : ExtendedRequestInterface, resp
 };
 
 // Handle the checkout.session.completed event by stripe so that we don't automatically delete our orders
-const postHandlePayment = ( request : any, response : any ) => {
+const postHandleStripeEvents = ( request : any, response : any ) => {
 
     const event = request.body;
 
@@ -377,18 +377,32 @@ const postHandlePayment = ( request : any, response : any ) => {
 
     // Handle the event
     switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
-        // Then define and call a method to handle the successful payment intent.
-        // handlePaymentIntentSucceeded(paymentIntent);
+        case 'payment_intent.succeeded':
+            const paymentIntent = event.data.object;
+            // Then define and call a method to handle the successful payment intent.
+            // handlePaymentIntentSucceeded(paymentIntent);
         break;
-      case 'payment_method.attached':
-        const paymentMethod = event.data.object;
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handlePaymentMethodAttached(paymentMethod);
+
+        case 'payment_method.attached':
+            const paymentMethod = event.data.object;
+            // Then define and call a method to handle the successful attachment of a PaymentMethod.
+            // handlePaymentMethodAttached(paymentMethod);
         break;
-      // ... handle other event types
-      default:
+
+        case 'checkout.session.completed':
+            const checkoutResult = event.data.object;
+            console.log("\n\n");
+            console.log("Checkout completed");
+        break;
+
+        case 'checkout.session.expired':
+            const checkoutExpired = event.data.object
+            console.log("\n\n");
+            console.log("Checkout expired");
+        break;
+    
+        // ... handle other event types
+        default:
         console.log(`Unhandled event type ${event.type}`);
     }
   
@@ -762,4 +776,4 @@ const postOrderCreate = async (request : ExtendedRequestInterface, response : Re
 
 };
 
-export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, postHandlePayment, getCheckoutSuccess, getIndex, getOrders, getProductDetails };
+export { getCart, postCart, postOrderCreate, getInvoiceController, postCartDelete, getProducts, getCheckout, postHandleStripeEvents, getCheckoutSuccess, getIndex, getOrders, getProductDetails };

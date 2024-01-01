@@ -3,4 +3,5 @@ node_modules
 package-lock.json
 src/util/database.ts
 src/data/connection.ts
+src/stripe.exe
 uploads
