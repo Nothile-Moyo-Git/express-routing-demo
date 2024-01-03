@@ -369,36 +369,57 @@ const getCreateWebhookEndpoint = async (request : ExtendedRequestInterface, resp
 // Handle the checkout.session.completed event by stripe so that we don't automatically delete our orders
 const postHandleStripeEvents = ( request : any, response : any ) => {
 
+    // Get the event from stripe, we do this here because this webhook is only called by the post request
     const event = request.body;
 
+    // Get the user and the session
+    const user = request.session.user;
+
+    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
+    const cart = request.session.cart;
+
+    /*
     console.clear();
     console.log("Handle payment endpoint for stripe");
-    console.log(event);
+    console.log(event); */
 
     // Handle the event
     switch (event.type) {
+
+        case 'payment_intent.created':
+            // const paymentIntent = event.data.object;
+            // Then define and call a method to handle the successful payment intent.
+            // handlePaymentIntentSucceeded(paymentIntent);
+            console.log("\n", "Payment intent created event run");
+        break;
+
         case 'payment_intent.succeeded':
             const paymentIntent = event.data.object;
             // Then define and call a method to handle the successful payment intent.
             // handlePaymentIntentSucceeded(paymentIntent);
+            console.log("\n", "Pay intent succeeded event run");
         break;
 
         case 'payment_method.attached':
             const paymentMethod = event.data.object;
             // Then define and call a method to handle the successful attachment of a PaymentMethod.
             // handlePaymentMethodAttached(paymentMethod);
+            console.log("\n", "Payment method attached event run");
+        break;
+
+        case 'charge.succeeded':
+            const chargeResult = event.data.object;
+            console.log("\n", "Charge succeeded event run");
         break;
 
         case 'checkout.session.completed':
             const checkoutResult = event.data.object;
-            console.log("\n\n");
-            console.log("Checkout completed");
+            console.log("\n", "Checkout completed event run");
         break;
 
         case 'checkout.session.expired':
             const checkoutExpired = event.data.object
-            console.log("\n\n");
-            console.log("Checkout expired");
+            console.log("\n", "Checkout expired event run");
         break;
     
         // ... handle other event types

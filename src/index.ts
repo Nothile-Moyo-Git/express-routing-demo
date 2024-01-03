@@ -33,7 +33,6 @@ import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility
 import fs from "fs";
 import { Session } from "express-session";
 
-
 // Module augmentation for the request
 declare module 'express-serve-static-core' {
     interface Request{
