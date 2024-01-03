@@ -116,9 +116,11 @@ You can find instructions for other operating systems [here](https://stripe.com/
 When you've got it installed in the _/src_ folder. You can run the following command using _cmd_ in the installation folder where your stripe is found.
 
 Run an event listener which listens to all stripe events on port 3000
-> stripe listen --forward-to --skip-verify localhost:3000/webhook
+> stripe listen --forward-to localhost:3000/webhook
 
 ** Note: You can forward events from your public site to your local one using stripe --load-from-webhooks-api **
+
+** Note: You can skip the verification for SSL using the --skip-verify tag, but be warned that this can cause security concerns **
 
 ## Databases
 **Note: Sequelize and MySQL were used previously, and have now been replaced with Mongoose. Mongoose is an ORM for MongoDB used with Node.js**
