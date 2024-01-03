@@ -409,7 +409,7 @@ const postHandleStripeEvents = ( request : any, response : any ) => {
     // Return a response to acknowledge receipt of the event
     response.json({received: true});
 
-    response.redirect("/orders");
+    response.status(200).end();
 };
 
 // Render the checkout success page

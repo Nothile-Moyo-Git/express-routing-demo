@@ -16,7 +16,7 @@ shopRoutes.get("/orders", isAuthenticated, getOrders);
 shopRoutes.get("/checkout", isAuthenticated, getCheckout);
 shopRoutes.get("/checkout/success", isAuthenticated, getCheckoutSuccess);
 shopRoutes.get("/checkout/cancel", isAuthenticated, getCheckout);
-shopRoutes.post("/webhook", postHandleStripeEvents);
+shopRoutes.post("/webhook", express.json({ type: "application/json" }), postHandleStripeEvents);
 shopRoutes.get("/products", getProducts);
 shopRoutes.get("/order/:orderId", isAuthenticated, getInvoiceController);
 shopRoutes.post("/cart-order-create", isAuthenticated, postOrderCreate);
