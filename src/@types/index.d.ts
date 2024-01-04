@@ -52,6 +52,74 @@ export interface UserInterface{
     resetTokenExpiration ?: Date
 }
 
+export interface StripeRequestInterface{
+    type ?: string,
+    request ?: {
+        id : string | null,
+        idempotency_key : string | null
+    },
+    pending_webhooks ?: number,
+    livemode ?: boolean,
+    id : string,
+    object : string,
+    api_version : string,
+    created : number,
+    data ?: {
+        object ?: {
+            id : string,
+            object : string,
+            after_expiration : boolean | null,
+            allow_promotion_codes : boolean | null,
+            amount_subtotal : number,
+            amount_total : number,
+            automatic_tax : any,
+            billing_address_collection : null,
+            cancel_url : string,
+            client_reference_id : null,
+            client_secret : null,
+            consent : null,
+            consent_collection : null,
+            created : number,
+            currency : string,
+            currency_conversion : null,
+            custom_fields : [],
+            custom_text : any,
+            customer : null,
+            customer_creation : string,
+            customer_details : null,
+            customer_email : null,
+            expires_at : number,
+            invoice : null,
+            invoice_creation : any,
+            livemode : false,
+            locale : null,
+            metadata : {},
+            mode : string,
+            payment_intent : null,
+            payment_link : null,
+            payment_method_collection : string,
+            payment_method_configuration_details : null,
+            payment_method_options : {},
+            payment_method_types : any[],
+            payment_status : string,
+            phone_number_collection : any,
+            recovered_from : null,
+            setupIntent : null,
+            shipping_address_collection : null,
+            shipping_cost : null,
+            shipping_details : null,
+            shipping_options : [],
+            status : string,
+            submit_type : null,
+            subscription : null,
+            success_url : string,
+            total_details : any,
+            ui_mode : string,
+            url : null
+        }
+    }
+}
+
 export interface CustomError extends Error{
     httpStatusCode : number
 }
