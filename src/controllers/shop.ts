@@ -312,40 +312,47 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
     // Get the products
     const products = cart.items;
 
-    // Creating the stripe session for checkout
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types : ['card'],
-        mode : 'payment',
-        line_items : products.map((product : CartItemInterface) => {
-            return {
-                price_data : {
-                    currency : 'gbp',
-                    unit_amount : product.price * 100,
-                    product_data : {
-                        name : product.title,
+    if (products.length > 0) {
 
-                    }
-                },
-                quantity : product.quantity
-            };
-        }),
-        success_url : request.protocol + "://" + request.get('host') + `/checkout/success?{CHECKOUT_SESSION_ID}`,
-        cancel_url : request.protocol + "://" + request.get('host') + `/checkout/cancel`
-    });
+        // Creating the stripe session for checkout
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types : ['card'],
+            mode : 'payment',
+            line_items : products.map((product : CartItemInterface) => {
+                return {
+                    price_data : {
+                        currency : 'gbp',
+                        unit_amount : product.price * 100,
+                        product_data : {
+                            name : product.title,
 
-    // Set session id
-    const sessionId = session.id;
+                        }
+                    },
+                    quantity : product.quantity
+                };
+            }),
+            success_url : request.protocol + "://" + request.get('host') + `/checkout/success?{CHECKOUT_SESSION_ID}`,
+            cancel_url : request.protocol + "://" + request.get('host') + `/checkout/cancel`
+        });
 
-    response.render("pages/shop/checkout/checkout", { 
-        pageTitle : "Checkout",
-        isAuthenticated : true,
-        csrfToken : csrfToken,
-        sessionId : sessionId,
-        cart : cart,
-        hasProducts : hasProducts, 
-        products : hasUser === true ? products : [],
-        clickHandler : "handlePayment()"
-    });
+        // Set session id
+        const sessionId = session.id;
+
+        response.render("pages/shop/checkout/checkout", { 
+            pageTitle : "Checkout",
+            isAuthenticated : true,
+            csrfToken : csrfToken,
+            sessionId : sessionId,
+            cart : cart,
+            hasProducts : hasProducts, 
+            products : hasUser === true ? products : [],
+            clickHandler : "handlePayment()"
+        });
+    }else{
+
+        response.redirect("/products");
+    }
+
 };
 
 // Create a webhook endpoint for stripe.
@@ -378,10 +385,10 @@ const postHandleStripeEvents = ( request : any, response : any ) => {
     // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
     const cart = request.session.cart;
 
-    /*
     console.clear();
     console.log("Handle payment endpoint for stripe");
-    console.log(event); */
+    console.log("\n\n");
+    console.log(event);
 
     // Handle the event
     switch (event.type) {
