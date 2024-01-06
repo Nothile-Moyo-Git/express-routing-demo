@@ -200,6 +200,9 @@ app.use( async( request : Request, response : Response, next : NextFunction ) =>
     // Query my current user
     const nothile : UserInterface | null = await User.findOne({ name : "Nothile" });
 
+    // Add user to the session if they don't exist
+    request.session.user = nothile ? nothile : undefined;
+
     // Pass the singleton through to the app
     request.User = nothile;
 
