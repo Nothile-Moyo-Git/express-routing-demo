@@ -357,7 +357,7 @@ const getCheckout = async ( request : ExtendedRequestInterface, response : Respo
 
 // Create a webhook endpoint for stripe.
 // NOTE: THIS IS FOR LOCAL TESTING, go to https://stripe.com/docs/webhooks in order to find out how to create live endpoints
-const getCreateWebhookEndpoint = async (request : ExtendedRequestInterface, response : Response, next : NextFunction) => {
+const getCreateWebhookEndpoint = async (request : any, response : Response, next : NextFunction) => {
 
     // Instantiate Stripe
     const stripe = new Stripe(stripeSecretKey);
@@ -374,54 +374,112 @@ const getCreateWebhookEndpoint = async (request : ExtendedRequestInterface, resp
 };
 
 // Handle the checkout.session.completed event by stripe so that we don't automatically delete our orders
-const postHandleStripeEvents = ( request : any, response : any ) => {
+const postHandleStripeEvents = async ( request : any, response : Response, next : NextFunction) => {
 
     // Get the event from stripe, we do this here because this webhook is only called by the post request
     const event = request.body;
-
-    // Get the user and the session
-    const user = request.session.user;
-
-    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
-    const cart = request.session.cart;
-
-    console.clear();
-    console.log("Handle payment endpoint for stripe");
-    console.log("\n\n");
-    console.log(event);
 
     // Handle the event
     switch (event.type) {
 
         case 'payment_intent.created':
-            // const paymentIntent = event.data.object;
+            // const paymentIntentCreated = event.data.object;
             // Then define and call a method to handle the successful payment intent.
             // handlePaymentIntentSucceeded(paymentIntent);
-            console.log("\n", "Payment intent created event run");
+
+            /* 
+
+            try{
+
+                // Create our order from the cart we pass through from the User singleton found in index.ts
+                const orderInstance = new Order({
+                    totalPrice : cart.totalPrice,
+                    orderItems : cart.items,
+                    user : {
+                        _id : user._id,
+                        name : user.name
+                    }
+                });
+
+                // Store the order in the database
+                await orderInstance.save();
+
+                // We now need to empty our cart
+                // We will create a User instance and we will delete the cart from the instance
+                // Then we'll execute the save method to update the database user
+                const userInstance = new User({
+                    _id : user._id,
+                    name : user.name,
+                    email : user.email,
+                    password : user.password,
+                    cart : cart,
+                    resetToken : user.resetToken,
+                    resetTokenExpiration : user.resetTokenExpiration
+                });
+
+                // Empty the cart now that we've saved it as an order
+                userInstance.emptyCart();
+
+                // Update the user details in MongoDB
+                await User.updateOne({ _id : user._id}, {
+                    cart : {
+                        items : [],
+                        totalPrice : 0
+                    }
+                });
+
+                // Update the user in the session and empty their cart too
+                request.session.user = userInstance;
+
+                // Update the cart in the session since it's the cart that gets referenced when we visit the cart
+                // Update the cart which we store separately in our session
+                request.session.cart = {
+                    items : userInstance.cart.items,
+                    totalPrice : userInstance.cart.totalPrice,
+                    userId : cart.userId
+                };
+
+                console.log("\n", "Payment intent created event run");
+
+            }catch(err){
+
+                console.clear();
+                console.log("There's been a server error, please view below");
+                console.log("\n");
+        
+                // Custom error object
+                const error = new CustomError(err.message, 500);
+        
+                console.log(error);
+        
+                return next(error);
+            } */
+
         break;
 
         case 'payment_intent.succeeded':
-            const paymentIntent = event.data.object;
+            const paymentIntentSucceeded = event.data.object;
+            
             // Then define and call a method to handle the successful payment intent.
             // handlePaymentIntentSucceeded(paymentIntent);
             console.log("\n", "Pay intent succeeded event run");
         break;
 
         case 'payment_method.attached':
-            const paymentMethod = event.data.object;
+            const paymentMethodAttached = event.data.object;
             // Then define and call a method to handle the successful attachment of a PaymentMethod.
             // handlePaymentMethodAttached(paymentMethod);
             console.log("\n", "Payment method attached event run");
         break;
 
         case 'charge.succeeded':
-            const chargeResult = event.data.object;
+            const chargeSucceeded = event.data.object;
             console.log("\n", "Charge succeeded event run");
         break;
 
         case 'checkout.session.completed':
-            const checkoutResult = event.data.object;
-            console.log("\n", "Checkout completed event run");
+            const checkoutSessionCompleted = event.data.object;
+            console.log("\n", "Checkout session completed event run");
         break;
 
         case 'checkout.session.expired':
@@ -441,80 +499,15 @@ const postHandleStripeEvents = ( request : any, response : any ) => {
 };
 
 // Render the checkout success page
-const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
-
-    // Get the user and the session
-    const user = request.session.user;
-
-    // Get the cart from the session, we store it in the session with the userId so that we can reference their cart
-    const cart = request.session.cart;
+const getCheckoutSuccess = async ( request : any, response : Response, next : NextFunction ) => {
     
-    try{
+    console.log("Request body");
+    console.log(request.query);
 
-        // Create our order from the cart we pass through from the User singleton found in index.ts
-        const orderInstance = new Order({
-            totalPrice : cart.totalPrice,
-            orderItems : cart.items,
-            user : {
-                _id : user._id,
-                name : user.name
-            }
-        });
+    console.log("\n", "Response", "\n", request.json);
 
-        // Store the order in the database
-        await orderInstance.save();
-
-        // We now need to empty our cart
-        // We will create a User instance and we will delete the cart from the instance
-        // Then we'll execute the save method to update the database user
-        const userInstance = new User({
-            _id : user._id,
-            name : user.name,
-            email : user.email,
-            password : user.password,
-            cart : cart,
-            resetToken : user.resetToken,
-            resetTokenExpiration : user.resetTokenExpiration
-        });
-
-        // Empty the cart now that we've saved it as an order
-        userInstance.emptyCart();
-
-        // Update the user details in MongoDB
-        await User.updateOne({ _id : user._id}, {
-            cart : {
-                items : [],
-                totalPrice : 0
-            }
-        });
-
-        // Update the user in the session and empty their cart too
-        request.session.user = userInstance;
-
-        // Update the cart in the session since it's the cart that gets referenced when we visit the cart
-        // Update the cart which we store separately in our session
-        request.session.cart = {
-            items : userInstance.cart.items,
-            totalPrice : userInstance.cart.totalPrice,
-            userId : cart.userId
-        };
-
-        // Move to the orders page
-        response.redirect("/orders");
-
-    }catch(err){
-
-        console.clear();
-        console.log("There's been a server error, please view below");
-        console.log("\n");
-
-        // Custom error object
-        const error = new CustomError(err.message, 500);
-
-        console.log(error);
-
-        return next(error);
-    }
+    // Move to the orders page
+    response.redirect("/orders");
 };
 
 // Get product detail controller

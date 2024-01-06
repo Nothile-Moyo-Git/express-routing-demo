@@ -136,7 +136,8 @@ export interface ExtendedSessionDataInterface extends SessionData {
     isLoggedIn : boolean,
     user : UserInterface,
     csrfToken : string,
-    cart ?: CartInterface
+    cart ?: CartInterface,
+    orderCompleted ?: boolean
 }
 
 export interface ExtendedRequestInterface extends Request{
@@ -163,6 +164,7 @@ export interface ExtendedRequestInterface extends Request{
         created ?: number,
         livemode ?: boolean,
         pending_webhooks ?: number,
+        received : boolean,
         request ?: {
             id : string | null,
             idempotency_key : string | null
