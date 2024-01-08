@@ -387,74 +387,6 @@ const postHandleStripeEvents = async ( request : any, response : Response, next 
             // Then define and call a method to handle the successful payment intent.
             // handlePaymentIntentSucceeded(paymentIntent);
 
-            /* 
-
-            try{
-
-                // Create our order from the cart we pass through from the User singleton found in index.ts
-                const orderInstance = new Order({
-                    totalPrice : cart.totalPrice,
-                    orderItems : cart.items,
-                    user : {
-                        _id : user._id,
-                        name : user.name
-                    }
-                });
-
-                // Store the order in the database
-                await orderInstance.save();
-
-                // We now need to empty our cart
-                // We will create a User instance and we will delete the cart from the instance
-                // Then we'll execute the save method to update the database user
-                const userInstance = new User({
-                    _id : user._id,
-                    name : user.name,
-                    email : user.email,
-                    password : user.password,
-                    cart : cart,
-                    resetToken : user.resetToken,
-                    resetTokenExpiration : user.resetTokenExpiration
-                });
-
-                // Empty the cart now that we've saved it as an order
-                userInstance.emptyCart();
-
-                // Update the user details in MongoDB
-                await User.updateOne({ _id : user._id}, {
-                    cart : {
-                        items : [],
-                        totalPrice : 0
-                    }
-                });
-
-                // Update the user in the session and empty their cart too
-                request.session.user = userInstance;
-
-                // Update the cart in the session since it's the cart that gets referenced when we visit the cart
-                // Update the cart which we store separately in our session
-                request.session.cart = {
-                    items : userInstance.cart.items,
-                    totalPrice : userInstance.cart.totalPrice,
-                    userId : cart.userId
-                };
-
-                console.log("\n", "Payment intent created event run");
-
-            }catch(err){
-
-                console.clear();
-                console.log("There's been a server error, please view below");
-                console.log("\n");
-        
-                // Custom error object
-                const error = new CustomError(err.message, 500);
-        
-                console.log(error);
-        
-                return next(error);
-            } */
-
         break;
 
         case 'payment_intent.succeeded':
@@ -501,10 +433,118 @@ const postHandleStripeEvents = async ( request : any, response : Response, next 
 // Render the checkout success page
 const getCheckoutSuccess = async ( request : any, response : Response, next : NextFunction ) => {
     
-    console.log("Request body");
-    console.log(request.query);
+    // Get the checkout session ID from the request
+    const CheckoutSessionId = Object.keys(request.query);
 
-    console.log("\n", "Response", "\n", request.json);
+    // Instantiate stripe so we can get customer details based on the checkout session ID
+    const stripe = new Stripe(stripeSecretKey);
+
+    // Define our session and customer here by using the parameters in our request, in this case, it's request.query
+    const session = await stripe.checkout.sessions.retrieve(CheckoutSessionId[0]);
+
+    // Get the user details from the MongoDB session
+    const user = request.session.user;
+
+    // Get the cart details from the MongoDB session
+    const cart = request.session.cart;
+
+    // If we have a checkout session, then 
+    if (session.id.length > 0) {
+
+        console.clear();
+        console.log("Session has an ID");
+        console.log("\n", "length", session.id.length);
+        console.log("\n", "customer details", session);
+
+        // Check customer details
+        let customer = null;
+
+        // Trying to extract a customer, will update this before pushing code
+        customer = await stripe.customers.search({
+            query : 'email:\'nothile1@gmail.com\''
+        });
+
+        /*
+        // If we have a customer, then use that, otherwise, create one
+        if (session.customer === null) {
+
+            customer = await stripe.customers.create({
+                name : session.customer_details.name,
+                email : session.customer_details.email,
+                address : session.customer_details.address,
+                phone : session.customer_details.phone,
+                tax_exempt : session.customer_details.tax_exempt
+            });
+        } */
+
+
+        /* try{
+
+            // Create our order from the cart we pass through from the User singleton found in index.ts
+            const orderInstance = new Order({
+                totalPrice : cart.totalPrice,
+                orderItems : cart.items,
+                user : {
+                    _id : user._id,
+                    name : user.name
+                }
+            });
+
+            // Store the order in the database
+            await orderInstance.save();
+
+            // We now need to empty our cart
+            // We will create a User instance and we will delete the cart from the instance
+            // Then we'll execute the save method to update the database user
+            const userInstance = new User({
+                _id : user._id,
+                name : user.name,
+                email : user.email,
+                password : user.password,
+                cart : cart,
+                resetToken : user.resetToken,
+                resetTokenExpiration : user.resetTokenExpiration
+            });
+
+            // Empty the cart now that we've saved it as an order
+            userInstance.emptyCart();
+
+            // Update the user details in MongoDB
+            await User.updateOne({ _id : user._id}, {
+                cart : {
+                    items : [],
+                    totalPrice : 0
+                }
+            });
+
+            // Update the user in the session and empty their cart too
+            request.session.user = userInstance;
+
+            // Update the cart in the session since it's the cart that gets referenced when we visit the cart
+            // Update the cart which we store separately in our session
+            request.session.cart = {
+                items : userInstance.cart.items,
+                totalPrice : userInstance.cart.totalPrice,
+                userId : cart.userId
+            };
+
+            console.log("\n", "Payment intent created event run");
+
+        }catch(err){
+
+            console.clear();
+            console.log("There's been a server error, please view below");
+            console.log("\n");
+    
+            // Custom error object
+            const error = new CustomError(err.message, 500);
+    
+            console.log(error);
+    
+            return next(error);
+        } */
+
+    }
 
     // Move to the orders page
     response.redirect("/orders");
