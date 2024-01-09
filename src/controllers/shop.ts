@@ -452,30 +452,32 @@ const getCheckoutSuccess = async ( request : any, response : Response, next : Ne
     if (session.id.length > 0) {
 
         console.clear();
-        console.log("Session has an ID");
-        console.log("\n", "length", session.id.length);
-        console.log("\n", "customer details", session);
+        console.log("User");
+        console.log(user);
+        console.log("Cart");
+        console.log(cart);
 
         // Check customer details
+        let previousCustomer = { data : [] };
         let customer = null;
 
         // Trying to extract a customer, will update this before pushing code
-        customer = await stripe.customers.search({
-            query : 'email:\'nothile1@gmail.com\''
+        previousCustomer = await stripe.customers.search({
+            query : `email:\'${session.customer_details.email.toLowerCase()}\'`
         });
 
-        /*
         // If we have a customer, then use that, otherwise, create one
-        if (session.customer === null) {
+        if (previousCustomer.data.length === 0) {
 
+            // Create a customer using the checkout details
             customer = await stripe.customers.create({
                 name : session.customer_details.name,
-                email : session.customer_details.email,
+                email : session.customer_details.email.toLowerCase(),
                 address : session.customer_details.address,
                 phone : session.customer_details.phone,
                 tax_exempt : session.customer_details.tax_exempt
             });
-        } */
+        }
 
 
         /* try{
