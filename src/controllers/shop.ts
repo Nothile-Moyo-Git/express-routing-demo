@@ -415,10 +415,20 @@ const postHandleStripeEvents = async ( request : any, response : Response, next 
         break;
 
         case 'checkout.session.expired':
-            const checkoutExpired = event.data.object
+            const checkoutExpired = event.data.object;
             console.log("\n", "Checkout expired event run");
         break;
-    
+
+        case 'customer.created':
+            const customerCreated = event.data.object;
+            console.log("\n", "Customer created event run");
+        break;
+
+        case 'customer.deleted':
+            const customerDeleted = event.data.object;
+            console.log("\n", "Customer deleted event run");
+        break;
+
         // ... handle other event types
         default:
         console.log(`Unhandled event type ${event.type}`);
@@ -431,7 +441,7 @@ const postHandleStripeEvents = async ( request : any, response : Response, next 
 };
 
 // Render the checkout success page
-const getCheckoutSuccess = async ( request : any, response : Response, next : NextFunction ) => {
+const getCheckoutSuccess = async ( request : ExtendedRequestInterface, response : Response, next : NextFunction ) => {
     
     // Get the checkout session ID from the request
     const CheckoutSessionId = Object.keys(request.query);
@@ -450,12 +460,6 @@ const getCheckoutSuccess = async ( request : any, response : Response, next : Ne
 
     // If we have a checkout session, then 
     if (session.id.length > 0) {
-
-        console.clear();
-        console.log("User");
-        console.log(user);
-        console.log("Cart");
-        console.log(cart);
 
         // Check customer details
         let previousCustomer = { data : [] };
@@ -479,8 +483,7 @@ const getCheckoutSuccess = async ( request : any, response : Response, next : Ne
             });
         }
 
-
-        /* try{
+        try{
 
             // Create our order from the cart we pass through from the User singleton found in index.ts
             const orderInstance = new Order({
@@ -544,7 +547,7 @@ const getCheckoutSuccess = async ( request : any, response : Response, next : Ne
             console.log(error);
     
             return next(error);
-        } */
+        }
 
     }
 
