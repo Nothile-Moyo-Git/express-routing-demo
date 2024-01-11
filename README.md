@@ -108,7 +108,6 @@ You can find PDF's in the _"/src/invoices"_ folder.
 The Stripe API is used to handle checkout sessions, purchases, payments and orders. It also stores and handles our external customer data.
 
 ### Stripe CLI
-
 When using development, you'll need to download the stripe executable. This allows you to run stripe from the *Command Line* from [here](https://github.com/stripe/stripe-cli/releases/tag/v1.19.1).
 
 You can find instructions for other operating systems [here](https://stripe.com/docs/stripe-cli?locale=en-GB).
@@ -118,9 +117,14 @@ When you've got it installed in the _/src_ folder. You can run the following com
 Run an event listener which listens to all stripe events on port 3000
 > stripe listen --forward-to localhost:3000/webhook
 
-** Note: You can forward events from your public site to your local one using stripe --load-from-webhooks-api **
+** Note: You can forward events from your public site to your local one using stripe --load-from-webhooks-api **.
 
-** Note: You can skip the verification for SSL using the --skip-verify tag, but be warned that this can cause security concerns **
+** Note: You can skip the verification for SSL using the --skip-verify tag, but be warned that this can cause security concerns **.
+
+### Stripe Security
+Stripe uses a *"success_url"* variable. The webhook passes the checkout session through the request which can then be used to access the server variable.
+
+You can find this in the *"src/controllers/shop.ts"* in the *"getCheckoutSuccess"*.
 
 ## Databases
 **Note: Sequelize and MySQL were used previously, and have now been replaced with Mongoose. Mongoose is an ORM for MongoDB used with Node.js**
