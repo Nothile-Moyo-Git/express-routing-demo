@@ -1,6 +1,7 @@
 @use "../../../scss/partials/branding" as branding;
 @use "../../../scss/partials/responsive" as responsive;
 @use "../../../scss/partials/mixins" as mixins;
+@use "../../../scss/partials/animations" as animations;
 
 .cart{
     width: calc(100% - 3rem);
@@ -18,6 +19,22 @@
 
     @include responsive.breakpoint(tablet){
         padding: 2rem 0.5rem;
+    }
+
+    &__link{
+        text-align: center;
+        font-size: 1.25rem;
+        color: white;
+        transition: animations.$slow_transition;
+        width: max-content;
+        margin: auto;
+        padding-bottom: 0.25rem;
+        border-bottom: 2px solid transparent;
+
+        @include mixins.state(){
+            color: branding.$brand_color_three;
+            border-bottom: 2px solid branding.$brand_color_three;
+        }
     }
 
     &__header{
