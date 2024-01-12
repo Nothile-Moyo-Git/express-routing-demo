@@ -32,6 +32,8 @@ import multer from "multer";
 import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility-methods";
 import fs from "fs";
 import { Session } from "express-session";
+import { Server } from "socket.io";
+import { createServer } from "node:http"; 
 
 // Module augmentation for the request
 declare module 'express-serve-static-core' {
@@ -250,8 +252,16 @@ const startServer = async () => {
     await createMongooseConnection(() => {
 
         // Listen to the port
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             console.log(`[Server]: Server is running on http://localhost:${port}`);
+        });
+
+        // Instantiate our websocket
+        const socketIO = new Server(server);
+
+        // Check if our connection has been established
+        socketIO.on("connection", (socket) => {
+            console.log("webhook client connected");
         });
     });
 };
