@@ -1,0 +1,20 @@
+<%- include('../../includes/header'); %>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script> const socket = io(); </script>
+
+    <body class="menu-open">
+
+        <%- include('../../includes/menu'); %>
+
+        <main class="content">
+
+            <h1 class="content__title"><%= pageTitle %></h1>
+
+            <p>Socket data</p>
+
+        </main>
+
+    </body>
+    
+<%- include('../../includes/footer'); %>

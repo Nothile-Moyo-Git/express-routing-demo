@@ -33,7 +33,6 @@ import { getFileNamePrefixWithDate, getFolderPathFromDate } from "./util/utility
 import fs from "fs";
 import { Session } from "express-session";
 import { Server } from "socket.io";
-import { createServer } from "node:http"; 
 
 // Module augmentation for the request
 declare module 'express-serve-static-core' {
@@ -261,7 +260,12 @@ const startServer = async () => {
 
         // Check if our connection has been established
         socketIO.on("connection", (socket) => {
-            console.log("webhook client connected");
+            console.log("A user connected");
+
+            // If a user disconnects
+            socket.on("disconnect", () => {
+                console.log("A user disconnected");
+            });
         });
     });
 };
