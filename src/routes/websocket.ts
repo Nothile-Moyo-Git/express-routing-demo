@@ -11,11 +11,13 @@
 // This file is for the output routes
 import express from "express";
 import isAuthenticated from "../middleware/is-auth";
+import { getChatPageController } from "../controllers/websocket";
 
 // Define our router object
 const socketRoutes = express.Router({ strict : true});
 
 // Handle our routes
+socketRoutes.get("/chat", isAuthenticated, getChatPageController);
 
-
+// Export our routes to the index file
 export default socketRoutes;
