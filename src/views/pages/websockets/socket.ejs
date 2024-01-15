@@ -1,8 +1,5 @@
 <%- include('../../includes/header'); %>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script> const socket = io(); </script>
-
     <body class="menu-open">
 
         <%- include('../../includes/menu'); %>
@@ -16,5 +13,13 @@
         </main>
 
     </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        // Instantiate our websocket here. The websocket is defined in "/src/index.ts"
+        const socket = io();
+        
+    </script>
     
 <%- include('../../includes/footer'); %>
