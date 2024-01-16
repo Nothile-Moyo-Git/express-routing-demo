@@ -270,6 +270,14 @@ const startServer = async () => {
             socket.on("disconnect", () => {
                 console.log("A user disconnected");
             });
+
+            // Output any emitted data from from socketIO
+            socket.on('chat message', (msg) => {
+
+                console.clear();
+                console.log("message: " + msg);
+            });
+
         });
     });
 };
