@@ -1,0 +1,25 @@
+@use "../scss/partials/animations" as animations;
+@use "../scss/partials/branding" as branding;
+@use "../scss/partials/mixins" as mixins;
+
+footer{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    padding: 0rem 1rem 1rem 1rem;
+    width: calc(100% - 2rem);
+
+    a{  z-index: 1; }
+
+    svg{
+        max-height: 40px;
+        max-width: 40px;
+        color: white;
+        cursor: pointer;
+        transition: animations.$standard_transition;
+
+        @include mixins.state(){
+            color: branding.$brand_color_three;
+        }
+    }
+}
