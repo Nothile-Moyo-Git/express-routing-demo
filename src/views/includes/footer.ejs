@@ -1,6 +1,8 @@
 <footer>
     <a href="/chat">
-        <%- include('../svg/chat-icon.svg'); %>
+        <% if (pageTitle !== 'Live chat') { %>
+            <%- include('../svg/chat-icon.svg'); %>
+        <% } %>
     </a>
 </footer>
 

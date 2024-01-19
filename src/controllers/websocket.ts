@@ -23,7 +23,7 @@ const getChatPageController = (request : ExtendedRequestInterface, response : Re
     const csrfToken = request.session.csrfToken;
 
     // Render the websocket chat page
-    response.render("pages/websockets/socket", {
+    response.render("pages/websockets/live-chat", {
         pageTitle : "Live chat",
         isAuthenticated : isLoggedIn === undefined ? false : true,
         csrfToken : csrfToken
