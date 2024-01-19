@@ -1,0 +1,26 @@
+@use "../partials/branding" as branding;
+@use "../partials/animations" as animations;
+@use "../partials/mixins" as mixins;
+@use "../scss/partials/responsive" as responsive;
+
+.chat-form{
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0px;
+
+    &__field{
+
+    }
+
+    &__input{
+        border: 0;
+        border-radius: 0px;
+        padding: 0.35rem 0.75rem;
+    }
+
+    &__button{
+        width: 80px;
+        min-width: 80px;
+    }
+}

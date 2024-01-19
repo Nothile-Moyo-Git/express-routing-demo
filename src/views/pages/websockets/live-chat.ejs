@@ -1,0 +1,67 @@
+<%- include('../../includes/header'); %>
+
+    <body class="menu-open">
+
+        <%- include('../../includes/menu'); %>
+
+        <main class="content">
+
+            <h1 class="content__title"><%= pageTitle %></h1>
+
+            <form class="chat-form" method="POST" enctype="multipart/form-data" id="chatForm">
+
+                <div class="form__field">
+                    <input
+                        class="chat-form__input"
+                        type="text"
+                        name="chatInput"
+                        id="chatInput"
+                        placeholder="Please enter some text in the chat"
+                        required
+                    />
+                </div>
+
+                <input
+                    type="hidden"
+                    name="csrfToken"
+                    value="<%= csrfToken %>"
+                />
+                
+                <button class="chat-form__button">Submit</button>
+
+            </form>
+
+        </main>
+
+    </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        // Instantiate our websocket here. The websocket is defined in "/src/index.ts"
+        const socket = io();
+
+        // Reference our elements
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('chatInput');
+
+        // Add the event listener so the chat can listen in real time
+        form.addEventListener('submit', (event) => {
+
+            // Stop us from executing a post request once we're done
+            event.preventDefault();
+
+            // Output the input to the websocket so we can view it in our console (and potentially do something with the data)
+            if (input.value) {
+
+                // Emit the input to the websocket instead of the endpoint here
+                socket.emit('chat message', input.value);
+                
+                // Reset our input to nothing
+                input.value = '';
+            }
+        });
+        
+    </script>
+    
+<%- include('../../includes/footer'); %>
