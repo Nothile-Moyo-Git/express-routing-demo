@@ -8,6 +8,10 @@
 
             <h1 class="content__title"><%= pageTitle %></h1>
 
+            <ul class="live-chat" id="messages">
+
+            </ul>
+
             <form class="chat-form" method="POST" enctype="multipart/form-data" id="chatForm">
 
                 <div class="form__field">
@@ -60,6 +64,10 @@
                 // Reset our input to nothing
                 input.value = '';
             }
+        });
+
+        socket.on('chat message', (message) => {
+            console.log("Response received");
         });
         
     </script>

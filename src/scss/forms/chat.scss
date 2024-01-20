@@ -1,26 +1,41 @@
 @use "../partials/branding" as branding;
 @use "../partials/animations" as animations;
 @use "../partials/mixins" as mixins;
-@use "../scss/partials/responsive" as responsive;
+@use "../partials/responsive" as responsive;
 
 .chat-form{
+    width: 100%;
     display: flex;
     flex-direction: row;
     position: fixed;
     bottom: 0px;
 
-    &__field{
-
-    }
-
     &__input{
+        width: calc(100% - 37px);
         border: 0;
+        font-size: 1rem;
         border-radius: 0px;
-        padding: 0.35rem 0.75rem;
+        padding: 0.6rem 1.15rem;
     }
 
     &__button{
         width: 80px;
         min-width: 80px;
+        overflow: hidden;
+        position: relative;
+        border: 0;
+        z-index: 2;
+        cursor: pointer;
+        color: white;
+        font-size: 1rem;
+        transition: animations.$standard_transition;
+
+        @include mixins.state(){
+            filter: contrast(150%);
+        }
+
+        @include mixins.backgroundGradientEffect(){
+            background: branding.$gradient_color_three;
+        }
     }
 }
