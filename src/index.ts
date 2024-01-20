@@ -273,11 +273,9 @@ const startServer = async () => {
 
             // Output any emitted data from from socketIO
             socket.on('chat message', (msg) => {
-
-                console.clear();
-                console.log("message: " + msg);
+                // console.log("message: " + msg);
+                socket.emit('chat message', msg);
             });
-
         });
     });
 };
