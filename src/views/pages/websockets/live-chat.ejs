@@ -24,12 +24,6 @@
                         required
                     />
                 </div>
-
-                <input
-                    type="hidden"
-                    name="csrfToken"
-                    value="<%= csrfToken %>"
-                />
                 
                 <button class="chat-form__button">Submit</button>
 
@@ -48,6 +42,7 @@
         // Reference our elements
         const form = document.getElementById('chatForm');
         const input = document.getElementById('chatInput');
+        const messages = document.getElementById('messages');
 
         // Add the event listener so the chat can listen in real time
         form.addEventListener('submit', (event) => {
@@ -67,7 +62,29 @@
         });
 
         socket.on('chat message', (message) => {
-            console.log("Response received");
+
+            console.clear();
+
+            // Get the number of items for the ID
+            const numberOfItems = document.querySelector('list-chat__item');
+            console.log("Number of items");
+            console.log(numberOfItems);
+
+            // Add the emitted message to the chat log on the page
+            // We do this by creating a new element and appending it onto the list
+            const item = document.createElement('li');
+
+            // Set the text of the item in the list
+            item.textContent = message;
+
+            // Set the class name for reference
+            item.className = "live-chat__item";
+
+            // Add the element to the list
+            messages.appendChild(item);
+
+            // Scroll to the chat log
+            window.scrollTo(0, document.body.scrollHeight);
         });
         
     </script>

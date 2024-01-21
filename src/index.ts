@@ -271,8 +271,10 @@ const startServer = async () => {
                 console.log("A user disconnected");
             });
 
-            // Output any emitted data from from socketIO
+            // Output any emitted data from from socketIO to all clients listening
+            // This effectively allows the chat system to work since the connection has been established
             socket.on('chat message', (msg) => {
+
                 // console.log("message: " + msg);
                 socket.emit('chat message', msg);
             });
