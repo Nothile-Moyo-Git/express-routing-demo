@@ -63,12 +63,14 @@
 
         socket.on('chat message', (message) => {
 
-            console.clear();
-
             // Get the number of items for the ID
-            const numberOfItems = document.querySelector('list-chat__item');
+            const numberOfItems = document.getElementsByClassName('live-chat__item');
+
+            console.clear();
             console.log("Number of items");
-            console.log(numberOfItems);
+            console.log(numberOfItems.length + 1);
+
+            // Get the date for the Chatbox
 
             // Add the emitted message to the chat log on the page
             // We do this by creating a new element and appending it onto the list
