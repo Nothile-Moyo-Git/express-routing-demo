@@ -275,8 +275,11 @@ const startServer = async () => {
             // This effectively allows the chat system to work since the connection has been established
             socket.on('chat message', (msg) => {
 
-                // console.log("message: " + msg);
+                // Broadcast the response to the current browser
                 socket.emit('chat message', msg);
+
+                // Broadcast the content to all other connected clients
+                socket.broadcast.emit('chat message', msg);
             });
         });
     });

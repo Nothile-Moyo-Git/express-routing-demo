@@ -1,9 +1,22 @@
 @use "../../partials/branding" as branding;
-@use "../../partials/animations" as animations;
 @use "../../partials/mixins" as mixins;
 @use "../../partials/responsive" as responsive;
 
 .live-chat{
     width: 100%;
 
+    &__item{
+        padding: 0.5rem 0.75rem;
+        background: white;
+        color: rgba(0, 0, 0, 0.9);
+        animation: fade-in 0.2s linear;
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
+
+        &:nth-child(even){
+            background: branding.$gradient_color_three;
+            color: white;
+        }
+    }
 }

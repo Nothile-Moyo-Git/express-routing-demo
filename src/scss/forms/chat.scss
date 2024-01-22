@@ -19,8 +19,8 @@
     }
 
     &__button{
-        width: 80px;
-        min-width: 80px;
+        width: 100px;
+        min-width: 100px;
         overflow: hidden;
         position: relative;
         border: 0;
@@ -31,7 +31,7 @@
         transition: animations.$standard_transition;
 
         @include mixins.state(){
-            filter: contrast(150%);
+            filter: contrast(175%);
         }
 
         @include mixins.backgroundGradientEffect(){
