@@ -66,20 +66,44 @@
             // Get the number of items for the ID
             const numberOfItems = document.getElementsByClassName('live-chat__item');
 
-            console.clear();
-            console.log("Number of items");
-            console.log(numberOfItems.length + 1);
-
             // Get the date for the Chatbox
+            const today = new Date();
+
+            // Get the year, month, and day
+            // Get hours, minutes and seconds
+            const yyyy = today.getFullYear();
+            const mm = today.getMonth() + 1;
+            const dd = today.getDate();       
+            const hh = today.getHours();
+            const ii = today.getMinutes();
+            const ss = today.getSeconds();
+
+            // Set the values for the post date by formatting
+            let stringMonth = mm.toString();
+            let stringDay = dd.toString();
+            let stringHours = hh.toString();
+            let stringMinutes = ii.toString();
+            let stringSeconds = ss.toString();
+
+            // Format details
+            if (mm < 10) { stringMonth = '0' + mm.toString(); };
+            if (dd < 10) { stringDay = '0' + dd.toString(); };
+            if (hh < 12) { stringHours = '0' + hh.toString(); };
+            if (ii < 10) { stringMinutes = '0' + ii.toString(); };
+            if (ss < 10) { stringSeconds = '0' + ss.toString(); };
+
+            // Format the date and output it in the chatbox
+            const postDate = `${stringDay}/${stringMonth}/${yyyy} - ${stringHours}:${stringMinutes}:${stringSeconds}`;
 
             // Add the emitted message to the chat log on the page
             // We do this by creating a new element and appending it onto the list
             const item = document.createElement('li');
 
             // Set the text of the item in the list
-            item.textContent = message;
+            item.textContent = `${postDate} => ${message}`;
 
             // Set the class name for reference
+            item.id = `chat-item__${numberOfItems.length + 1}`;
             item.className = "live-chat__item";
 
             // Add the element to the list

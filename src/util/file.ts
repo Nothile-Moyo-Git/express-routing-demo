@@ -38,4 +38,4 @@ const deleteFile = (filePath : string) => {
     });
 };
 
-export { deleteFile  };
+export { deleteFile };

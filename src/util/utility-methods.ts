@@ -104,7 +104,7 @@ export const getFileNamePrefixWithDate = () => {
     let stringMinutes = ii.toString();
     let stringSeconds = ss.toString();
 
-    // Formatting the date values to include 0 if it's less than 10
+    // Formatting the date values to include 0 if it's less than 10/12
     if (mm < 10) { stringMonth = '0' + mm.toString(); };
     if (dd < 10) { stringDay = '0' + dd.toString(); };
     if (hh < 12) { stringHours = '0' + hh.toString(); };
